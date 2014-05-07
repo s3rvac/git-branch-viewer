@@ -1,9 +1,9 @@
 import unittest
 
-from viewer import app
+from viewer.web import app
 
 
-class AppTestCase(unittest.TestCase):
+class WebTestCase(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 

@@ -1,1 +1,1 @@
-from viewer import app as application
+from viewer.web import app as application

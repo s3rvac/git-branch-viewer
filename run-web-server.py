@@ -1,5 +1,5 @@
 #!/usr/bin/env python
 
-from viewer import app
+from viewer.web import app
 
 app.run(debug=True)
