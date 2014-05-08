@@ -1,7 +1,0 @@
-Learn:
-	- Python.unittest (https://docs.python.org/3.4/library/unittest.html)
-	- Python.unittest.mock (https://docs.python.org/3.4/library/unittest.mock.html)
-	- Flask (http://flask.pocoo.org/docs/)
-	- sphinx (http://sphinx-doc.org)
-	- nose (https://nose.readthedocs.org)
-	- coverage (http://nedbatchelder.com/code/coverage/)
