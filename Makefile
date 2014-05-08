@@ -22,7 +22,7 @@ tests:
 	@nosetests tests
 
 tests-coverage:
-	@nosetests --with-coverage \
+	@nosetests tests --with-coverage \
 		--cover-package viewer \
 		--cover-erase \
 		--cover-html \
