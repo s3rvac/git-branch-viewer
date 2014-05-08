@@ -1,12 +1,12 @@
 .PHONY: help clean clean-pyc lint tests tests-coverage docs
 
 help:
-	@echo "clean          - remove build artifacts"
-	@echo "clean-pyc      - remove Python file artifacts"
-	@echo "lint           - check style with flake8"
-	@echo "tests          - run unit tests"
-	@echo "tests-coverage - check test code coverage"
-	@echo "docs           - generate Sphinx HTML documentation, including API docs"
+	@echo "clean         - remove build artifacts"
+	@echo "clean-pyc     - remove Python file artifacts"
+	@echo "lint          - check style with flake8"
+	@echo "test          - run unit tests"
+	@echo "test-coverage - check test code coverage"
+	@echo "docs          - generate Sphinx HTML documentation, including API docs"
 
 clean: clean-pyc
 	@rm -rf coverage
@@ -18,10 +18,10 @@ clean-pyc:
 lint:
 	@flake8 viewer tests
 
-tests:
+test:
 	@nosetests tests
 
-tests-coverage:
+test-coverage:
 	@nosetests tests --with-coverage \
 		--cover-package viewer \
 		--cover-erase \
