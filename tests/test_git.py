@@ -35,6 +35,6 @@ class GitCreateTests(unittest.TestCase):
         mock_check_call.side_effect = subprocess.CalledProcessError(
             128, "['git', 'status']",
             b'fatal: Not a git repository (or any parent up to mount point)')
-        REPO_PATH = '/path/to/existing/location/with/norepository'
+        REPO_PATH = '/path/to/existing/location/with/no/repository'
         self.assertRaises(NoGitRepositoryError, Git, REPO_PATH)
         mock_check_call.assert_called_once_with(['git', 'status'])
