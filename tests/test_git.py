@@ -11,6 +11,7 @@ import unittest
 from unittest import mock
 
 from viewer.git import Git
+from viewer.git import GitCmdNotFoundError
 from viewer.git import NoGitRepositoryError
 
 
@@ -37,4 +38,12 @@ class GitCreateTests(unittest.TestCase):
             b'fatal: Not a git repository (or any parent up to mount point)')
         REPO_PATH = '/path/to/existing/location/with/no/repository'
         self.assertRaises(NoGitRepositoryError, Git, REPO_PATH)
+        mock_check_call.assert_called_once_with(['git', 'status'])
+
+    def test_exception_is_raised_when_git_is_not_installed(
+            self, mock_check_call, mock_chdir):
+        mock_check_call.side_effect = FileNotFoundError(
+            "[Errno 2] No such file or directory: 'git'")
+        REPO_PATH = '/path/to/existing/location/with/norepository'
+        self.assertRaises(GitCmdNotFoundError, Git, REPO_PATH)
         mock_check_call.assert_called_once_with(['git', 'status'])
