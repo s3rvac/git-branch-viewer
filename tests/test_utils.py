@@ -12,7 +12,7 @@ from unittest import mock
 from viewer.utils import chdir
 
 
-@mock.patch('os.chdir', spec_set=os.chdir)
+@mock.patch('os.chdir')
 class ChdirTests(unittest.TestCase):
     def setUp(self):
         self.orig_cwd = os.getcwd()
