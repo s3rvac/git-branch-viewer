@@ -1,3 +1,10 @@
+#
+# A GNU Makefile for the project.
+#
+# Copyright: (c) 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
+# License: BSD, see LICENSE for more details
+#
+
 .PHONY: help clean clean-pyc lint tests tests-coverage docs
 
 help:
