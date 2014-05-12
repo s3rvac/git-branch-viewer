@@ -50,9 +50,9 @@ class Git:
             #
             #   FileNotFoundError: [Errno 2] No such file or directory: 'cmd'
             #
-            except FileNotFoundError as ex:
+            except FileNotFoundError:
                 raise GitCmdNotFoundError(
                     "'git' is not installed or cannot be run")
-            except subprocess.CalledProcessError as ex:
+            except subprocess.CalledProcessError:
                 raise NoGitRepositoryError(
                     "'{}' is not a git repository".format(self.path))
