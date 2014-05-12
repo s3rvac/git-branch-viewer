@@ -35,4 +35,3 @@ class ChdirTests(unittest.TestCase):
                 raise RuntimeError
         except RuntimeError:
             mock_chdir.assert_called_once_with(self.orig_cwd)
-
