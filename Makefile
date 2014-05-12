@@ -5,7 +5,7 @@
 # License: BSD, see LICENSE for more details
 #
 
-.PHONY: help clean clean-pyc lint tests tests-coverage docs
+.PHONY: help clean clean-pyc lint test test-coverage docs
 
 help:
 	@echo "clean         - remove build artifacts"
