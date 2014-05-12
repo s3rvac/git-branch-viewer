@@ -17,7 +17,7 @@ from viewer.git import NoGitRepositoryError
 @mock.patch('os.chdir')
 @mock.patch('subprocess.check_call')
 class GitCreateTests(unittest.TestCase):
-    def test_create_git_from_existing_repository_enters_the_repo_and_calls_git_status(
+    def test_create_git_from_repository_enters_the_repo_and_calls_git_status(
             self, mock_check_call, mock_chdir):
         REPO_PATH = '/path/to/existing/repository'
         git = Git(REPO_PATH)
