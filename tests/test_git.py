@@ -5,7 +5,6 @@
 # License: BSD, see LICENSE for more details
 #
 
-import os
 import subprocess
 import unittest
 from unittest import mock
