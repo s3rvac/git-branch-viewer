@@ -34,6 +34,8 @@ class Git:
     def __init__(self, path):
         """Creates an interface to a git repository in the given path.
 
+        The path is then accessible through the path attribute.
+
         If the given path does not exist or cannot be entered,
         FileNotFoundError is raised.
 

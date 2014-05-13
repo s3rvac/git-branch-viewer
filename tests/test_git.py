@@ -24,6 +24,12 @@ class GitCreateTests(unittest.TestCase):
         mock_chdir.assert_any_call(REPO_PATH)
         mock_check_call.assert_called_once_with(['git', 'status'])
 
+    def test_path_is_accessible_after_creating_git_from_existing_repository(
+            self, mock_check_call, mock_chdir):
+        REPO_PATH = '/path/to/existing/repository'
+        git = Git(REPO_PATH)
+        self.assertEqual(git.path, REPO_PATH)
+
     def test_create_git_from_nonexisting_location_raises_exception(
             self, mock_check_call, mock_chdir):
         mock_chdir.side_effect = FileNotFoundError('No such file or directory')
