@@ -18,13 +18,13 @@ class BaseGitError(Exception):
     pass
 
 
-class NoGitRepositoryError(BaseGitError):
-    """An exception raised when there is no repository in the given path."""
+class GitCmdError(BaseGitError):
+    """An exception that is raised when a git command fails."""
     pass
 
 
-class GitCmdNotFoundError(BaseGitError):
-    """An exception raised when the git command has not been found."""
+class GitBinaryNotFoundError(GitCmdError):
+    """An exception that is raised when the git binary was not found."""
     pass
 
 
@@ -36,25 +36,34 @@ class Git:
 
         The path is then accessible through the path attribute.
 
-        If the given path does not exist or cannot be entered,
-        FileNotFoundError is raised.
-
-        If the path is not a git repository, NoGitRepositoryError is raised.
-
-        If the git command is not found, GitCmdNotFoundError is raised.
+        See run_git_cmd() for the list of exceptions that may be raised.
         """
         self.path = path
+        self._verify_repository_existence()
 
+    def run_git_cmd(self, args):
+        """Runs the git command with the given arguments in the repository and
+        returns the output.
+
+        args has to be a sequence of parameters passed to git.
+
+        If the path does not exist or cannot be entered, FileNotFoundError is
+        raised.
+
+        If the git command is not found, GitBinaryNotFoundError is raised.
+
+        If there is an error when running the command, GitCmdError is raised.
+        """
         with chdir(self.path):
             try:
-                subprocess.check_call(['git', 'status'])
-            # When a command is not found, subprocess.check_call() raises
-            #
-            #   FileNotFoundError: [Errno 2] No such file or directory: 'cmd'
-            #
-            except FileNotFoundError:
-                raise GitCmdNotFoundError(
-                    "'git' is not installed or cannot be run")
-            except subprocess.CalledProcessError:
-                raise NoGitRepositoryError(
-                    "'{}' is not a git repository".format(self.path))
+                return subprocess.check_output(['git'] + list(args))
+            # When a command is not found or cannot be executed,
+            # subprocess.check_output() raises OSError.
+            except OSError:
+                raise GitBinaryNotFoundError(
+                    "'git' is not installed or cannot be executed")
+            except subprocess.CalledProcessError as ex:
+                raise GitCmdError(ex.output)
+
+    def _verify_repository_existence(self):
+        self.run_git_cmd(['status'])
