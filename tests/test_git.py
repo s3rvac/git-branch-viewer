@@ -5,13 +5,39 @@
 # License: BSD, see LICENSE for more details
 #
 
+import datetime
 import subprocess
 import unittest
 from unittest import mock
 
+from viewer.git import Commit
 from viewer.git import Git
 from viewer.git import GitBinaryNotFoundError
 from viewer.git import GitCmdError
+
+
+class CommitTests(unittest.TestCase):
+    """Tests for the Commit class."""
+
+    def test_data_passed_into_constructor_are_accessible_after_creation(self):
+        hash = '1795de317458e658f8134ae76d668c8539043c28'
+        author = 'Petr Zemek'
+        email = 's3rvac@gmail.com'
+        date = datetime.date.today()
+        commit = Commit(hash, author, email, date)
+        self.assertEqual(commit.hash, hash)
+        self.assertEqual(commit.author, author)
+        self.assertEqual(commit.email, email)
+        self.assertEqual(commit.date, date)
+
+    def test_short_hash_returns_correct_result(self):
+        hash = '1795de317458e658f8134ae76d668c8539043c28'
+        author = 'Petr Zemek'
+        email = 's3rvac@gmail.com'
+        date = datetime.date.today()
+        commit = Commit(hash, author, email, date)
+        self.assertEqual(commit.short_hash(), hash[:8])
+        self.assertEqual(commit.short_hash(10), hash[:10])
 
 
 class GitTests(unittest.TestCase):

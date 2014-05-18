@@ -13,6 +13,28 @@ import subprocess
 from .utils import chdir
 
 
+class Commit:
+    """A representation of a git commit."""
+
+    def __init__(self, hash, author, email, date):
+        """Creates a commit with the given data.
+
+         - hash: a 40 character-long identifier of the commit (string)
+         - author: author of the commit (string)
+         - email: email of the author (string)
+         - date: date the commit was authored (a date object)
+        """
+        self.hash = hash
+        self.author = author
+        self.email = email
+        self.date = date
+
+    def short_hash(self, length=8):
+        """Returns a shorter version of the hash."""
+        return self.hash[:length]
+
+
+
 class BaseGitError(Exception):
     """A base class for all exception raised by the Git class."""
     pass
