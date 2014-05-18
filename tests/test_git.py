@@ -5,10 +5,10 @@
 # License: BSD, see LICENSE for more details
 #
 
-import datetime
 import random
 import subprocess
 import unittest
+from datetime import datetime
 from unittest import mock
 
 from viewer.git import Branch
@@ -20,7 +20,7 @@ from viewer.git import GitCmdError
 
 def get_curr_date():
     """Returns the current date."""
-    return datetime.date.today()
+    return datetime.now()
 
 
 def get_rand_hash(characters=Commit.VALID_HASH_CHARACTERS):
