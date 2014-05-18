@@ -75,6 +75,55 @@ class CommitCreateTests(unittest.TestCase):
                 'PZ', 'pz@pz.net', get_curr_date())
 
 
+class CommitComparisonTests(unittest.TestCase):
+    """Tests for commit comparison."""
+
+    def test_two_identical_commits_are_equal(self):
+        commit = Commit(get_rand_hash(), 'PZ', 'pz@pz.net', get_curr_date())
+        self.assertEqual(commit, commit)
+
+    def test_two_commits_with_equal_data_are_equal(self):
+        hash = get_rand_hash()
+        author = 'PZ'
+        email = 'pz@pz.net'
+        date = get_curr_date()
+        commit1 = Commit(hash, author, email, date)
+        commit2 = Commit(hash, author, email, date)
+        self.assertEqual(commit1, commit2)
+
+    def test_two_commits_with_different_hash_are_not_equal(self):
+        author = 'PZ'
+        email = 'pz@pz.net'
+        date = get_curr_date()
+        commit1 = Commit(get_rand_hash(), author, email, date)
+        commit2 = Commit(get_rand_hash(), author, email, date)
+        self.assertNotEqual(commit1, commit2)
+
+    def test_two_commits_with_different_author_are_not_equal(self):
+        hash = get_rand_hash()
+        email = 'pz@pz.net'
+        date = get_curr_date()
+        commit1 = Commit(hash, 'Petr Zemek', email, date)
+        commit2 = Commit(hash, 'PZ', email, date)
+        self.assertNotEqual(commit1, commit2)
+
+    def test_two_commits_with_different_email_are_not_equal(self):
+        hash = get_rand_hash()
+        author = 'PZ'
+        date = get_curr_date()
+        commit1 = Commit(hash, author, 'pz@pz.net', date)
+        commit2 = Commit(hash, author, 's3rvac@gmail.com', date)
+        self.assertNotEqual(commit1, commit2)
+
+    def test_two_commits_with_different_date_are_not_equal(self):
+        hash = get_rand_hash()
+        author = 'PZ'
+        email = 'pz@pz.net'
+        commit1 = Commit(hash, author, email, datetime(2007, 12, 11, 5, 43, 14))
+        commit2 = Commit(hash, author, email, datetime(2014, 5, 18, 10, 27, 53))
+        self.assertNotEqual(commit1, commit2)
+
+
 def get_new_commit(hash=None, author=None, email=None, date=None):
     """Returns a new commit, possibly based on the given data (if not None)."""
     hash = hash or get_rand_hash()

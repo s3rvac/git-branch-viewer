@@ -43,6 +43,15 @@ class Commit:
         """Returns a shorter version of the hash."""
         return self.hash[:length]
 
+    def __eq__(self, other):
+        return (self.hash == other.hash and
+                self.author == other.author and
+                self.email == other.email and
+                self.date == other.date)
+
+    def __ne__(self, other):
+        return not self == other
+
     def _normalize_hash(self):
         self.hash = self.hash.lower()
 
