@@ -23,8 +23,14 @@ class Commit:
          - author: author of the commit (string)
          - email: email of the author (string)
          - date: date the commit was authored (a date object)
+
+        When the hash has invalid length, ValueError is raised.
         """
         self.hash = hash
+        if len(hash) != 40:
+            raise ValueError(
+                "hash '{}' has invalid length {}".format(hash, len(hash)))
+
         self.author = author
         self.email = email
         self.date = date

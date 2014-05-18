@@ -38,6 +38,14 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(self.commit.short_hash(), self.hash[:8])
         self.assertEqual(self.commit.short_hash(10), self.hash[:10])
 
+    def test_value_error_is_raised_when_hash_has_invalid_length(self):
+        with self.assertRaises(ValueError):
+            Commit('', 'PZ', 'pz@pz.net', datetime.date.today())
+        with self.assertRaises(ValueError):
+            Commit('abcdef', 'PZ', 'pz@pz.net', datetime.date.today())
+        with self.assertRaises(ValueError):
+            Commit('a'*41, 'PZ', 'pz@pz.net', datetime.date.today())
+
 
 def get_new_commit(hash=None, author=None, email=None, date=None):
     """Returns a new commit, possibly based on the given data (if not None)."""
