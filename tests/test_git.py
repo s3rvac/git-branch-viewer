@@ -18,6 +18,11 @@ from viewer.git import GitBinaryNotFoundError
 from viewer.git import GitCmdError
 
 
+def get_curr_date():
+    """Returns the current date."""
+    return datetime.date.today()
+
+
 def get_rand_hash(characters=Commit.VALID_HASH_CHARACTERS):
     """Returns a new, random hash from the given characters"""
     return ''.join(random.choice(
@@ -31,7 +36,7 @@ class CommitTests(unittest.TestCase):
         self.hash = get_rand_hash()
         self.author = 'Petr Zemek'
         self.email = 's3rvac@gmail.com'
-        self.date = datetime.date.today()
+        self.date = get_curr_date()
         self.commit = Commit(self.hash, self.author, self.email, self.date)
 
     def test_valid_hash_length_has_proper_value(self):
@@ -52,22 +57,22 @@ class CommitTests(unittest.TestCase):
 
     def test_hash_is_properly_normalized(self):
         hash = get_rand_hash('ABCDEF')
-        commit = Commit(hash, 'PZ', 'pz@pz.net', datetime.date.today())
+        commit = Commit(hash, 'PZ', 'pz@pz.net', get_curr_date())
         self.assertEqual(self.commit.hash, self.hash)
 
     def test_value_error_is_raised_when_hash_has_invalid_length(self):
         with self.assertRaises(ValueError):
-            Commit('', 'PZ', 'pz@pz.net', datetime.date.today())
+            Commit('', 'PZ', 'pz@pz.net', get_curr_date())
         with self.assertRaises(ValueError):
-            Commit('abcdef', 'PZ', 'pz@pz.net', datetime.date.today())
+            Commit('abcdef', 'PZ', 'pz@pz.net', get_curr_date())
         with self.assertRaises(ValueError):
             Commit('a' * (Commit.VALID_HASH_LENGTH + 1),
-                'PZ', 'pz@pz.net', datetime.date.today())
+                'PZ', 'pz@pz.net', get_curr_date())
 
     def test_value_error_is_raised_when_hash_has_invalid_characters(self):
         with self.assertRaises(ValueError):
             Commit((Commit.VALID_HASH_LENGTH - 1) * 'a' + 'g',
-                'PZ', 'pz@pz.net', datetime.date.today())
+                'PZ', 'pz@pz.net', get_curr_date())
 
 
 def get_new_commit(hash=None, author=None, email=None, date=None):
@@ -75,7 +80,7 @@ def get_new_commit(hash=None, author=None, email=None, date=None):
     hash = hash or get_rand_hash()
     author = author or 'Petr Zemek'
     email = email or 's3rvac@gmail.com'
-    date = datetime.date.today()
+    date = get_curr_date()
     return Commit(hash, author, email, date)
 
 
