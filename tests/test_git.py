@@ -29,8 +29,8 @@ def get_rand_hash(characters=Commit.VALID_HASH_CHARACTERS):
         list(characters)) for _ in range(Commit.VALID_HASH_LENGTH))
 
 
-class CommitTests(unittest.TestCase):
-    """Tests for the Commit class."""
+class CommitCreateTests(unittest.TestCase):
+    """Tests for Commit.__init__()."""
 
     def setUp(self):
         self.hash = get_rand_hash()
