@@ -15,12 +15,14 @@ from .utils import chdir
 
 class Commit:
     """A representation of a git commit."""
+    VALID_HASH_LENGTH = 40
+    VALID_HASH_CHARACTERS = set('0123456789abcdef')
 
     def __init__(self, hash, author, email, date):
         """Creates a commit with the given data.
 
-         - hash: a 40 character-long identifier of the commit (string
-                 containing hexadecimal digits)
+         - hash: identifier of the commit (string of VALID_HASH_LENGTH
+                 containing only VALID_HASH_CHARACTERS)
          - author: author of the commit (string)
          - email: email of the author (string)
          - date: date the commit was authored (a date object)
@@ -44,17 +46,17 @@ class Commit:
         self._validate_hash_characters()
 
     def _validate_hash_length(self):
-        if len(self.hash) != 40:
+        if len(self.hash) != self.VALID_HASH_LENGTH:
             raise ValueError(
-                "hash '{}' has invalid length {}".format(
-                    self.hash, len(self.hash)))
+                "hash '{}' has invalid length {} (expected {})".format(
+                    self.hash, len(self.hash), self.VALID_HASH_LENGTH))
 
     def _validate_hash_characters(self):
         hash_characters = set(self.hash)
-        invalid_characters = hash_characters - set('0123456789abcdef')
+        invalid_characters = hash_characters - self.VALID_HASH_CHARACTERS
         if invalid_characters:
             raise ValueError(
-                "hash '{}' contains invalid character(s) '{}'".format(
+                "hash '{}' contains invalid character(s): '{}'".format(
                     self.hash, ''.join(invalid_characters)))
 
 

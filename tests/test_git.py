@@ -28,6 +28,12 @@ class CommitTests(unittest.TestCase):
         self.date = datetime.date.today()
         self.commit = Commit(self.hash, self.author, self.email, self.date)
 
+    def test_valid_hash_length_has_proper_value(self):
+        self.assertEqual(Commit.VALID_HASH_LENGTH, 40)
+
+    def test_valid_hash_characters_has_proper_value(self):
+        self.assertEqual(Commit.VALID_HASH_CHARACTERS, set('abcdef0123456789'))
+
     def test_data_passed_into_constructor_are_accessible_after_creation(self):
         self.assertEqual(self.commit.hash, self.hash)
         self.assertEqual(self.commit.author, self.author)
@@ -44,17 +50,21 @@ class CommitTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             Commit('abcdef', 'PZ', 'pz@pz.net', datetime.date.today())
         with self.assertRaises(ValueError):
-            Commit('a'*41, 'PZ', 'pz@pz.net', datetime.date.today())
+            Commit('a' * (Commit.VALID_HASH_LENGTH + 1),
+                'PZ', 'pz@pz.net', datetime.date.today())
 
     def test_value_error_is_raised_when_hash_has_invalid_characters(self):
         with self.assertRaises(ValueError):
-            Commit(39*'a' + 'g', 'PZ', 'pz@pz.net', datetime.date.today())
+            Commit((Commit.VALID_HASH_LENGTH - 1) * 'a' + 'g',
+                'PZ', 'pz@pz.net', datetime.date.today())
 
 
 def get_new_commit(hash=None, author=None, email=None, date=None):
     """Returns a new commit, possibly based on the given data (if not None)."""
     def get_rand_hash():
-        return ''.join(random.choice('0123456789abcdef') for _ in range(40))
+        return ''.join(random.choice(
+            list(Commit.VALID_HASH_CHARACTERS)) for _ in range(
+                Commit.VALID_HASH_LENGTH))
 
     hash = hash or get_rand_hash()
     author = author or 'Petr Zemek'
