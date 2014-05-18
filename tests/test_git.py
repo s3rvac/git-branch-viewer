@@ -18,11 +18,17 @@ from viewer.git import GitBinaryNotFoundError
 from viewer.git import GitCmdError
 
 
+def get_rand_hash(characters=Commit.VALID_HASH_CHARACTERS):
+    """Returns a new, random hash from the given characters"""
+    return ''.join(random.choice(
+        list(characters)) for _ in range(Commit.VALID_HASH_LENGTH))
+
+
 class CommitTests(unittest.TestCase):
     """Tests for the Commit class."""
 
     def setUp(self):
-        self.hash = '1795de317458e658f8134ae76d668c8539043c28'
+        self.hash = get_rand_hash()
         self.author = 'Petr Zemek'
         self.email = 's3rvac@gmail.com'
         self.date = datetime.date.today()
@@ -61,11 +67,6 @@ class CommitTests(unittest.TestCase):
 
 def get_new_commit(hash=None, author=None, email=None, date=None):
     """Returns a new commit, possibly based on the given data (if not None)."""
-    def get_rand_hash():
-        return ''.join(random.choice(
-            list(Commit.VALID_HASH_CHARACTERS)) for _ in range(
-                Commit.VALID_HASH_LENGTH))
-
     hash = hash or get_rand_hash()
     author = author or 'Petr Zemek'
     email = email or 's3rvac@gmail.com'
