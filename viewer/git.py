@@ -29,14 +29,24 @@ class GitBinaryNotFoundError(GitCmdError):
 
 
 class Git:
-    """Interface to a git repository."""
+    """Interface to a git repository.
+
+    The methods in this class may raise the following exceptions:
+
+     - FileNotFoundError: If the repository path path does not exist or cannot be entered.
+
+     - GitBinaryNotFoundError: If the git binary (i.e. git) is not found.
+
+     - GitCmdError: If there is an error when running a git command.
+    """
 
     def __init__(self, path):
         """Creates an interface to a git repository in the given path.
 
         The path is then accessible through the path attribute.
 
-        See run_git_cmd() for the list of exceptions that may be raised.
+        See the class description for a list of exceptions that this method may
+        raise.
         """
         self.path = path
         self._verify_repository_existence()
@@ -47,12 +57,8 @@ class Git:
 
         args has to be a sequence of parameters passed to git.
 
-        If the path does not exist or cannot be entered, FileNotFoundError is
-        raised.
-
-        If the git command is not found, GitBinaryNotFoundError is raised.
-
-        If there is an error when running the command, GitCmdError is raised.
+        See the class description for a list of exceptions that this method may
+        raise.
         """
         with chdir(self.path):
             try:
