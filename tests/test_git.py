@@ -10,8 +10,8 @@ import unittest
 from unittest import mock
 
 from viewer.git import Git
-from viewer.git import GitCmdError
 from viewer.git import GitBinaryNotFoundError
+from viewer.git import GitCmdError
 
 
 class GitTests(unittest.TestCase):
