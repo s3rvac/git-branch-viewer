@@ -118,7 +118,8 @@ class Git:
 
     The methods in this class may raise the following exceptions:
 
-     - FileNotFoundError: If the repository path path does not exist or cannot be entered.
+     - FileNotFoundError: If the repository path path does not exist or cannot
+                          be entered.
 
      - GitBinaryNotFoundError: If the git binary (i.e. git) is not found.
 
