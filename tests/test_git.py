@@ -58,7 +58,7 @@ class CommitCreateTests(unittest.TestCase):
     def test_hash_is_properly_normalized(self):
         hash = get_rand_hash('ABCDEF')
         commit = Commit(hash, 'PZ', 'pz@pz.net', get_curr_date())
-        self.assertEqual(self.commit.hash, self.hash)
+        self.assertEqual(commit.hash, hash.lower())
 
     def test_value_error_is_raised_when_hash_has_invalid_length(self):
         with self.assertRaises(ValueError):
