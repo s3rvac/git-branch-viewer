@@ -46,6 +46,10 @@ class CommitTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             Commit('a'*41, 'PZ', 'pz@pz.net', datetime.date.today())
 
+    def test_value_error_is_raised_when_hash_has_invalid_characters(self):
+        with self.assertRaises(ValueError):
+            Commit(39*'a' + 'g', 'PZ', 'pz@pz.net', datetime.date.today())
+
 
 def get_new_commit(hash=None, author=None, email=None, date=None):
     """Returns a new commit, possibly based on the given data (if not None)."""

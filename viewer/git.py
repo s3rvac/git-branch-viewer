@@ -19,25 +19,43 @@ class Commit:
     def __init__(self, hash, author, email, date):
         """Creates a commit with the given data.
 
-         - hash: a 40 character-long identifier of the commit (string)
+         - hash: a 40 character-long identifier of the commit (string
+                 containing hexadecimal digits)
          - author: author of the commit (string)
          - email: email of the author (string)
          - date: date the commit was authored (a date object)
 
-        When the hash has invalid length, ValueError is raised.
+        When the hash has invalid length or contains invalid characters,
+        ValueError is raised.
         """
         self.hash = hash
-        if len(hash) != 40:
-            raise ValueError(
-                "hash '{}' has invalid length {}".format(hash, len(hash)))
-
         self.author = author
         self.email = email
         self.date = date
 
+        self._validate_hash()
+
     def short_hash(self, length=8):
         """Returns a shorter version of the hash."""
         return self.hash[:length]
+
+    def _validate_hash(self):
+        self._validate_hash_length()
+        self._validate_hash_characters()
+
+    def _validate_hash_length(self):
+        if len(self.hash) != 40:
+            raise ValueError(
+                "hash '{}' has invalid length {}".format(
+                    self.hash, len(self.hash)))
+
+    def _validate_hash_characters(self):
+        hash_characters = set(self.hash)
+        invalid_characters = hash_characters - set('0123456789abcdef')
+        if invalid_characters:
+            raise ValueError(
+                "hash '{}' contains invalid character(s) '{}'".format(
+                    self.hash, ''.join(invalid_characters)))
 
 
 class Branch:
