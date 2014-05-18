@@ -34,6 +34,21 @@ class Commit:
         return self.hash[:length]
 
 
+class Branch:
+    """A representation of a git branch."""
+
+    def __init__(self, name, commit, unmerged_commits):
+        """Constructs a branch with the given data.
+
+         - name: name of the branch (string)
+         - commit: current commit in the branch (a Commit object)
+         - unmerged_commits: commits that have not been merged to the master
+                             branch (a list of Commit objects)
+        """
+        self.name = name
+        self.commit = commit
+        self.unmerged_commits = unmerged_commits
+
 
 class BaseGitError(Exception):
     """A base class for all exception raised by the Git class."""

@@ -6,10 +6,12 @@
 #
 
 import datetime
+import random
 import subprocess
 import unittest
 from unittest import mock
 
+from viewer.git import Branch
 from viewer.git import Commit
 from viewer.git import Git
 from viewer.git import GitBinaryNotFoundError
@@ -38,6 +40,31 @@ class CommitTests(unittest.TestCase):
         commit = Commit(hash, author, email, date)
         self.assertEqual(commit.short_hash(), hash[:8])
         self.assertEqual(commit.short_hash(10), hash[:10])
+
+
+def get_new_commit(hash=None, author=None, email=None, date=None):
+    """Returns a new commit, possibly based on the given data (if not None)."""
+    def get_rand_hash():
+        return ''.join(random.choice('0123456789abcdef') for _ in range(40))
+
+    hash = hash or get_rand_hash()
+    author = author or 'Petr Zemek'
+    email = email or 's3rvac@gmail.com'
+    date = datetime.date.today()
+    return Commit(hash, author, email, date)
+
+
+class BranchTests(unittest.TestCase):
+    """Tests for the Branch class."""
+
+    def test_data_passed_into_constructor_are_accessible_after_creation(self):
+        name = 'remotes/origin/test'
+        commit = get_new_commit()
+        unmerged_commits = [get_new_commit() for _ in range(5)]
+        branch = Branch(name, commit, unmerged_commits)
+        self.assertEqual(branch.name, name)
+        self.assertEqual(branch.commit, commit)
+        self.assertEqual(branch.unmerged_commits, unmerged_commits)
 
 
 class GitTests(unittest.TestCase):
