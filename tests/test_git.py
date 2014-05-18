@@ -119,8 +119,10 @@ class CommitComparisonTests(unittest.TestCase):
         hash = get_rand_hash()
         author = 'PZ'
         email = 'pz@pz.net'
-        commit1 = Commit(hash, author, email, datetime.datetime(2007, 12, 11, 5, 43, 14))
-        commit2 = Commit(hash, author, email, datetime.datetime(2014, 5, 18, 10, 27, 53))
+        commit1 = Commit(hash, author, email,
+            datetime.datetime(2007, 12, 11, 5, 43, 14))
+        commit2 = Commit(hash, author, email,
+            datetime.datetime(2014, 5, 18, 10, 27, 53))
         self.assertNotEqual(commit1, commit2)
 
 
