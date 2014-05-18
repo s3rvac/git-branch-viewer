@@ -133,6 +133,16 @@ def get_new_commit(hash=None, author=None, email=None, date=None):
     return Commit(hash, author, email, date)
 
 
+class CommitReprTests(unittest.TestCase):
+    """Tests for Commit.__repr__()."""
+
+    def test_repr_works_correctly(self):
+        commit = get_new_commit()
+        commit_repr = repr(commit)
+        self.assertIsInstance(commit_repr, str)
+        self.assertEqual(eval(commit_repr), commit)
+
+
 class BranchTests(unittest.TestCase):
     """Tests for the Branch class."""
 

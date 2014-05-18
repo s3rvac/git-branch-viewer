@@ -52,6 +52,14 @@ class Commit:
     def __ne__(self, other):
         return not self == other
 
+    def __repr__(self):
+        return '{}({!r}, {!r}, {!r}, {!r})'.format(
+            self.__class__.__name__,
+            self.hash,
+            self.author,
+            self.email,
+            self.date)
+
     def _normalize_hash(self):
         self.hash = self.hash.lower()
 
