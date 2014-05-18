@@ -21,25 +21,22 @@ from viewer.git import GitCmdError
 class CommitTests(unittest.TestCase):
     """Tests for the Commit class."""
 
+    def setUp(self):
+        self.hash = '1795de317458e658f8134ae76d668c8539043c28'
+        self.author = 'Petr Zemek'
+        self.email = 's3rvac@gmail.com'
+        self.date = datetime.date.today()
+        self.commit = Commit(self.hash, self.author, self.email, self.date)
+
     def test_data_passed_into_constructor_are_accessible_after_creation(self):
-        hash = '1795de317458e658f8134ae76d668c8539043c28'
-        author = 'Petr Zemek'
-        email = 's3rvac@gmail.com'
-        date = datetime.date.today()
-        commit = Commit(hash, author, email, date)
-        self.assertEqual(commit.hash, hash)
-        self.assertEqual(commit.author, author)
-        self.assertEqual(commit.email, email)
-        self.assertEqual(commit.date, date)
+        self.assertEqual(self.commit.hash, self.hash)
+        self.assertEqual(self.commit.author, self.author)
+        self.assertEqual(self.commit.email, self.email)
+        self.assertEqual(self.commit.date, self.date)
 
     def test_short_hash_returns_correct_result(self):
-        hash = '1795de317458e658f8134ae76d668c8539043c28'
-        author = 'Petr Zemek'
-        email = 's3rvac@gmail.com'
-        date = datetime.date.today()
-        commit = Commit(hash, author, email, date)
-        self.assertEqual(commit.short_hash(), hash[:8])
-        self.assertEqual(commit.short_hash(10), hash[:10])
+        self.assertEqual(self.commit.short_hash(), self.hash[:8])
+        self.assertEqual(self.commit.short_hash(10), self.hash[:10])
 
 
 def get_new_commit(hash=None, author=None, email=None, date=None):
