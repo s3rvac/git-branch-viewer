@@ -50,6 +50,11 @@ class CommitTests(unittest.TestCase):
         self.assertEqual(self.commit.short_hash(), self.hash[:8])
         self.assertEqual(self.commit.short_hash(10), self.hash[:10])
 
+    def test_hash_is_properly_normalized(self):
+        hash = get_rand_hash('ABCDEF')
+        commit = Commit(hash, 'PZ', 'pz@pz.net', datetime.date.today())
+        self.assertEqual(self.commit.hash, self.hash)
+
     def test_value_error_is_raised_when_hash_has_invalid_length(self):
         with self.assertRaises(ValueError):
             Commit('', 'PZ', 'pz@pz.net', datetime.date.today())

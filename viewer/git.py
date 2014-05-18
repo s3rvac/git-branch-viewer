@@ -27,19 +27,24 @@ class Commit:
          - email: email of the author (string)
          - date: date the commit was authored (a date object)
 
-        When the hash has invalid length or contains invalid characters,
-        ValueError is raised.
+        The hash is normalized so that it contains only lowercase characters.
+        If the hash has invalid length or contains invalid characters after the
+        normalization, ValueError is raised.
         """
         self.hash = hash
         self.author = author
         self.email = email
         self.date = date
 
+        self._normalize_hash()
         self._validate_hash()
 
     def short_hash(self, length=8):
         """Returns a shorter version of the hash."""
         return self.hash[:length]
+
+    def _normalize_hash(self):
+        self.hash = self.hash.lower()
 
     def _validate_hash(self):
         self._validate_hash_length()
