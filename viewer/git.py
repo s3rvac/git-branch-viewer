@@ -139,30 +139,30 @@ class Git:
 
     The methods in this class may raise the following exceptions:
 
-     - FileNotFoundError: If the repository path path does not exist or cannot
-                          be entered.
-
-     - GitBinaryNotFoundError: If the git binary (i.e. git) is not found.
-
-     - GitCmdError: If there is an error when running a git command.
+    :raises FileNotFoundError: If the repository path path does not exist or
+                               cannot be entered.
+    :raises GitBinaryNotFoundError: If the git binary (i.e. git) is not found.
+    :raises GitCmdError: If there is an error when running a git command.
     """
 
     def __init__(self, path):
-        """Creates an interface to a git repository in the given path.
+        """Creates an interface to a git repository in the given `path`.
 
-        The path is then accessible through the path attribute.
+        :param str path: A path to the repository.
 
         See the class description for a list of exceptions that this method may
         raise.
         """
+        #: Path to the repository.
         self.path = path
+
         self._verify_repository_existence()
 
     def run_git_cmd(self, args):
         """Runs the git command with the given arguments in the repository and
         returns the output.
 
-        args has to be a sequence of parameters passed to git.
+        :param seq args: A sequence of parameters passed to git.
 
         See the class description for a list of exceptions that this method may
         raise.
