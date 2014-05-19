@@ -107,13 +107,16 @@ class Branch:
     def __init__(self, name, commit, unmerged_commits):
         """Constructs a branch with the given data.
 
-         - name: name of the branch (string)
-         - commit: current commit in the branch (a Commit object)
-         - unmerged_commits: commits that have not been merged to the master
-                             branch (a list of Commit objects)
+        :param str name: Name of the branch.
+        :param Commit commit: Current commit in the branch.
+        :param seq unmerged_commits: Commits that have not been merged to the
+                                     master branch.
         """
+        #: Name of the branch.
         self.name = name
+        #: Current commit in the branch.
         self.commit = commit
+        #: Commits that have not been merged to the master branch.
         self.unmerged_commits = unmerged_commits
 
 
