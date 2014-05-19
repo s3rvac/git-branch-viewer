@@ -15,7 +15,13 @@ from .utils import chdir
 
 class Commit:
     """A representation of a git commit."""
+
+    #: The length of a valid hash. Hashes of a different length are not
+    #: permitted.
     VALID_HASH_LENGTH = 40
+
+    #: The set of valid hash characters '0123456789abcdef'. Other characters
+    #: are not permitted in a hash.
     VALID_HASH_CHARACTERS = set('0123456789abcdef')
 
     def __init__(self, hash, author, email, date):
