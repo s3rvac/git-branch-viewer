@@ -35,9 +35,8 @@ class Commit:
         The hash is normalized so that it contains only lowercase characters.
 
         :raises ValueError: If the hash's length differs from
-                            :py:attr:`VALID_HASH_LENGTH` or if the hash
-                            contains characters out of
-                            :py:attr:`VALID_HASH_CHARACTERS`.
+                            :attr:`VALID_HASH_LENGTH` or if the hash contains
+                            characters out of :attr:`VALID_HASH_CHARACTERS`.
         """
         #: Identifier of the commit.
         self.hash = hash
