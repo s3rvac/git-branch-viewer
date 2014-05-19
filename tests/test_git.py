@@ -74,6 +74,10 @@ class CommitCreateAndAccessTests(unittest.TestCase):
             Commit((Commit.VALID_HASH_LENGTH - 1) * 'a' + 'g',
                 'PZ', 'pz@pz.net', get_curr_date())
 
+    def test_hash_is_validated_when_set_after_creation(self):
+        with self.assertRaises(ValueError):
+            self.commit.hash = ''
+
 
 class CommitComparisonTests(unittest.TestCase):
     """Tests for commit comparison."""

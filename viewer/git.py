@@ -36,8 +36,15 @@ class Commit:
         self.email = email
         self.date = date
 
-        self._normalize_hash()
-        self._validate_hash()
+    @property
+    def hash(self):
+        return self._hash
+
+    @hash.setter
+    def hash(self, new_hash):
+        new_hash = self._normalize_hash(new_hash)
+        self._validate_hash(new_hash)
+        self._hash = new_hash
 
     def short_hash(self, length=8):
         """Returns a shorter version of the hash."""
@@ -60,26 +67,26 @@ class Commit:
             self.email,
             self.date)
 
-    def _normalize_hash(self):
-        self.hash = self.hash.lower()
+    def _normalize_hash(self, hash):
+        return hash.lower()
 
-    def _validate_hash(self):
-        self._validate_hash_length()
-        self._validate_hash_characters()
+    def _validate_hash(self, hash):
+        self._validate_hash_length(hash)
+        self._validate_hash_characters(hash)
 
-    def _validate_hash_length(self):
-        if len(self.hash) != self.VALID_HASH_LENGTH:
+    def _validate_hash_length(self, hash):
+        if len(hash) != self.VALID_HASH_LENGTH:
             raise ValueError(
                 "hash '{}' has invalid length {} (expected {})".format(
-                    self.hash, len(self.hash), self.VALID_HASH_LENGTH))
+                    hash, len(hash), self.VALID_HASH_LENGTH))
 
-    def _validate_hash_characters(self):
-        hash_characters = set(self.hash)
+    def _validate_hash_characters(self, hash):
+        hash_characters = set(hash)
         invalid_characters = hash_characters - self.VALID_HASH_CHARACTERS
         if invalid_characters:
             raise ValueError(
                 "hash '{}' contains invalid character(s): '{}'".format(
-                    self.hash, ''.join(invalid_characters)))
+                    hash, ''.join(invalid_characters)))
 
 
 class Branch:
