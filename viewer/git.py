@@ -27,19 +27,25 @@ class Commit:
     def __init__(self, hash, author, email, date):
         """Creates a commit with the given data.
 
-         - hash: identifier of the commit (string of VALID_HASH_LENGTH
-                 containing only VALID_HASH_CHARACTERS)
-         - author: author of the commit (string)
-         - email: email of the author (string)
-         - date: date the commit was authored (a date object)
+        :param str hash: Identifier of the commit.
+        :param str author: Author of the commit.
+        :param str email: Email of the author.
+        :param date date: Date the commit was authored.
 
         The hash is normalized so that it contains only lowercase characters.
-        If the hash has invalid length or contains invalid characters after the
-        normalization, ValueError is raised.
+
+        :raises ValueError: If the hash's length differs from
+                            :py:attr:`VALID_HASH_LENGTH` or if the hash
+                            contains characters out of
+                            :py:attr:`VALID_HASH_CHARACTERS`.
         """
+        #: Identifier of the commit.
         self.hash = hash
+        #: Author of the commit.
         self.author = author
+        #: Email of the author.
         self.email = email
+        #: Date the commit was authored.
         self.date = date
 
     @property
