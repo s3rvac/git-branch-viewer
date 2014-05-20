@@ -103,20 +103,19 @@ class Commit:
 class Branch:
     """A representation of a git branch."""
 
-    def __init__(self, name, commit, unmerged_commits):
+    def __init__(self, name, remote, commit):
         """Constructs a branch with the given data.
 
         :param str name: Name of the branch.
+        :param str remote: Name of the remote on which this branch is.
         :param Commit commit: Current commit in the branch.
-        :param seq unmerged_commits: Commits that have not been merged to the
-                                     master branch.
         """
         #: Name of the branch.
         self.name = name
+        #: Name of the remote on which this branch is.
+        self.remote = remote
         #: Current commit in the branch.
         self.commit = commit
-        #: Commits that have not been merged to the master branch.
-        self.unmerged_commits = unmerged_commits
 
 
 class BaseGitError(Exception):

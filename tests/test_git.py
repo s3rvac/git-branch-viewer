@@ -153,13 +153,13 @@ class BranchTests(unittest.TestCase):
     """Tests for the Branch class."""
 
     def test_data_passed_into_constructor_are_accessible_after_creation(self):
-        name = 'remotes/origin/test'
+        name = 'test'
+        remote = 'origin'
         commit = get_new_commit()
-        unmerged_commits = [get_new_commit() for _ in range(5)]
-        branch = Branch(name, commit, unmerged_commits)
+        branch = Branch(name, remote, commit)
         self.assertEqual(branch.name, name)
+        self.assertEqual(branch.remote, remote)
         self.assertEqual(branch.commit, commit)
-        self.assertEqual(branch.unmerged_commits, unmerged_commits)
 
 
 class GitTests(unittest.TestCase):
