@@ -213,7 +213,7 @@ class GitCreateTests(GitTests):
         self.mock_check_output.assert_called_once_with(['git', 'status'])
 
 
-class RunGitCmdTests(GitTests):
+class GitRunGitCmdTests(GitTests):
     """Tests for Git.run_git_cmd()."""
 
     def setUp(self):
