@@ -141,7 +141,8 @@ class Git:
 
     :raises FileNotFoundError: If the repository path path does not exist or
                                cannot be entered.
-    :raises GitBinaryNotFoundError: If the git binary (i.e. git) is not found.
+    :raises GitBinaryNotFoundError: If the git binary (i.e. ``git``) is not
+                                    found.
     :raises GitCmdError: If there is an error when running a git command.
     """
 
