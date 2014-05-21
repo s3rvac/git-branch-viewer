@@ -149,8 +149,8 @@ class CommitReprTests(unittest.TestCase):
         self.assertEqual(eval(commit_repr), commit)
 
 
-class BranchTests(unittest.TestCase):
-    """Tests for the Branch class."""
+class BranchCreateAndAccessTests(unittest.TestCase):
+    """Tests for Branch.__init__() and accessors."""
 
     def test_data_passed_into_constructor_are_accessible_after_creation(self):
         name = 'test'
