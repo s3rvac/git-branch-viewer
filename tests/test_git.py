@@ -197,6 +197,17 @@ class BranchComparisonTests(unittest.TestCase):
         self.assertNotEqual(branch1, branch2)
 
 
+class BranchReprTests(unittest.TestCase):
+    """Tests for Branch.__repr__()."""
+
+    def test_repr_works_correctly(self):
+        branch = Branch('featureX', 'origin',
+            Commit(get_rand_hash(), 'PZ', 'pz@pz.net', get_curr_date()))
+        branch_repr = repr(branch)
+        self.assertIsInstance(branch_repr, str)
+        self.assertEqual(eval(branch_repr), branch)
+
+
 class GitTests(unittest.TestCase):
     """A base class for all git tests."""
 

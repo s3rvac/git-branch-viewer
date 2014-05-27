@@ -128,6 +128,13 @@ class Branch:
     def __ne__(self, other):
         return not self == other
 
+    def __repr__(self):
+        return '{}({!r}, {!r}, {!r})'.format(
+            self.__class__.__name__,
+            self.name,
+            self.remote,
+            self.commit)
+
 
 class BaseGitError(Exception):
     """A base class for all exception raised by the Git class."""
