@@ -117,6 +117,17 @@ class Branch:
         #: Current commit in the branch.
         self.commit = commit
 
+    def __eq__(self, other):
+        print(self.name, other.name)
+        print(self.remote, other.remote)
+        print(self.commit, other.commit)
+        return (self.name == other.name and
+                self.remote == other.remote and
+                self.commit == other.commit)
+
+    def __ne__(self, other):
+        return not self == other
+
 
 class BaseGitError(Exception):
     """A base class for all exception raised by the Git class."""
