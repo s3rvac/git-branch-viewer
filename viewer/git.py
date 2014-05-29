@@ -147,7 +147,7 @@ class GitCmdError(BaseGitError):
 
 
 class GitBinaryNotFoundError(GitCmdError):
-    """An exception that is raised when the git binary was not found."""
+    """An exception that is raised when the git binary is not found."""
     pass
 
 
