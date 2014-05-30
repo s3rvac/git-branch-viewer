@@ -153,33 +153,33 @@ class BranchCreateAndAccessTests(unittest.TestCase):
     """Tests for Branch.__init__() and accessors."""
 
     def test_data_passed_into_constructor_are_accessible_after_creation(self):
-        name = 'test'
         remote = 'origin'
-        branch = Branch(name, remote)
-        self.assertEqual(branch.name, name)
+        name = 'test'
+        branch = Branch(remote, name)
         self.assertEqual(branch.remote, remote)
+        self.assertEqual(branch.name, name)
 
 
 class BranchComparisonTests(unittest.TestCase):
     """Tests for branch comparison."""
 
     def test_two_identical_branches_are_equal(self):
-        branch = Branch('featureX', 'origin')
+        branch = Branch('origin', 'featureX')
         self.assertEqual(branch, branch)
 
     def test_two_branches_with_equal_data_are_equal(self):
-        branch1 = Branch('featureX', 'origin')
-        branch2 = Branch('featureX', 'origin')
+        branch1 = Branch('origin', 'featureX')
+        branch2 = Branch('origin', 'featureX')
         self.assertEqual(branch1, branch2)
 
     def test_two_branches_with_different_name_are_not_equal(self):
-        branch1 = Branch('featureX', 'origin')
-        branch2 = Branch('my_branch', 'origin')
+        branch1 = Branch('origin', 'featureX')
+        branch2 = Branch('origin', 'my_branch')
         self.assertNotEqual(branch1, branch2)
 
     def test_two_branches_with_different_remote_are_not_equal(self):
-        branch1 = Branch('featureX', 'origin')
-        branch2 = Branch('featureX', 'other_location')
+        branch1 = Branch('origin', 'featureX')
+        branch2 = Branch('other_location', 'featureX')
         self.assertNotEqual(branch1, branch2)
 
 
@@ -187,7 +187,7 @@ class BranchReprTests(unittest.TestCase):
     """Tests for Branch.__repr__()."""
 
     def test_repr_works_correctly(self):
-        branch = Branch('featureX', 'origin')
+        branch = Branch('origin', 'featureX')
         branch_repr = repr(branch)
         self.assertIsInstance(branch_repr, str)
         self.assertEqual(eval(branch_repr), branch)
