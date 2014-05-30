@@ -155,45 +155,31 @@ class BranchCreateAndAccessTests(unittest.TestCase):
     def test_data_passed_into_constructor_are_accessible_after_creation(self):
         name = 'test'
         remote = 'origin'
-        commit = get_new_commit()
-        branch = Branch(name, remote, commit)
+        branch = Branch(name, remote)
         self.assertEqual(branch.name, name)
         self.assertEqual(branch.remote, remote)
-        self.assertEqual(branch.commit, commit)
 
 
 class BranchComparisonTests(unittest.TestCase):
     """Tests for branch comparison."""
 
-    def setUp(self):
-        self.commit = Commit(get_rand_hash(), 'PZ', 'pz@pz.net', get_curr_date())
-
     def test_two_identical_branches_are_equal(self):
-        branch = Branch('featureX', 'origin', self.commit)
+        branch = Branch('featureX', 'origin')
         self.assertEqual(branch, branch)
 
     def test_two_branches_with_equal_data_are_equal(self):
-        hash = get_rand_hash()
-        date = get_curr_date()
-        branch1 = Branch('featureX', 'origin', self.commit)
-        branch2 = Branch('featureX', 'origin', self.commit)
+        branch1 = Branch('featureX', 'origin')
+        branch2 = Branch('featureX', 'origin')
         self.assertEqual(branch1, branch2)
 
     def test_two_branches_with_different_name_are_not_equal(self):
-        branch1 = Branch('featureX', 'origin', self.commit)
-        branch2 = Branch('my_branch', 'origin', self.commit)
+        branch1 = Branch('featureX', 'origin')
+        branch2 = Branch('my_branch', 'origin')
         self.assertNotEqual(branch1, branch2)
 
     def test_two_branches_with_different_remote_are_not_equal(self):
-        branch1 = Branch('featureX', 'origin', self.commit)
-        branch2 = Branch('featureX', 'other_location', self.commit)
-        self.assertNotEqual(branch1, branch2)
-
-    def test_two_branches_with_different_commit_are_not_equal(self):
-        branch1 = Branch('featureX', 'origin',
-            Commit(get_rand_hash(), 'PZ', 'pz@pz.net', get_curr_date()))
-        branch2 = Branch('featureX', 'origin',
-            Commit(get_rand_hash(), 'John Doe', 'john@doe.au', get_curr_date()))
+        branch1 = Branch('featureX', 'origin')
+        branch2 = Branch('featureX', 'other_location')
         self.assertNotEqual(branch1, branch2)
 
 
@@ -201,8 +187,7 @@ class BranchReprTests(unittest.TestCase):
     """Tests for Branch.__repr__()."""
 
     def test_repr_works_correctly(self):
-        branch = Branch('featureX', 'origin',
-            Commit(get_rand_hash(), 'PZ', 'pz@pz.net', get_curr_date()))
+        branch = Branch('featureX', 'origin')
         branch_repr = repr(branch)
         self.assertIsInstance(branch_repr, str)
         self.assertEqual(eval(branch_repr), branch)

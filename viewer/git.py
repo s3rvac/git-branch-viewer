@@ -103,37 +103,31 @@ class Commit:
 class Branch:
     """A representation of a git branch."""
 
-    def __init__(self, name, remote, commit):
+    def __init__(self, name, remote):
         """Constructs a branch with the given data.
 
         :param str name: Name of the branch.
         :param str remote: Name of the remote on which this branch is.
-        :param Commit commit: Current commit in the branch.
         """
         #: Name of the branch.
         self.name = name
         #: Name of the remote on which this branch is.
         self.remote = remote
-        #: Current commit in the branch.
-        self.commit = commit
 
     def __eq__(self, other):
         print(self.name, other.name)
         print(self.remote, other.remote)
-        print(self.commit, other.commit)
         return (self.name == other.name and
-                self.remote == other.remote and
-                self.commit == other.commit)
+                self.remote == other.remote)
 
     def __ne__(self, other):
         return not self == other
 
     def __repr__(self):
-        return '{}({!r}, {!r}, {!r})'.format(
+        return '{}({!r}, {!r})'.format(
             self.__class__.__name__,
             self.name,
-            self.remote,
-            self.commit)
+            self.remote)
 
 
 class BaseGitError(Exception):
