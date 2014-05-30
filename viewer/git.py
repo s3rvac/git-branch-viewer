@@ -190,7 +190,7 @@ class Git:
             except subprocess.CalledProcessError as ex:
                 raise GitCmdError(ex.output)
 
-    def get_branches(self, remote):
+    def get_branches_on_remote(self, remote):
         """Returns all the branches on the given remote in a list."""
         ls_remote_output = self.run_git_cmd(['ls-remote', '--heads', remote])
         return self._get_branches_from_ls_remote_output(ls_remote_output, remote)

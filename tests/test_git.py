@@ -257,8 +257,8 @@ class GitRunGitCmdTests(GitTests):
         self.assertEqual(self.git.run_git_cmd(['status']), GIT_STATUS_OUTPUT)
 
 
-class GitGetBranchesTests(GitTests):
-    """Tests for Git.get_branches()."""
+class GitGetBranchesOnRemoteTests(GitTests):
+    """Tests for Git.get_branches_on_remote()."""
 
     def setUp(self):
         super().setUp()
@@ -266,13 +266,13 @@ class GitGetBranchesTests(GitTests):
 
     def test_calls_proper_command_to_get_branches_on_given_remote(self):
         remote = 'origin'
-        self.git.get_branches(remote)
+        self.git.get_branches_on_remote(remote)
         self.mock_check_output.assert_called_with(
             ['git', 'ls-remote', '--heads', remote])
 
     def test_returns_empty_list_when_there_are_no_branches(self):
         self.mock_check_output.return_value = ''
-        self.assertEqual(self.git.get_branches('origin'), [])
+        self.assertEqual(self.git.get_branches_on_remote('origin'), [])
 
     def test_returns_single_branch_when_there_is_single_branch(self):
         remote = 'origin'
@@ -283,7 +283,7 @@ class GitGetBranchesTests(GitTests):
         expected_branches = [
             Branch(remote, name)
         ]
-        self.assertEqual(self.git.get_branches(remote), expected_branches)
+        self.assertEqual(self.git.get_branches_on_remote(remote), expected_branches)
 
     def test_returns_two_branches_when_there_are_two_branches(self):
         remote = 'origin'
@@ -299,4 +299,4 @@ class GitGetBranchesTests(GitTests):
             Branch(remote, name1),
             Branch(remote, name2)
         ]
-        self.assertEqual(self.git.get_branches(remote), expected_branches)
+        self.assertEqual(self.git.get_branches_on_remote(remote), expected_branches)
