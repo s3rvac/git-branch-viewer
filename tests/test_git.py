@@ -255,3 +255,48 @@ class GitRunGitCmdTests(GitTests):
         GIT_STATUS_OUTPUT = 'The output from git status.'
         self.mock_check_output.return_value = GIT_STATUS_OUTPUT
         self.assertEqual(self.git.run_git_cmd(['status']), GIT_STATUS_OUTPUT)
+
+
+class GitGetBranchesTests(GitTests):
+    """Tests for Git.get_branches()."""
+
+    def setUp(self):
+        super().setUp()
+        self.git = Git('/path/to/existing/repository')
+
+    def test_calls_proper_command_to_get_branches_on_given_remote(self):
+        remote = 'origin'
+        self.git.get_branches(remote)
+        self.mock_check_output.assert_called_with(
+            ['git', 'ls-remote', '--heads', remote])
+
+    def test_returns_empty_list_when_there_are_no_branches(self):
+        self.mock_check_output.return_value = ''
+        self.assertEqual(self.git.get_branches('origin'), [])
+
+    def test_returns_single_branch_when_there_is_single_branch(self):
+        remote = 'origin'
+        hash = '1956e0f534d57e409508e821e03b5f6c317690fd'
+        name = 'master'
+        self.mock_check_output.return_value = '{} refs/heads/{}\n'.format(
+            hash, name)
+        expected_branches = [
+            Branch(remote, name)
+        ]
+        self.assertEqual(self.git.get_branches(remote), expected_branches)
+
+    def test_returns_two_branches_when_there_are_two_branches(self):
+        remote = 'origin'
+        hash1 = '1956e0f534d57e409508e821e03b5f6c317690fd'
+        name1 = 'master'
+        hash2 = '6b2a042d4d1b80ebda22e7c63cc8e830a0d77045'
+        name2 = 'featureX'
+        self.mock_check_output.return_value = """
+            {} refs/heads/{}
+            {} refs/heads/{}
+            """.format(hash1, name1, hash2, name2)
+        expected_branches = [
+            Branch(remote, name1),
+            Branch(remote, name2)
+        ]
+        self.assertEqual(self.git.get_branches(remote), expected_branches)

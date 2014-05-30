@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for more details
 """
 
+import re
 import subprocess
 
 from .utils import chdir
@@ -188,6 +189,30 @@ class Git:
                     "'git' is not installed or cannot be executed")
             except subprocess.CalledProcessError as ex:
                 raise GitCmdError(ex.output)
+
+    def get_branches(self, remote):
+        """Returns all the branches on the given remote in a list."""
+        ls_remote_output = self.run_git_cmd(['ls-remote', '--heads', remote])
+        return self._get_branches_from_ls_remote_output(ls_remote_output, remote)
+
+    def _get_branches_from_ls_remote_output(self, output, remote):
+        # The ls-remote output should be of the form
+        #
+        #   hash1        refs/heads/branch1_name
+        #   hash1        refs/heads/branch2_name
+        #   ...
+        #
+        branches = []
+        for line in output.split('\n'):
+            m = re.match(r"""
+                    \s*                     # Optional spaces at the beginning
+                    [a-fA-F0-9]+            # Hash
+                    \s+                     # Spaces
+                    refs/heads/(?P<name>.+) # Branch name
+                """, line, re.VERBOSE)
+            if m:
+                branches.append(Branch(remote, m.group('name')))
+        return branches
 
     def _verify_repository_existence(self):
         self.run_git_cmd(['status'])
