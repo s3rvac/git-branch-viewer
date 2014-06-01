@@ -66,22 +66,22 @@ class Commit:
 
     @property
     def hash(self):
-        """Returns the identifier of the commit."""
+        """Identifier of the commit."""
         return self._hash
 
     @property
     def author(self):
-        """Returns the author of the commit."""
+        """Author of the commit."""
         return self._author
 
     @property
     def email(self):
-        """Returns the email of the author of the commit."""
+        """Email of the author."""
         return self._email
 
     @property
     def date(self):
-        """Returns the date the commit was authored."""
+        """Date the commit was authored."""
         return self._date
 
     def short_hash(self, length=8):
@@ -145,17 +145,17 @@ class Branch:
 
     @property
     def repo(self):
-        """Returns the repository in which this branch is."""
+        """Git repository in which this branch is."""
         return self._repo
 
     @property
     def remote(self):
-        """Returns the name of the remote on which this branch is."""
+        """Name of the remote on which this branch is."""
         return self._remote
 
     @property
     def name(self):
-        """Returns the name of the branch."""
+        """Name of the branch."""
         return self._name
 
     def __eq__(self, other):
@@ -201,7 +201,7 @@ class Repo:
 
     @property
     def path(self):
-        """Returns the absolute path to the repository."""
+        """Absolute path to the repository."""
         return self._path
 
     def run_git_cmd(self, args):
