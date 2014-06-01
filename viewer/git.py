@@ -228,10 +228,18 @@ class Git:
         #   author PZ <pz@pz.net> 1401389467 +0200
         #   ...
         #
+        hash = self._get_commit_hash_from_show_output(show_output)
+        author, email, date = self._get_commit_details_from_show_output(
+            show_output)
+        return Commit(hash, author, email, date)
+
+    def _get_commit_hash_from_show_output(self, show_output):
         m = re.search(r"""
                 commit \s+ (?P<hash>[a-fA-F0-9]+)
             """, show_output, re.VERBOSE | re.MULTILINE)
-        hash = m.group('hash')
+        return m.group('hash')
+
+    def _get_commit_details_from_show_output(self, show_output):
         m = re.search(r"""
                 author \s+ (?P<author>.+)
                        \s+ <(?P<email>.+)>
@@ -242,7 +250,7 @@ class Git:
         author = m.group('author')
         email = m.group('email')
         date = datetime.datetime.fromtimestamp(int(m.group('date_ts')))
-        return Commit(hash, author, email, date)
+        return author, email, date
 
     def _verify_repository_existence(self):
         self.run_git_cmd(['status'])
