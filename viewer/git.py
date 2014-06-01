@@ -121,26 +121,32 @@ class Commit:
 class Branch:
     """A representation of a git branch."""
 
-    def __init__(self, remote, name):
+    def __init__(self, repo, remote, name):
         """Constructs a branch with the given data.
 
+        :param Repo repo: Git repository in which this branch is.
         :param str remote: Name of the remote on which this branch is.
         :param str name: Name of the branch.
         """
+        #: Git repository in which this branch is.
+        self.repo = repo
         #: Name of the remote on which this branch is.
         self.remote = remote
         #: Name of the branch.
         self.name = name
 
     def __eq__(self, other):
-        return (self.remote == other.remote and self.name == other.name)
+        return (self.repo == other.repo and
+            self.remote == other.remote and
+            self.name == other.name)
 
     def __ne__(self, other):
         return not self == other
 
     def __repr__(self):
-        return '{}({!r}, {!r})'.format(
+        return '{}({!r}, {!r}, {!r})'.format(
             self.__class__.__name__,
+            self.repo,
             self.remote,
             self.name)
 
@@ -237,7 +243,7 @@ class Repo:
                     $
                 """, line, re.VERBOSE)
             if m:
-                branches.append(Branch(remote, m.group('name')))
+                branches.append(Branch(self, remote, m.group('name')))
         return branches
 
     def _get_commit_from_git_show_with_args(self, *args):

@@ -152,13 +152,21 @@ class CommitReprTests(unittest.TestCase):
         self.assertEqual(eval(commit_repr), commit)
 
 
+def get_git_repo_mock(path='/path/to/existing/repository'):
+    """Returns a Mock object for a git repository."""
+    repo = mock.MagicMock(spec=Repo, path=path)
+    return repo
+
+
 class BranchCreateAndAccessTests(unittest.TestCase):
     """Tests for Branch.__init__() and accessors."""
 
     def test_data_passed_into_constructor_are_accessible_after_creation(self):
+        repo_mock = get_git_repo_mock()
         remote = 'origin'
         name = 'test'
-        branch = Branch(remote, name)
+        branch = Branch(repo_mock, remote, name)
+        self.assertEqual(branch.repo, repo_mock)
         self.assertEqual(branch.remote, remote)
         self.assertEqual(branch.name, name)
 
@@ -167,22 +175,32 @@ class BranchComparisonTests(unittest.TestCase):
     """Tests for branch comparison."""
 
     def test_two_identical_branches_are_equal(self):
-        branch = Branch('origin', 'featureX')
+        branch = Branch(get_git_repo_mock(), 'origin', 'featureX')
         self.assertEqual(branch, branch)
 
     def test_two_branches_with_equal_data_are_equal(self):
-        branch1 = Branch('origin', 'featureX')
-        branch2 = Branch('origin', 'featureX')
+        repo_mock = get_git_repo_mock()
+        branch1 = Branch(repo_mock, 'origin', 'featureX')
+        branch2 = Branch(repo_mock, 'origin', 'featureX')
         self.assertEqual(branch1, branch2)
 
-    def test_two_branches_with_different_name_are_not_equal(self):
-        branch1 = Branch('origin', 'featureX')
-        branch2 = Branch('origin', 'my_branch')
+    def test_two_branches_with_different_repo_are_not_equal(self):
+        repo1_mock = get_git_repo_mock('/path')
+        repo2_mock = get_git_repo_mock('/some/other/path')
+        branch1 = Branch(repo1_mock, 'origin', 'featureX')
+        branch2 = Branch(repo2_mock, 'other_location', 'featureX')
         self.assertNotEqual(branch1, branch2)
 
     def test_two_branches_with_different_remote_are_not_equal(self):
-        branch1 = Branch('origin', 'featureX')
-        branch2 = Branch('other_location', 'featureX')
+        repo_mock = get_git_repo_mock()
+        branch1 = Branch(repo_mock, 'origin', 'featureX')
+        branch2 = Branch(repo_mock, 'other_location', 'featureX')
+        self.assertNotEqual(branch1, branch2)
+
+    def test_two_branches_with_different_name_are_not_equal(self):
+        repo_mock = get_git_repo_mock()
+        branch1 = Branch(repo_mock, 'origin', 'featureX')
+        branch2 = Branch(repo_mock, 'origin', 'my_branch')
         self.assertNotEqual(branch1, branch2)
 
 
@@ -190,10 +208,11 @@ class BranchReprTests(unittest.TestCase):
     """Tests for Branch.__repr__()."""
 
     def test_repr_works_correctly(self):
-        branch = Branch('origin', 'featureX')
+        repo_mock = get_git_repo_mock()
+        branch = Branch(repo_mock, 'origin', 'featureX')
         branch_repr = repr(branch)
-        self.assertIsInstance(branch_repr, str)
-        self.assertEqual(eval(branch_repr), branch)
+        self.assertEqual(branch_repr, 'Branch({!r}, {!r}, {!r})'.format(
+            repo_mock, branch.remote, branch.name))
 
 
 class RepoTests(unittest.TestCase):
@@ -323,7 +342,7 @@ class RepoGetBranchesOnRemoteTests(RepoTests):
         self.mock_check_output.return_value = '{} refs/heads/{}\n'.format(
             hash, name)
         expected_branches = [
-            Branch(remote, name)
+            Branch(self.repo, remote, name)
         ]
         self.assertEqual(self.repo.get_branches_on_remote(remote), expected_branches)
 
@@ -338,8 +357,8 @@ class RepoGetBranchesOnRemoteTests(RepoTests):
             {} refs/heads/{}
             """.format(hash1, name1, hash2, name2)
         expected_branches = [
-            Branch(remote, name1),
-            Branch(remote, name2)
+            Branch(self.repo, remote, name1),
+            Branch(self.repo, remote, name2)
         ]
         self.assertEqual(self.repo.get_branches_on_remote(remote), expected_branches)
 
@@ -392,7 +411,7 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
 
     def setUp(self):
         super().setUp()
-        self.branch = Branch('origin', 'master')
+        self.branch = Branch(self.repo, 'origin', 'master')
 
     def test_calls_proper_subprocess_command(self):
         self.repo.get_commit_for_branch(self.branch)
