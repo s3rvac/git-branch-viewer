@@ -144,8 +144,8 @@ class Branch:
             self.name)
 
 
-class Git:
-    """Interface to a git repository.
+class Repo:
+    """An interface to a git repository.
 
     The methods in this class may raise the following exceptions:
 

@@ -14,9 +14,9 @@ from unittest import mock
 
 from viewer.git import Branch
 from viewer.git import Commit
-from viewer.git import Git
 from viewer.git import GitBinaryNotFoundError
 from viewer.git import GitCmdError
+from viewer.git import Repo
 
 
 def get_curr_date():
@@ -196,8 +196,8 @@ class BranchReprTests(unittest.TestCase):
         self.assertEqual(eval(branch_repr), branch)
 
 
-class GitTests(unittest.TestCase):
-    """A base class for all git tests."""
+class RepoTests(unittest.TestCase):
+    """A base class for all Repo tests."""
 
     def setUp(self):
         # Patch os.chdir.
@@ -211,31 +211,31 @@ class GitTests(unittest.TestCase):
         self.mock_check_output = patcher.start()
 
 
-class GitCreateTests(GitTests):
-    """Tests for Git.__init__()."""
+class RepoCreateTests(RepoTests):
+    """Tests for Repo.__init__()."""
 
-    def test_create_git_from_repository_enters_the_repo_and_calls_git_status(self):
+    def test_create_repo_enters_the_repo_and_calls_git_status(self):
         REPO_PATH = '/path/to/existing/repository'
-        Git(REPO_PATH)
+        Repo(REPO_PATH)
         self.mock_chdir.assert_any_call(REPO_PATH)
         self.mock_check_output.assert_called_once_with(['git', 'status'])
 
-    def test_path_is_accessible_after_creating_git_from_existing_repository(self):
+    def test_path_is_accessible_after_creating_repo_from_existing_repository(self):
         REPO_PATH = '/path/to/existing/repository'
-        git = Git(REPO_PATH)
-        self.assertEqual(git.path, REPO_PATH)
+        repo = Repo(REPO_PATH)
+        self.assertEqual(repo.path, REPO_PATH)
 
-    def test_create_git_from_nonexisting_location_raises_exception(self):
+    def test_create_repo_from_nonexisting_location_raises_exception(self):
         self.mock_chdir.side_effect = FileNotFoundError('No such file or directory')
         REPO_PATH = '/path/to/nonexisting/location'
-        self.assertRaises(FileNotFoundError, Git, REPO_PATH)
+        self.assertRaises(FileNotFoundError, Repo, REPO_PATH)
 
-    def test_create_git_from_location_with_no_repository_raises_exception(self):
+    def test_create_repo_from_location_with_no_repository_raises_exception(self):
         self.mock_check_output.side_effect = subprocess.CalledProcessError(
             128, "['git', 'status']",
             b'fatal: Not a git repository (or any parent up to mount point)')
         REPO_PATH = '/path/to/existing/location/with/no/repository'
-        self.assertRaises(GitCmdError, Git, REPO_PATH)
+        self.assertRaises(GitCmdError, Repo, REPO_PATH)
         self.mock_check_output.assert_called_once_with(['git', 'status'])
 
     def test_exception_is_raised_when_git_binary_is_not_found(self):
@@ -243,39 +243,39 @@ class GitCreateTests(GitTests):
         self.mock_check_output.side_effect = FileNotFoundError(
             "[Errno 2] No such file or directory: 'git'")
         REPO_PATH = '/path/to/existing/location/with/norepository'
-        self.assertRaises(GitBinaryNotFoundError, Git, REPO_PATH)
+        self.assertRaises(GitBinaryNotFoundError, Repo, REPO_PATH)
         self.mock_check_output.assert_called_once_with(['git', 'status'])
 
 
-class GitRunGitCmdTests(GitTests):
-    """Tests for Git.run_git_cmd()."""
+class RepoRunGitCmdTests(RepoTests):
+    """Tests for Repo.run_git_cmd()."""
 
     def setUp(self):
         super().setUp()
-        self.git = Git('/path/to/existing/repository')
+        self.repo = Repo('/path/to/existing/repository')
 
     def test_git_status_returns_output(self):
         GIT_STATUS_OUTPUT = 'The output from git status.'
         self.mock_check_output.return_value = GIT_STATUS_OUTPUT
-        self.assertEqual(self.git.run_git_cmd(['status']), GIT_STATUS_OUTPUT)
+        self.assertEqual(self.repo.run_git_cmd(['status']), GIT_STATUS_OUTPUT)
 
 
-class GitGetBranchesOnRemoteTests(GitTests):
-    """Tests for Git.get_branches_on_remote()."""
+class RepoGetBranchesOnRemoteTests(RepoTests):
+    """Tests for Repo.get_branches_on_remote()."""
 
     def setUp(self):
         super().setUp()
-        self.git = Git('/path/to/existing/repository')
+        self.repo = Repo('/path/to/existing/repository')
 
     def test_calls_proper_command_to_get_branches_on_given_remote(self):
         remote = 'origin'
-        self.git.get_branches_on_remote(remote)
+        self.repo.get_branches_on_remote(remote)
         self.mock_check_output.assert_called_with(
             ['git', 'ls-remote', '--heads', remote])
 
     def test_returns_empty_list_when_there_are_no_branches(self):
         self.mock_check_output.return_value = ''
-        self.assertEqual(self.git.get_branches_on_remote('origin'), [])
+        self.assertEqual(self.repo.get_branches_on_remote('origin'), [])
 
     def test_returns_single_branch_when_there_is_single_branch(self):
         remote = 'origin'
@@ -286,7 +286,7 @@ class GitGetBranchesOnRemoteTests(GitTests):
         expected_branches = [
             Branch(remote, name)
         ]
-        self.assertEqual(self.git.get_branches_on_remote(remote), expected_branches)
+        self.assertEqual(self.repo.get_branches_on_remote(remote), expected_branches)
 
     def test_returns_two_branches_when_there_are_two_branches(self):
         remote = 'origin'
@@ -302,11 +302,11 @@ class GitGetBranchesOnRemoteTests(GitTests):
             Branch(remote, name1),
             Branch(remote, name2)
         ]
-        self.assertEqual(self.git.get_branches_on_remote(remote), expected_branches)
+        self.assertEqual(self.repo.get_branches_on_remote(remote), expected_branches)
 
 
-class GitGetCommitTests(GitTests):
-    """A base class for all Git.get_commit_*() tests."""
+class RepoGetCommitTests(RepoTests):
+    """A base class for all Repo.get_commit_*() tests."""
 
     def mock_check_output_side_effect(self, *args, **kwargs):
         if 'show' in args[0]:
@@ -331,36 +331,36 @@ class GitGetCommitTests(GitTests):
         self.email = 's3rvac@gmail.com'
         self.date = get_curr_date()
         self.mock_check_output.side_effect = self.mock_check_output_side_effect
-        self.git = Git('/path/to/existing/repository')
+        self.repo = Repo('/path/to/existing/repository')
 
 
-class GitGetCommitFromHashTests(GitGetCommitTests):
-    """Tests for Git.get_commit_from_hash()."""
+class RepoGetCommitFromHashTests(RepoGetCommitTests):
+    """Tests for Repo.get_commit_from_hash()."""
 
     def test_calls_proper_subprocess_command(self):
         hash = '8a9abf8ad351dc9c7e2a5ba9f3b4d41c038ea605'
-        self.git.get_commit_from_hash(hash)
+        self.repo.get_commit_from_hash(hash)
         self.mock_check_output.assert_called_with(
             ['git', 'show', '--format=raw', hash])
 
     def test_returns_correct_commit(self):
-        self.assertEqual(self.git.get_commit_from_hash(hash),
+        self.assertEqual(self.repo.get_commit_from_hash(hash),
             Commit(self.hash, self.author, self.email, self.date))
 
 
-class GitGetCommitForBranchTests(GitGetCommitTests):
-    """Tests for Git.get_commit_for_branch()."""
+class RepoGetCommitForBranchTests(RepoGetCommitTests):
+    """Tests for Repo.get_commit_for_branch()."""
 
     def setUp(self):
         super().setUp()
         self.branch = Branch('origin', 'master')
 
     def test_calls_proper_subprocess_command(self):
-        self.git.get_commit_for_branch(self.branch)
+        self.repo.get_commit_for_branch(self.branch)
         self.mock_check_output.assert_called_with(
             ['git', 'show', '--format=raw',
              self.branch.remote, self.branch.name])
 
     def test_returns_correct_commit(self):
-        self.assertEqual(self.git.get_commit_for_branch(self.branch),
+        self.assertEqual(self.repo.get_commit_for_branch(self.branch),
             Commit(self.hash, self.author, self.email, self.date))
