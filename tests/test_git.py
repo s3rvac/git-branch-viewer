@@ -276,6 +276,16 @@ class RepoComparisonTests(RepoTests):
         self.assertNotEqual(repo1, repo2)
 
 
+class RepoReprTests(RepoTests):
+    """Tests for Repo.__repr__()."""
+
+    def test_repr_works_correctly(self):
+        repo = Repo('/path/to/existing/repository')
+        repo_repr = repr(repo)
+        self.assertIsInstance(repo_repr, str)
+        self.assertEqual(eval(repo_repr), repo)
+
+
 class RepoRunGitCmdTests(RepoTests):
     """Tests for Repo.run_git_cmd()."""
 

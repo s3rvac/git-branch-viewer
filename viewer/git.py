@@ -215,6 +215,11 @@ class Repo:
     def __ne__(self, other):
         return not self == other
 
+    def __repr__(self):
+        return '{}({!r})'.format(
+            self.__class__.__name__,
+            self.path)
+
     def _get_branches_from_ls_remote_output(self, output, remote):
         # The ls-remote output should be of the form
         #
