@@ -215,6 +215,7 @@ class Git:
                     [a-fA-F0-9]+            # Hash
                     \s+                     # Spaces
                     refs/heads/(?P<name>.+) # Branch name
+                    $
                 """, line, re.VERBOSE)
             if m:
                 branches.append(Branch(remote, m.group('name')))
