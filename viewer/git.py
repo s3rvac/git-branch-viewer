@@ -15,6 +15,21 @@ import subprocess
 from .utils import chdir
 
 
+class BaseGitError(Exception):
+    """A base class for all exception raised by the classes in this module."""
+    pass
+
+
+class GitCmdError(BaseGitError):
+    """An exception that is raised when a git command fails."""
+    pass
+
+
+class GitBinaryNotFoundError(GitCmdError):
+    """An exception that is raised when the git binary is not found."""
+    pass
+
+
 class Commit:
     """A representation of a git commit."""
 
@@ -127,21 +142,6 @@ class Branch:
             self.__class__.__name__,
             self.remote,
             self.name)
-
-
-class BaseGitError(Exception):
-    """A base class for all exception raised by the Git class."""
-    pass
-
-
-class GitCmdError(BaseGitError):
-    """An exception that is raised when a git command fails."""
-    pass
-
-
-class GitBinaryNotFoundError(GitCmdError):
-    """An exception that is raised when the git binary is not found."""
-    pass
 
 
 class Git:
