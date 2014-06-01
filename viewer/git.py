@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for more details
 """
 
+import datetime
 import re
 import subprocess
 
@@ -195,6 +196,11 @@ class Git:
         ls_remote_output = self.run_git_cmd(['ls-remote', '--heads', remote])
         return self._get_branches_from_ls_remote_output(ls_remote_output, remote)
 
+    def get_commit_from_hash(self, hash):
+        """Returns the commit corresponding to the given hash."""
+        show_output = self.run_git_cmd(['show', '--format=raw', hash])
+        return self._get_commit_from_show_output(show_output)
+
     def _get_branches_from_ls_remote_output(self, output, remote):
         # The ls-remote output should be of the form
         #
@@ -213,6 +219,30 @@ class Git:
             if m:
                 branches.append(Branch(remote, m.group('name')))
         return branches
+
+    def _get_commit_from_show_output(self, show_output):
+        # The output of `git show --format=raw` should be of the form
+        #
+        #   commit 4b34858294e9f4eee1cdd9af58911154b99472e3
+        #   ...
+        #   author PZ <pz@pz.net> 1401389467 +0200
+        #   ...
+        #
+        m = re.search(r"""
+                commit \s+ (?P<hash>[a-fA-F0-9]+)
+            """, show_output, re.VERBOSE | re.MULTILINE)
+        hash = m.group('hash')
+        m = re.search(r"""
+                author \s+ (?P<author>.+)
+                       \s+ <(?P<email>.+)>
+                       \s+ (?P<date_ts>[0-9]+)
+                       \s+ (?P<tz>[+-][0-9]+)
+                $
+            """, show_output, re.VERBOSE | re.MULTILINE)
+        author = m.group('author')
+        email = m.group('email')
+        date = datetime.datetime.fromtimestamp(int(m.group('date_ts')))
+        return Commit(hash, author, email, date)
 
     def _verify_repository_existence(self):
         self.run_git_cmd(['status'])

@@ -303,3 +303,42 @@ class GitGetBranchesOnRemoteTests(GitTests):
             Branch(remote, name2)
         ]
         self.assertEqual(self.git.get_branches_on_remote(remote), expected_branches)
+
+
+class GitGetCommitFromHashTests(GitTests):
+    """Tests for Git.get_commit_from_hash()."""
+
+    def mock_check_output_side_effect(self, *args, **kwargs):
+        if 'show' in args[0]:
+            return """
+                commit {0}
+                tree a2a8fa487eb573eaa61b64023ec09c302bb156a1
+                parent b988c5d5afa278591c5de8fb0563212118ce6e8c
+                author {1} <{2}> {3} +0200
+                commiter {1} <{2}> {3} +0200
+
+                some commit message
+
+                diff
+            """.format(self.hash, self.author, self.email,
+                int(self.date.timestamp()))
+        return ''
+
+    def setUp(self):
+        super().setUp()
+        self.hash = '4b34858294e9f4eee1cdd9af58911154b99472e3'
+        self.author = 'Petr Zemek'
+        self.email = 's3rvac@gmail.com'
+        self.date = get_curr_date()
+        self.mock_check_output.side_effect = self.mock_check_output_side_effect
+        self.git = Git('/path/to/existing/repository')
+
+    def test_calls_proper_command_to_get_commit_for_hash(self):
+        hash = '8a9abf8ad351dc9c7e2a5ba9f3b4d41c038ea605'
+        self.git.get_commit_from_hash(hash)
+        self.mock_check_output.assert_called_with(
+            ['git', 'show', '--format=raw', hash])
+
+    def test_returns_correct_commit(self):
+        self.assertEqual(self.git.get_commit_from_hash(hash),
+            Commit(self.hash, self.author, self.email, self.date))
