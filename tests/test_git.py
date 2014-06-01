@@ -261,6 +261,21 @@ class RepoCreateTests(RepoTests):
         self.mock_check_output.assert_called_once_with(['git', 'status'])
 
 
+class RepoComparisonTests(RepoTests):
+    """Tests for repository comparison."""
+
+    def test_two_repos_with_same_path_are_equal(self):
+        REPO_PATH = '/path/to/existing/repository'
+        repo1 = Repo(REPO_PATH)
+        repo2 = Repo(REPO_PATH)
+        self.assertEqual(repo1, repo2)
+
+    def test_two_repos_with_different_path_are_not_equal(self):
+        repo1 = Repo('/path/to/existing/repository')
+        repo2 = Repo('/other/path/to/other/existing/repository')
+        self.assertNotEqual(repo1, repo2)
+
+
 class RepoRunGitCmdTests(RepoTests):
     """Tests for Repo.run_git_cmd()."""
 

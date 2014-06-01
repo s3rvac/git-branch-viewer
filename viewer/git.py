@@ -209,6 +209,12 @@ class Repo:
         return self._get_commit_from_git_show_with_args(
             branch.remote, branch.name)
 
+    def __eq__(self, other):
+        return self.path == other.path
+
+    def __ne__(self, other):
+        return not self == other
+
     def _get_branches_from_ls_remote_output(self, output, remote):
         # The ls-remote output should be of the form
         #
