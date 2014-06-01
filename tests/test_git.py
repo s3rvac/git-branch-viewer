@@ -305,8 +305,8 @@ class GitGetBranchesOnRemoteTests(GitTests):
         self.assertEqual(self.git.get_branches_on_remote(remote), expected_branches)
 
 
-class GitGetCommitFromHashTests(GitTests):
-    """Tests for Git.get_commit_from_hash()."""
+class GitGetCommitTests(GitTests):
+    """A base class for all Git.get_commit_*() tests."""
 
     def mock_check_output_side_effect(self, *args, **kwargs):
         if 'show' in args[0]:
@@ -333,7 +333,11 @@ class GitGetCommitFromHashTests(GitTests):
         self.mock_check_output.side_effect = self.mock_check_output_side_effect
         self.git = Git('/path/to/existing/repository')
 
-    def test_calls_proper_command_to_get_commit_for_hash(self):
+
+class GitGetCommitFromHashTests(GitGetCommitTests):
+    """Tests for Git.get_commit_from_hash()."""
+
+    def test_calls_proper_subprocess_command(self):
         hash = '8a9abf8ad351dc9c7e2a5ba9f3b4d41c038ea605'
         self.git.get_commit_from_hash(hash)
         self.mock_check_output.assert_called_with(
