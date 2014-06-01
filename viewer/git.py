@@ -198,11 +198,12 @@ class Git:
 
     def get_commit_from_hash(self, hash):
         """Returns the commit corresponding to the given hash."""
-        return self._get_commit_from_args(hash)
+        return self._get_commit_from_git_show_with_args(hash)
 
     def get_commit_for_branch(self, branch):
         """Returns the commit for the given branch."""
-        return self._get_commit_from_args(branch.remote, branch.name)
+        return self._get_commit_from_git_show_with_args(
+            branch.remote, branch.name)
 
     def _get_branches_from_ls_remote_output(self, output, remote):
         # The ls-remote output should be of the form
@@ -224,7 +225,7 @@ class Git:
                 branches.append(Branch(remote, m.group('name')))
         return branches
 
-    def _get_commit_from_args(self, *args):
+    def _get_commit_from_git_show_with_args(self, *args):
         show_output = self.run_git_cmd(['show', '--format=raw'] + list(args))
         return self._get_commit_from_show_output(show_output)
 
