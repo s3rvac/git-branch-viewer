@@ -14,9 +14,9 @@ class WebTestCase(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
-    def test_index_page_does_not_exist(self):
+    def test_index_page_exists(self):
         rv = self.app.get('/')
-        self.assertEqual(rv.status_code, 404)
+        self.assertEqual(rv.status_code, 200)
 
     def tearDown(self):
         pass
