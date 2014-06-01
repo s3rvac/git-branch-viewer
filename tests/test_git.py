@@ -234,6 +234,11 @@ class RepoCreateTests(RepoTests):
         repo = Repo(REL_REPO_PATH)
         self.assertEqual(repo.path, ABS_REPO_PATH)
 
+    def test_path_cannot_be_changed_after_creation(self):
+        repo = Repo('/path/to/existing/repository')
+        with self.assertRaises(AttributeError):
+            repo.path = '/some/other/path'
+
     def test_create_repo_from_nonexisting_location_raises_exception(self):
         self.mock_chdir.side_effect = FileNotFoundError('No such file or directory')
         REPO_PATH = '/path/to/nonexisting/location'

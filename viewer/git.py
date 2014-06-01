@@ -167,10 +167,13 @@ class Repo:
         See the class description for a list of exceptions that this method may
         raise.
         """
-        #: Absolute path to the repository.
-        self.path = os.path.abspath(path)
-
+        self._path = os.path.abspath(path)
         self._verify_repository_existence()
+
+    @property
+    def path(self):
+        """Returns the absolute path to the repository."""
+        return self._path
 
     def run_git_cmd(self, args):
         """Runs the git command with the given arguments in the repository and
