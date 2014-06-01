@@ -8,6 +8,7 @@
 import random
 import subprocess
 import unittest
+# Cannot use `from datetime import datetime` because of eval() in `repr` tests.
 import datetime
 from unittest import mock
 
