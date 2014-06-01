@@ -225,6 +225,15 @@ class RepoCreateTests(RepoTests):
         repo = Repo(REPO_PATH)
         self.assertEqual(repo.path, REPO_PATH)
 
+    @mock.patch('os.path.abspath')
+    def test_rel_path_is_converted_into_abs_path_after_creating_repo(self,
+            mock_abspath):
+        ABS_REPO_PATH = '/path/to/existing/repository'
+        REL_REPO_PATH = '../repository'
+        mock_abspath.return_value = ABS_REPO_PATH
+        repo = Repo(REL_REPO_PATH)
+        self.assertEqual(repo.path, ABS_REPO_PATH)
+
     def test_create_repo_from_nonexisting_location_raises_exception(self):
         self.mock_chdir.side_effect = FileNotFoundError('No such file or directory')
         REPO_PATH = '/path/to/nonexisting/location'

@@ -9,6 +9,7 @@
 """
 
 import datetime
+import os
 import re
 import subprocess
 
@@ -161,11 +162,13 @@ class Repo:
 
         :param str path: A path to the repository.
 
+        If the path is relative, it is converted into an absolute path.
+
         See the class description for a list of exceptions that this method may
         raise.
         """
-        #: Path to the repository.
-        self.path = path
+        #: Absolute path to the repository.
+        self.path = os.path.abspath(path)
 
         self._verify_repository_existence()
 
