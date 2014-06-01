@@ -346,3 +346,21 @@ class GitGetCommitFromHashTests(GitGetCommitTests):
     def test_returns_correct_commit(self):
         self.assertEqual(self.git.get_commit_from_hash(hash),
             Commit(self.hash, self.author, self.email, self.date))
+
+
+class GitGetCommitForBranchTests(GitGetCommitTests):
+    """Tests for Git.get_commit_for_branch()."""
+
+    def setUp(self):
+        super().setUp()
+        self.branch = Branch('origin', 'master')
+
+    def test_calls_proper_subprocess_command(self):
+        self.git.get_commit_for_branch(self.branch)
+        self.mock_check_output.assert_called_with(
+            ['git', 'show', '--format=raw',
+             self.branch.remote, self.branch.name])
+
+    def test_returns_correct_commit(self):
+        self.assertEqual(self.git.get_commit_for_branch(self.branch),
+            Commit(self.hash, self.author, self.email, self.date))

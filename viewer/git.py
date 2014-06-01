@@ -201,6 +201,12 @@ class Git:
         show_output = self.run_git_cmd(['show', '--format=raw', hash])
         return self._get_commit_from_show_output(show_output)
 
+    def get_commit_for_branch(self, branch):
+        """Returns the commit for the given branch."""
+        show_output = self.run_git_cmd(['show', '--format=raw',
+            branch.remote, branch.name])
+        return self._get_commit_from_show_output(show_output)
+
     def _get_branches_from_ls_remote_output(self, output, remote):
         # The ls-remote output should be of the form
         #
