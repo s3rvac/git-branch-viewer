@@ -1,5 +1,5 @@
-viewer.git package
-==================
+viewer.git module
+=================
 
 Module contents
 ---------------
