@@ -117,8 +117,6 @@ class Branch:
         self.name = name
 
     def __eq__(self, other):
-        print(self.remote, other.remote)
-        print(self.name, other.name)
         return (self.remote == other.remote and self.name == other.name)
 
     def __ne__(self, other):
