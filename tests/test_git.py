@@ -20,7 +20,9 @@ from viewer.git import GitCmdError
 
 def get_curr_date():
     """Returns the current date."""
-    return datetime.datetime.now()
+    # Do not include milliseconds into the date because git uses just seconds.
+    curr_date_ts = int(datetime.datetime.now().timestamp())
+    return datetime.datetime.fromtimestamp(curr_date_ts)
 
 
 def get_rand_hash(characters=Commit.VALID_HASH_CHARACTERS):
