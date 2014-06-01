@@ -51,29 +51,38 @@ class Commit:
         :param date date: Date the commit was authored.
 
         The hash is normalized so that it contains only lowercase characters.
+        The data cannot be changed after the commit is created.
 
         :raises ValueError: If the hash's length differs from
                             :attr:`VALID_HASH_LENGTH` or if the hash contains
                             characters out of :attr:`VALID_HASH_CHARACTERS`.
         """
-        #: Identifier of the commit.
-        self.hash = hash
-        #: Author of the commit.
-        self.author = author
-        #: Email of the author.
-        self.email = email
-        #: Date the commit was authored.
-        self.date = date
+        self._hash = self._normalize_hash(hash)
+        self._validate_hash(self._hash)
+
+        self._author = author
+        self._email = email
+        self._date = date
 
     @property
     def hash(self):
+        """Returns the identifier of the commit."""
         return self._hash
 
-    @hash.setter
-    def hash(self, new_hash):
-        new_hash = self._normalize_hash(new_hash)
-        self._validate_hash(new_hash)
-        self._hash = new_hash
+    @property
+    def author(self):
+        """Returns the author of the commit."""
+        return self._author
+
+    @property
+    def email(self):
+        """Returns the email of the author of the commit."""
+        return self._email
+
+    @property
+    def date(self):
+        """Returns the date the commit was authored."""
+        return self._date
 
     def short_hash(self, length=8):
         """Returns a shorter version of the hash."""

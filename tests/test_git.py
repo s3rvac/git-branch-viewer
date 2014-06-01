@@ -54,6 +54,16 @@ class CommitCreateAndAccessTests(unittest.TestCase):
         self.assertEqual(self.commit.email, self.email)
         self.assertEqual(self.commit.date, self.date)
 
+    def test_data_cannot_be_changed_after_creation(self):
+        with self.assertRaises(AttributeError):
+            self.commit.hash = get_rand_hash()
+        with self.assertRaises(AttributeError):
+            self.commit.author = 'Other Author'
+        with self.assertRaises(AttributeError):
+            self.commit.email = 'Other email'
+        with self.assertRaises(AttributeError):
+            self.commit.date = get_curr_date()
+
     def test_short_hash_returns_correct_result(self):
         self.assertEqual(self.commit.short_hash(), self.hash[:8])
         self.assertEqual(self.commit.short_hash(10), self.hash[:10])
@@ -76,10 +86,6 @@ class CommitCreateAndAccessTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             Commit((Commit.VALID_HASH_LENGTH - 1) * 'a' + 'g',
                 'PZ', 'pz@pz.net', get_curr_date())
-
-    def test_hash_is_validated_when_set_after_creation(self):
-        with self.assertRaises(ValueError):
-            self.commit.hash = ''
 
 
 class CommitComparisonTests(unittest.TestCase):
