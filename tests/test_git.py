@@ -161,14 +161,24 @@ def get_git_repo_mock(path='/path/to/existing/repository'):
 class BranchCreateAndAccessTests(unittest.TestCase):
     """Tests for Branch.__init__() and accessors."""
 
+    def setUp(self):
+        self.repo_mock = get_git_repo_mock()
+        self.remote = 'origin'
+        self.name = 'test'
+        self.branch = Branch(self.repo_mock, self.remote, self.name)
+
     def test_data_passed_into_constructor_are_accessible_after_creation(self):
-        repo_mock = get_git_repo_mock()
-        remote = 'origin'
-        name = 'test'
-        branch = Branch(repo_mock, remote, name)
-        self.assertEqual(branch.repo, repo_mock)
-        self.assertEqual(branch.remote, remote)
-        self.assertEqual(branch.name, name)
+        self.assertEqual(self.branch.repo, self.repo_mock)
+        self.assertEqual(self.branch.remote, self.remote)
+        self.assertEqual(self.branch.name, self.name)
+
+    def test_data_cannot_be_changed_after_creation(self):
+        with self.assertRaises(AttributeError):
+            self.branch.repo = get_git_repo_mock()
+        with self.assertRaises(AttributeError):
+            self.branch.remote = 'other_remote'
+        with self.assertRaises(AttributeError):
+            self.branch.name = 'other_name'
 
 
 class BranchComparisonTests(unittest.TestCase):

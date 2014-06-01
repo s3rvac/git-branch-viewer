@@ -127,13 +127,27 @@ class Branch:
         :param Repo repo: Git repository in which this branch is.
         :param str remote: Name of the remote on which this branch is.
         :param str name: Name of the branch.
+
+        The data cannot be changed after the branch is created.
         """
-        #: Git repository in which this branch is.
-        self.repo = repo
-        #: Name of the remote on which this branch is.
-        self.remote = remote
-        #: Name of the branch.
-        self.name = name
+        self._repo = repo
+        self._remote = remote
+        self._name = name
+
+    @property
+    def repo(self):
+        """Returns the repository in which this branch is."""
+        return self._repo
+
+    @property
+    def remote(self):
+        """Returns the name of the remote on which this branch is."""
+        return self._remote
+
+    @property
+    def name(self):
+        """Returns the name of the branch."""
+        return self._name
 
     def __eq__(self, other):
         return (self.repo == other.repo and
