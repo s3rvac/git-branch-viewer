@@ -85,7 +85,7 @@ class Commit:
         return self._date
 
     def short_hash(self, length=8):
-        """Returns a shorter version of the hash."""
+        """Shorter version of the hash."""
         return self.hash[:length]
 
     def __eq__(self, other):
