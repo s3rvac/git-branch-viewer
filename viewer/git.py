@@ -42,13 +42,14 @@ class Commit:
     #: are not permitted in a hash.
     VALID_HASH_CHARACTERS = set('0123456789abcdef')
 
-    def __init__(self, hash, author, email, date):
+    def __init__(self, hash, author, email, date, msg):
         """Creates a commit with the given data.
 
         :param str hash: Identifier of the commit.
         :param str author: Author of the commit.
         :param str email: Email of the author.
         :param date date: Date the commit was authored.
+        :param str msg: Commit message.
 
         The hash is normalized so that it contains only lowercase characters.
         The data cannot be changed after the commit is created.
@@ -63,6 +64,7 @@ class Commit:
         self._author = author
         self._email = email
         self._date = date
+        self._msg = msg
 
     @property
     def hash(self):
@@ -84,6 +86,11 @@ class Commit:
         """Date the commit was authored."""
         return self._date
 
+    @property
+    def msg(self):
+        """Commit message."""
+        return self._msg
+
     def short_hash(self, length=8):
         """Shorter version of the hash."""
         return self.hash[:length]
@@ -92,18 +99,20 @@ class Commit:
         return (self.hash == other.hash and
                 self.author == other.author and
                 self.email == other.email and
-                self.date == other.date)
+                self.date == other.date and
+                self.msg == other.msg)
 
     def __ne__(self, other):
         return not self == other
 
     def __repr__(self):
-        return '{}({!r}, {!r}, {!r}, {!r})'.format(
+        return '{}({!r}, {!r}, {!r}, {!r}, {!r})'.format(
             self.__class__.__name__,
             self.hash,
             self.author,
             self.email,
-            self.date)
+            self.date,
+            self.msg)
 
     def _normalize_hash(self, hash):
         return hash.lower()
@@ -281,10 +290,12 @@ class Repo:
         #   author PZ <pz@pz.net> 1401389467 +0200
         #   ...
         #
+        #   commit message
+        #
         hash = self._get_commit_hash_from_show_output(show_output)
-        author, email, date = self._get_commit_details_from_show_output(
+        author, email, date, msg = self._get_commit_details_from_show_output(
             show_output)
-        return Commit(hash, author, email, date)
+        return Commit(hash, author, email, date, msg)
 
     def _get_commit_hash_from_show_output(self, show_output):
         m = re.search(r"""
@@ -293,6 +304,7 @@ class Repo:
         return m.group('hash')
 
     def _get_commit_details_from_show_output(self, show_output):
+        # author, email, date
         m = re.search(r"""
                 author \s+ (?P<author>.+)
                        \s+ <(?P<email>.+)>
@@ -303,7 +315,18 @@ class Repo:
         author = m.group('author')
         email = m.group('email')
         date = datetime.datetime.fromtimestamp(int(m.group('date_ts')))
-        return author, email, date
+
+        # message
+        m = re.search(r"""
+                \n
+                \n
+                (?P<msg>.*)
+                \n
+                $
+            """, show_output, re.VERBOSE | re.MULTILINE)
+        msg = m.group('msg').strip()
+
+        return author, email, date, msg
 
     def _verify_repository_existence(self):
         self.run_git_cmd(['status'])
