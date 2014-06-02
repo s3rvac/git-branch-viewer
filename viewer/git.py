@@ -260,7 +260,7 @@ class Repo:
     def get_commit_for_branch(self, branch):
         """Returns the commit for the given branch."""
         return self._get_commit_from_git_show_with_args(
-            branch.remote, branch.name)
+            '{}/{}'.format(branch.remote, branch.name))
 
     def __eq__(self, other):
         return self.path == other.path

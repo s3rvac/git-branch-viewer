@@ -484,7 +484,7 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
         self.repo.get_commit_for_branch(self.branch)
         self.mock_check_output.assert_called_with(
             ['git', 'show', '--format=format:%H%n%an%n%ae%n%at%n%s%n',
-             self.branch.remote, self.branch.name],
+             '{}/{}'.format(self.branch.remote, self.branch.name)],
             universal_newlines=True)
 
     def test_returns_correct_commit(self):
