@@ -74,22 +74,22 @@ class CommitCreateAndAccessTests(unittest.TestCase):
 
     def test_hash_is_properly_normalized(self):
         hash = get_rand_hash('ABCDEF')
-        commit = Commit(hash, 'PZ', 'pz@pz.net', get_curr_date(), 'commit msg')
+        commit = Commit(hash, self.author, self.email, self.date, self.msg)
         self.assertEqual(commit.hash, hash.lower())
 
     def test_value_error_is_raised_when_hash_has_invalid_length(self):
         with self.assertRaises(ValueError):
-            Commit('', 'PZ', 'pz@pz.net', get_curr_date(), 'commit msg')
+            Commit('', self.author, self.email, self.date, self.msg)
         with self.assertRaises(ValueError):
-            Commit('abcdef', 'PZ', 'pz@pz.net', get_curr_date(), 'commit msg')
+            Commit('abcdef', self.author, self.email, self.date, self.msg)
         with self.assertRaises(ValueError):
             Commit('a' * (Commit.VALID_HASH_LENGTH + 1),
-                'PZ', 'pz@pz.net', get_curr_date(), 'commit msg')
+                self.author, self.email, self.date, self.msg)
 
     def test_value_error_is_raised_when_hash_has_invalid_characters(self):
         with self.assertRaises(ValueError):
             Commit((Commit.VALID_HASH_LENGTH - 1) * 'a' + 'g',
-                'PZ', 'pz@pz.net', get_curr_date(), 'commit msg')
+                self.author, self.email, self.date, self.msg)
 
 
 class CommitComparisonTests(unittest.TestCase):
