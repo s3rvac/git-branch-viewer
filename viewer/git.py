@@ -255,11 +255,11 @@ class Repo:
 
     def get_commit_from_hash(self, hash):
         """Returns the commit corresponding to the given hash."""
-        return self._get_commit_from_git_show_with_args(hash)
+        return self._get_commit_from_git_show_with_object(hash)
 
     def get_commit_for_branch(self, branch):
         """Returns the commit for the given branch."""
-        return self._get_commit_from_git_show_with_args(
+        return self._get_commit_from_git_show_with_object(
             '{}/{}'.format(branch.remote, branch.name))
 
     def __eq__(self, other):
@@ -293,7 +293,7 @@ class Repo:
                 branches.append(Branch(self, remote, m.group('name')))
         return branches
 
-    def _get_commit_from_git_show_with_args(self, *args):
+    def _get_commit_from_git_show_with_object(self, obj):
         # We use `git show` with a custom format to get just the needed
         # information about the commit. The used format produces output of the
         # following form:
@@ -307,7 +307,7 @@ class Repo:
         #   diff
         #
         output = self.run_git_cmd(['show',
-            '--format=format:%H%n%an%n%ae%n%at%n%s%n'] + list(args))
+            '--format=format:%H%n%an%n%ae%n%at%n%s%n', obj])
         m = re.match(r"""
                 (?P<hash>[a-fA-F0-9]+)\n
                 (?P<author>.+)\n
