@@ -209,6 +209,18 @@ class BranchCreateAndAccessTests(unittest.TestCase):
             self.branch.name = 'other_name'
 
 
+class BranchCommitTests(unittest.TestCase):
+    """Tests for Branch.commit."""
+
+    def test_get_commit_calls_proper_repo_method_and_returns_correct_commit(self):
+        repo_mock = get_git_repo_mock()
+        branch = Branch(repo_mock, 'origin', 'featureX')
+        expected_commit = get_new_commit()
+        repo_mock.get_commit_for_branch.return_value = expected_commit
+        self.assertEqual(branch.commit, expected_commit)
+        repo_mock.get_commit_for_branch.assert_called_once_with(branch)
+
+
 class BranchComparisonTests(unittest.TestCase):
     """Tests for branch comparison."""
 

@@ -168,6 +168,11 @@ class Branch:
         """Name of the branch."""
         return self._name
 
+    @property
+    def commit(self):
+        """Commit representing the branch."""
+        return self._repo.get_commit_for_branch(self)
+
     def __eq__(self, other):
         return (self.repo == other.repo and
             self.remote == other.remote and
