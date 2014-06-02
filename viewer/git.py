@@ -280,8 +280,9 @@ class Repo:
         return branches
 
     def _get_commit_from_git_show_with_args(self, *args):
-        # We use `git show` with a custom format to get the information about
-        # the commit. It produces the output of the following form:
+        # We use `git show` with a custom format to get just the needed
+        # information about the commit. The used format produces output of the
+        # following form:
         #
         #   hash
         #   author
