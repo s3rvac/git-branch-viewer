@@ -214,6 +214,14 @@ class Repo:
         """Absolute path to the repository."""
         return self._path
 
+    @property
+    def name(self):
+        """Name of the repository (its top-level directory)."""
+        # `git rev-parse --show-toplevel` prints the path to the top-level
+        # directory of the repository.
+        return os.path.basename(
+            self.run_git_cmd(['rev-parse', '--show-toplevel']).strip())
+
     def run_git_cmd(self, args):
         """Runs the git command with the given arguments in the repository and
         returns the output.

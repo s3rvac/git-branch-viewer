@@ -321,6 +321,26 @@ class RepoCreateTests(RepoTests):
             universal_newlines=True)
 
 
+class RepoNameTests(RepoTests):
+    """Tests for Repo.name."""
+
+    def test_name_calls_proper_command(self):
+        REPO_PATH = '/path/to/existing/repository'
+        repo = Repo(REPO_PATH)
+        repo.name
+        self.mock_check_output.assert_called_with(
+            ['git', 'rev-parse', '--show-toplevel'],
+            universal_newlines=True)
+
+    def test_name_returns_correct_name(self):
+        REPO_NAME = 'repository'
+        REPO_BASE_PATH = '/path/to/existing/{}'.format(REPO_NAME)
+        REPO_PATH = '{}/subdirectory'.format(REPO_BASE_PATH)
+        repo = Repo(REPO_PATH)
+        self.mock_check_output.return_value = '{}\n'.format(REPO_BASE_PATH)
+        self.assertEqual(repo.name, REPO_NAME)
+
+
 class RepoComparisonTests(RepoTests):
     """Tests for repository comparison."""
 
