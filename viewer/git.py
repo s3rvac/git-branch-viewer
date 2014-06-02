@@ -280,53 +280,37 @@ class Repo:
         return branches
 
     def _get_commit_from_git_show_with_args(self, *args):
-        output = self.run_git_cmd(['show', '--format=raw'] + list(args))
+        # We use `git show` with a custom format to get the information about
+        # the commit. It produces the output of the following form:
+        #
+        #   hash
+        #   author
+        #   email
+        #   date (timestamp)
+        #   subject
+        #
+        #   diff
+        #
+        output = self.run_git_cmd(['show',
+            '--format=format:%H%n%an%n%ae%n%at%n%s%n'] + list(args))
         return self._get_commit_from_show_output(output)
 
     def _get_commit_from_show_output(self, output):
-        # The output of `git show --format=raw` should be of the form
-        #
-        #   commit 4b34858294e9f4eee1cdd9af58911154b99472e3
-        #   ...
-        #   author PZ <pz@pz.net> 1401389467 +0200
-        #   ...
-        #
-        #   commit message
-        #
-        hash = self._get_commit_hash_from_show_output(output)
-        author, email, date = \
-            self._get_commit_author_email_date_from_show_output(output)
-        subject = self._get_commit_subject_from_show_output(output)
-        return Commit(hash, author, email, date, subject)
-
-    def _get_commit_hash_from_show_output(self, output):
-        m = re.search(r"""
-                commit \s+ (?P<hash>[a-fA-F0-9]+)
+        # See the comment in _get_commit_from_git_show_with_args() for a
+        # description of the output format.
+        m = re.match(r"""
+                (?P<hash>[a-fA-F0-9]+)\n
+                (?P<author>.+)\n
+                (?P<email>.+)\n
+                (?P<date_ts>[0-9]+)\n
+                (?P<subject>.+)\n
             """, output, re.VERBOSE | re.MULTILINE)
-        return m.group('hash')
-
-    def _get_commit_author_email_date_from_show_output(self, output):
-        m = re.search(r"""
-                author \s+ (?P<author>.+)
-                       \s+ <(?P<email>.+)>
-                       \s+ (?P<date_ts>[0-9]+)
-                       \s+ (?P<tz>[+-][0-9]+)
-                $
-            """, output, re.VERBOSE | re.MULTILINE)
+        hash = m.group('hash')
         author = m.group('author')
         email = m.group('email')
         date = datetime.datetime.fromtimestamp(int(m.group('date_ts')))
-        return author, email, date
-
-    def _get_commit_subject_from_show_output(self, output):
-        m = re.search(r"""
-                \n
-                \n
-                (?P<subject>.*)
-                \n
-                $
-            """, output, re.VERBOSE | re.MULTILINE)
-        return m.group('subject').strip()
+        subject = m.group('subject')
+        return Commit(hash, author, email, date, subject)
 
     def _verify_repository_existence(self):
         self.run_git_cmd(['status'])

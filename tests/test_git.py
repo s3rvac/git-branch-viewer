@@ -406,18 +406,9 @@ class RepoGetCommitTests(RepoTests):
 
     def mock_check_output_side_effect(self, *args, **kwargs):
         if 'show' in args[0]:
-            return """
-                commit {0}
-                tree a2a8fa487eb573eaa61b64023ec09c302bb156a1
-                parent b988c5d5afa278591c5de8fb0563212118ce6e8c
-                author {1} <{2}> {3} +0200
-                commiter {1} <{2}> {3} +0200
-
-                Commit message
-
-                diff
-            """.format(self.hash, self.author, self.email,
-                int(self.date.timestamp()))
+            return '{}\n{}\n{}\n{}\n{}\n\ndiff'.format(
+                self.hash, self.author, self.email,
+                int(self.date.timestamp()), self.subject)
         return ''
 
     def setUp(self):
@@ -438,7 +429,7 @@ class RepoGetCommitFromHashTests(RepoGetCommitTests):
         hash = '8a9abf8ad351dc9c7e2a5ba9f3b4d41c038ea605'
         self.repo.get_commit_from_hash(hash)
         self.mock_check_output.assert_called_with(
-            ['git', 'show', '--format=raw', hash])
+            ['git', 'show', '--format=format:%H%n%an%n%ae%n%at%n%s%n', hash])
 
     def test_returns_correct_commit(self):
         self.assertEqual(self.repo.get_commit_from_hash(hash),
@@ -455,7 +446,7 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
     def test_calls_proper_subprocess_command(self):
         self.repo.get_commit_for_branch(self.branch)
         self.mock_check_output.assert_called_with(
-            ['git', 'show', '--format=raw',
+            ['git', 'show', '--format=format:%H%n%an%n%ae%n%at%n%s%n',
              self.branch.remote, self.branch.name])
 
     def test_returns_correct_commit(self):
