@@ -293,11 +293,6 @@ class Repo:
         #
         output = self.run_git_cmd(['show',
             '--format=format:%H%n%an%n%ae%n%at%n%s%n'] + list(args))
-        return self._get_commit_from_show_output(output)
-
-    def _get_commit_from_show_output(self, output):
-        # See the comment in _get_commit_from_git_show_with_args() for a
-        # description of the output format.
         m = re.match(r"""
                 (?P<hash>[a-fA-F0-9]+)\n
                 (?P<author>.+)\n
