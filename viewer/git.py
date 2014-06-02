@@ -235,8 +235,8 @@ class Repo:
 
     def get_branches_on_remote(self, remote):
         """Returns all the branches on the given remote in a list."""
-        ls_remote_output = self.run_git_cmd(['ls-remote', '--heads', remote])
-        return self._get_branches_from_ls_remote_output(ls_remote_output, remote)
+        output = self.run_git_cmd(['ls-remote', '--heads', remote])
+        return self._get_branches_from_ls_remote_output(output, remote)
 
     def get_commit_from_hash(self, hash):
         """Returns the commit corresponding to the given hash."""
@@ -279,10 +279,10 @@ class Repo:
         return branches
 
     def _get_commit_from_git_show_with_args(self, *args):
-        show_output = self.run_git_cmd(['show', '--format=raw'] + list(args))
-        return self._get_commit_from_show_output(show_output)
+        output = self.run_git_cmd(['show', '--format=raw'] + list(args))
+        return self._get_commit_from_show_output(output)
 
-    def _get_commit_from_show_output(self, show_output):
+    def _get_commit_from_show_output(self, output):
         # The output of `git show --format=raw` should be of the form
         #
         #   commit 4b34858294e9f4eee1cdd9af58911154b99472e3
@@ -292,18 +292,18 @@ class Repo:
         #
         #   commit message
         #
-        hash = self._get_commit_hash_from_show_output(show_output)
+        hash = self._get_commit_hash_from_show_output(output)
         author, email, date, msg = self._get_commit_details_from_show_output(
-            show_output)
+            output)
         return Commit(hash, author, email, date, msg)
 
-    def _get_commit_hash_from_show_output(self, show_output):
+    def _get_commit_hash_from_show_output(self, output):
         m = re.search(r"""
                 commit \s+ (?P<hash>[a-fA-F0-9]+)
-            """, show_output, re.VERBOSE | re.MULTILINE)
+            """, output, re.VERBOSE | re.MULTILINE)
         return m.group('hash')
 
-    def _get_commit_details_from_show_output(self, show_output):
+    def _get_commit_details_from_show_output(self, output):
         # author, email, date
         m = re.search(r"""
                 author \s+ (?P<author>.+)
@@ -311,7 +311,7 @@ class Repo:
                        \s+ (?P<date_ts>[0-9]+)
                        \s+ (?P<tz>[+-][0-9]+)
                 $
-            """, show_output, re.VERBOSE | re.MULTILINE)
+            """, output, re.VERBOSE | re.MULTILINE)
         author = m.group('author')
         email = m.group('email')
         date = datetime.datetime.fromtimestamp(int(m.group('date_ts')))
@@ -323,7 +323,7 @@ class Repo:
                 (?P<msg>.*)
                 \n
                 $
-            """, show_output, re.VERBOSE | re.MULTILINE)
+            """, output, re.VERBOSE | re.MULTILINE)
         msg = m.group('msg').strip()
 
         return author, email, date, msg
