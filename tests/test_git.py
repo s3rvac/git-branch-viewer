@@ -40,8 +40,9 @@ class CommitCreateAndAccessTests(unittest.TestCase):
         self.author = 'Petr Zemek'
         self.email = 's3rvac@gmail.com'
         self.date = get_curr_date()
-        self.msg = 'Commit message'
-        self.commit = Commit(self.hash, self.author, self.email, self.date, self.msg)
+        self.subject = 'Commit message'
+        self.commit = Commit(self.hash, self.author, self.email, self.date,
+            self.subject)
 
     def test_valid_hash_length_has_proper_value(self):
         self.assertEqual(Commit.VALID_HASH_LENGTH, 40)
@@ -54,7 +55,7 @@ class CommitCreateAndAccessTests(unittest.TestCase):
         self.assertEqual(self.commit.author, self.author)
         self.assertEqual(self.commit.email, self.email)
         self.assertEqual(self.commit.date, self.date)
-        self.assertEqual(self.commit.msg, self.msg)
+        self.assertEqual(self.commit.subject, self.subject)
 
     def test_data_cannot_be_changed_after_creation(self):
         with self.assertRaises(AttributeError):
@@ -66,7 +67,7 @@ class CommitCreateAndAccessTests(unittest.TestCase):
         with self.assertRaises(AttributeError):
             self.commit.date = get_curr_date()
         with self.assertRaises(AttributeError):
-            self.commit.msg = 'Other commit message'
+            self.commit.subject = 'Other commit message'
 
     def test_short_hash_returns_correct_result(self):
         self.assertEqual(self.commit.short_hash(), self.hash[:8])
@@ -74,22 +75,22 @@ class CommitCreateAndAccessTests(unittest.TestCase):
 
     def test_hash_is_properly_normalized(self):
         hash = get_rand_hash('ABCDEF')
-        commit = Commit(hash, self.author, self.email, self.date, self.msg)
+        commit = Commit(hash, self.author, self.email, self.date, self.subject)
         self.assertEqual(commit.hash, hash.lower())
 
     def test_value_error_is_raised_when_hash_has_invalid_length(self):
         with self.assertRaises(ValueError):
-            Commit('', self.author, self.email, self.date, self.msg)
+            Commit('', self.author, self.email, self.date, self.subject)
         with self.assertRaises(ValueError):
-            Commit('abcdef', self.author, self.email, self.date, self.msg)
+            Commit('abcdef', self.author, self.email, self.date, self.subject)
         with self.assertRaises(ValueError):
             Commit('a' * (Commit.VALID_HASH_LENGTH + 1),
-                self.author, self.email, self.date, self.msg)
+                self.author, self.email, self.date, self.subject)
 
     def test_value_error_is_raised_when_hash_has_invalid_characters(self):
         with self.assertRaises(ValueError):
             Commit((Commit.VALID_HASH_LENGTH - 1) * 'a' + 'g',
-                self.author, self.email, self.date, self.msg)
+                self.author, self.email, self.date, self.subject)
 
 
 class CommitComparisonTests(unittest.TestCase):
@@ -105,47 +106,47 @@ class CommitComparisonTests(unittest.TestCase):
         author = 'PZ'
         email = 'pz@pz.net'
         date = get_curr_date()
-        msg = 'Commit message'
-        commit1 = Commit(hash, author, email, date, msg)
-        commit2 = Commit(hash, author, email, date, msg)
+        subject = 'Commit message'
+        commit1 = Commit(hash, author, email, date, subject)
+        commit2 = Commit(hash, author, email, date, subject)
         self.assertEqual(commit1, commit2)
 
     def test_two_commits_with_different_hash_are_not_equal(self):
         author = 'PZ'
         email = 'pz@pz.net'
         date = get_curr_date()
-        msg = 'Commit message'
-        commit1 = Commit(get_rand_hash(), author, email, date, msg)
-        commit2 = Commit(get_rand_hash(), author, email, date, msg)
+        subject = 'Commit message'
+        commit1 = Commit(get_rand_hash(), author, email, date, subject)
+        commit2 = Commit(get_rand_hash(), author, email, date, subject)
         self.assertNotEqual(commit1, commit2)
 
     def test_two_commits_with_different_author_are_not_equal(self):
         hash = get_rand_hash()
         email = 'pz@pz.net'
         date = get_curr_date()
-        msg = 'Commit message'
-        commit1 = Commit(hash, 'Petr Zemek', email, date, msg)
-        commit2 = Commit(hash, 'PZ', email, date, msg)
+        subject = 'Commit message'
+        commit1 = Commit(hash, 'Petr Zemek', email, date, subject)
+        commit2 = Commit(hash, 'PZ', email, date, subject)
         self.assertNotEqual(commit1, commit2)
 
     def test_two_commits_with_different_email_are_not_equal(self):
         hash = get_rand_hash()
         author = 'PZ'
         date = get_curr_date()
-        msg = 'Commit message'
-        commit1 = Commit(hash, author, 'pz@pz.net', date, msg)
-        commit2 = Commit(hash, author, 's3rvac@gmail.com', date, msg)
+        subject = 'Commit message'
+        commit1 = Commit(hash, author, 'pz@pz.net', date, subject)
+        commit2 = Commit(hash, author, 's3rvac@gmail.com', date, subject)
         self.assertNotEqual(commit1, commit2)
 
     def test_two_commits_with_different_date_are_not_equal(self):
         hash = get_rand_hash()
         author = 'PZ'
         email = 'pz@pz.net'
-        msg = 'Commit message'
+        subject = 'Commit message'
         commit1 = Commit(hash, author, email,
-            datetime.datetime(2007, 12, 11, 5, 43, 14), msg)
+            datetime.datetime(2007, 12, 11, 5, 43, 14), subject)
         commit2 = Commit(hash, author, email,
-            datetime.datetime(2014, 5, 18, 10, 27, 53), msg)
+            datetime.datetime(2014, 5, 18, 10, 27, 53), subject)
         self.assertNotEqual(commit1, commit2)
 
     def test_two_commits_with_different_msg_are_not_equal(self):
@@ -159,14 +160,14 @@ class CommitComparisonTests(unittest.TestCase):
         self.assertNotEqual(commit1, commit2)
 
 
-def get_new_commit(hash=None, author=None, email=None, date=None, msg=None):
+def get_new_commit(hash=None, author=None, email=None, date=None, subject=None):
     """Returns a new commit, possibly based on the given data (if not None)."""
     hash = hash or get_rand_hash()
     author = author or 'Petr Zemek'
     email = email or 's3rvac@gmail.com'
     date = get_curr_date()
-    msg = msg or 'Commit message'
-    return Commit(hash, author, email, date, msg)
+    subject = subject or 'Commit message'
+    return Commit(hash, author, email, date, subject)
 
 
 class CommitReprTests(unittest.TestCase):
@@ -425,7 +426,7 @@ class RepoGetCommitTests(RepoTests):
         self.author = 'Petr Zemek'
         self.email = 's3rvac@gmail.com'
         self.date = get_curr_date()
-        self.msg = 'Commit message'
+        self.subject = 'Commit message'
         self.mock_check_output.side_effect = self.mock_check_output_side_effect
         self.repo = Repo('/path/to/existing/repository')
 
@@ -441,7 +442,7 @@ class RepoGetCommitFromHashTests(RepoGetCommitTests):
 
     def test_returns_correct_commit(self):
         self.assertEqual(self.repo.get_commit_from_hash(hash),
-            Commit(self.hash, self.author, self.email, self.date, self.msg))
+            Commit(self.hash, self.author, self.email, self.date, self.subject))
 
 
 class RepoGetCommitForBranchTests(RepoGetCommitTests):
@@ -459,4 +460,4 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
 
     def test_returns_correct_commit(self):
         self.assertEqual(self.repo.get_commit_for_branch(self.branch),
-            Commit(self.hash, self.author, self.email, self.date, self.msg))
+            Commit(self.hash, self.author, self.email, self.date, self.subject))
