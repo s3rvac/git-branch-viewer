@@ -293,8 +293,9 @@ class Repo:
         #   commit message
         #
         hash = self._get_commit_hash_from_show_output(output)
-        author, email, date, msg = self._get_commit_details_from_show_output(
-            output)
+        author, email, date = \
+            self._get_commit_author_email_date_from_show_output(output)
+        msg = self._get_commit_msg_from_show_output(output)
         return Commit(hash, author, email, date, msg)
 
     def _get_commit_hash_from_show_output(self, output):
@@ -303,8 +304,7 @@ class Repo:
             """, output, re.VERBOSE | re.MULTILINE)
         return m.group('hash')
 
-    def _get_commit_details_from_show_output(self, output):
-        # author, email, date
+    def _get_commit_author_email_date_from_show_output(self, output):
         m = re.search(r"""
                 author \s+ (?P<author>.+)
                        \s+ <(?P<email>.+)>
@@ -315,8 +315,9 @@ class Repo:
         author = m.group('author')
         email = m.group('email')
         date = datetime.datetime.fromtimestamp(int(m.group('date_ts')))
+        return author, email, date
 
-        # message
+    def _get_commit_msg_from_show_output(self, output):
         m = re.search(r"""
                 \n
                 \n
@@ -324,9 +325,7 @@ class Repo:
                 \n
                 $
             """, output, re.VERBOSE | re.MULTILINE)
-        msg = m.group('msg').strip()
-
-        return author, email, date, msg
+        return m.group('msg').strip()
 
     def _verify_repository_existence(self):
         self.run_git_cmd(['status'])
