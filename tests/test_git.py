@@ -275,7 +275,8 @@ class RepoCreateTests(RepoTests):
         REPO_PATH = '/path/to/existing/repository'
         Repo(REPO_PATH)
         self.mock_chdir.assert_any_call(REPO_PATH)
-        self.mock_check_output.assert_called_once_with(['git', 'status'])
+        self.mock_check_output.assert_called_once_with(['git', 'status'],
+            universal_newlines=True)
 
     def test_path_is_accessible_after_creating_repo_from_existing_repository(self):
         REPO_PATH = '/path/to/existing/repository'
@@ -307,7 +308,8 @@ class RepoCreateTests(RepoTests):
             b'fatal: Not a git repository (or any parent up to mount point)')
         REPO_PATH = '/path/to/existing/location/with/no/repository'
         self.assertRaises(GitCmdError, Repo, REPO_PATH)
-        self.mock_check_output.assert_called_once_with(['git', 'status'])
+        self.mock_check_output.assert_called_once_with(['git', 'status'],
+            universal_newlines=True)
 
     def test_exception_is_raised_when_git_binary_is_not_found(self):
         # FileNotFoundError is raised when the command does not exist.
@@ -315,7 +317,8 @@ class RepoCreateTests(RepoTests):
             "[Errno 2] No such file or directory: 'git'")
         REPO_PATH = '/path/to/existing/location/with/norepository'
         self.assertRaises(GitBinaryNotFoundError, Repo, REPO_PATH)
-        self.mock_check_output.assert_called_once_with(['git', 'status'])
+        self.mock_check_output.assert_called_once_with(['git', 'status'],
+            universal_newlines=True)
 
 
 class RepoComparisonTests(RepoTests):
@@ -367,7 +370,8 @@ class RepoGetBranchesOnRemoteTests(RepoTests):
         remote = 'origin'
         self.repo.get_branches_on_remote(remote)
         self.mock_check_output.assert_called_with(
-            ['git', 'ls-remote', '--heads', remote])
+            ['git', 'ls-remote', '--heads', remote],
+            universal_newlines=True)
 
     def test_returns_empty_list_when_there_are_no_branches(self):
         self.mock_check_output.return_value = ''
@@ -429,7 +433,8 @@ class RepoGetCommitFromHashTests(RepoGetCommitTests):
         hash = '8a9abf8ad351dc9c7e2a5ba9f3b4d41c038ea605'
         self.repo.get_commit_from_hash(hash)
         self.mock_check_output.assert_called_with(
-            ['git', 'show', '--format=format:%H%n%an%n%ae%n%at%n%s%n', hash])
+            ['git', 'show', '--format=format:%H%n%an%n%ae%n%at%n%s%n', hash],
+            universal_newlines=True)
 
     def test_returns_correct_commit(self):
         self.assertEqual(self.repo.get_commit_from_hash(hash),
@@ -447,7 +452,8 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
         self.repo.get_commit_for_branch(self.branch)
         self.mock_check_output.assert_called_with(
             ['git', 'show', '--format=format:%H%n%an%n%ae%n%at%n%s%n',
-             self.branch.remote, self.branch.name])
+             self.branch.remote, self.branch.name],
+            universal_newlines=True)
 
     def test_returns_correct_commit(self):
         self.assertEqual(self.repo.get_commit_for_branch(self.branch),

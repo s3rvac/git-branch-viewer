@@ -225,7 +225,8 @@ class Repo:
         """
         with chdir(self.path):
             try:
-                return subprocess.check_output(['git'] + list(args))
+                return subprocess.check_output(['git'] + list(args),
+                    universal_newlines=True)
             # When a command is not found or cannot be executed,
             # subprocess.check_output() raises OSError.
             except OSError:
