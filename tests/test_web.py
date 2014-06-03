@@ -32,6 +32,3 @@ class WebTestCase(unittest.TestCase):
     def test_repo_name_is_shown_on_index_page(self):
         rv = self.app.get('/')
         self.assertIn(self.repo_name, rv.data.decode())
-
-    def tearDown(self):
-        pass
