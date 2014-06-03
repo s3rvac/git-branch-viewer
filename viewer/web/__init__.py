@@ -10,5 +10,9 @@
 
 from flask import Flask
 app = Flask(__name__)
+# Global settings.
+app.config.from_pyfile('settings.cfg')
+# Local settings.
+app.config.from_envvar('GIT_BRANCH_VIEWER_SETTINGS', silent=True)
 
 from . import views
