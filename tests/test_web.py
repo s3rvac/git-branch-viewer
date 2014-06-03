@@ -11,7 +11,7 @@ from unittest import mock
 import viewer
 
 
-class WebTestCase(unittest.TestCase):
+class WebTests(unittest.TestCase):
     def setUp(self):
         # Create and initialize a mock for git.Repo.
         self.repo_mock = mock.MagicMock(spec=viewer.git.Repo)
