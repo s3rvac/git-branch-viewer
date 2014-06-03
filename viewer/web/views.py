@@ -9,10 +9,21 @@
 """
 
 from flask import render_template
+from flask import g
 
+from viewer import git
 from . import app
+
+
+def get_repo():
+    return git.Repo(app.config['GIT_REPO_PATH'])
+
+
+@app.before_request
+def before_request():
+    g.repo = get_repo()
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', repo_name=g.repo.name)
