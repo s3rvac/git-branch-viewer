@@ -29,6 +29,12 @@ class WebTests(unittest.TestCase):
         rv = self.app.get('/')
         self.assertEqual(rv.status_code, 200)
 
+    def test_repo_is_initialized_with_path_from_config(self):
+        REPO_PATH = '/path/to/repo'
+        viewer.web.app.config['GIT_REPO_PATH'] = REPO_PATH
+        rv = self.app.get('/')
+        self.repo_cls_mock.assert_called_once_with(REPO_PATH)
+
     def test_repo_name_is_shown_on_index_page(self):
         rv = self.app.get('/')
         self.assertIn(self.repo_name, rv.data.decode())
