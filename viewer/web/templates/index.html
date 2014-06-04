@@ -14,7 +14,12 @@
 <h2>Branches on Remote '{{ remote }}'</h2>
 <ul>
 	{% for branch in branches %}
-	<li>{{ branch.name }}</li>
+	<li>
+		{{ branch.name }}
+		<ul>
+			<li>{{ branch.commit }}</li>
+		</ul>
+	</li>
 	{% endfor %}
 </ul>
 {% endblock %}

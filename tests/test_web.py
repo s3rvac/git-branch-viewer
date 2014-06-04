@@ -11,6 +11,8 @@ from unittest import mock
 import viewer
 import viewer.web
 
+from .test_git import get_new_commit
+
 
 class WebTests(unittest.TestCase):
     """A base class for all web tests."""
@@ -74,3 +76,15 @@ class BranchesOnIndexPageTests(WebTests):
         rv = self.app.get('/')
         for branch in self.BRANCHES:
             self.assertIn(branch.name, rv.data.decode())
+
+    def test_commit_for_each_branch_is_shown_on_index_page(self):
+        COMMIT = get_new_commit()
+        self.repo_mock.get_branches_on_remote.return_value = self.BRANCHES
+        # For simplicity, we return the same commit for every branch.
+        self.repo_mock.get_commit_for_branch.return_value = COMMIT
+        rv = self.app.get('/')
+        # We check just some of the commit's data because what is actually
+        # shown and in what format may differ over time.
+        self.assertIn(COMMIT.short_hash(), rv.data.decode())
+        self.assertIn(COMMIT.author, rv.data.decode())
+        self.assertIn(COMMIT.email, rv.data.decode())
