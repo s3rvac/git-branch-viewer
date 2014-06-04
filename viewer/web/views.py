@@ -26,4 +26,5 @@ def before_request():
 
 @app.route('/')
 def index():
-    return render_template('index.html', repo_name=g.repo.name)
+    branches = g.repo.get_branches_on_remote(app.config['GIT_REMOTE'])
+    return render_template('index.html', repo_name=g.repo.name, branches=branches)

@@ -39,3 +39,14 @@ class WebTests(unittest.TestCase):
         type(self.repo_mock).name = mock.PropertyMock(return_value=REPO_NAME)
         rv = self.app.get('/')
         self.assertIn(REPO_NAME, rv.data.decode())
+
+    def test_branches_are_shown_on_index_page(self):
+        REMOTE = 'test_remote'
+        BRANCHES = [
+            viewer.git.Branch(self.repo_mock, REMOTE, 'test_branch1'),
+            viewer.git.Branch(self.repo_mock, REMOTE, 'test_branch2')
+        ]
+        self.repo_mock.get_branches_on_remote.return_value = BRANCHES
+        rv = self.app.get('/')
+        for branch in BRANCHES:
+            self.assertIn(branch.name, rv.data.decode())
