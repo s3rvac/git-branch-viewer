@@ -14,10 +14,8 @@ import viewer.web
 
 class WebTests(unittest.TestCase):
     def setUp(self):
-        # Create and initialize a mocked repository.
+        # Create a mocked repository.
         self.repo_mock = mock.MagicMock(spec=viewer.git.Repo)
-        self.repo_name = 'my testing repo'
-        type(self.repo_mock).name = mock.PropertyMock(return_value=self.repo_name)
 
         # Patch repository creation.
         patcher = mock.patch('viewer.git.Repo', return_value=self.repo_mock)
@@ -37,5 +35,7 @@ class WebTests(unittest.TestCase):
         self.repo_cls_mock.assert_called_once_with(REPO_PATH)
 
     def test_repo_name_is_shown_on_index_page(self):
+        REPO_NAME = 'my testing repo'
+        type(self.repo_mock).name = mock.PropertyMock(return_value=REPO_NAME)
         rv = self.app.get('/')
-        self.assertIn(self.repo_name, rv.data.decode())
+        self.assertIn(REPO_NAME, rv.data.decode())
