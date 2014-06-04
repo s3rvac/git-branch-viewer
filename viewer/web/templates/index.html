@@ -5,6 +5,16 @@
 
 {% extends "base.html" %}
 
+{% macro display_commit(commit) -%}
+	<div>
+		{{ commit.short_hash() }}
+		{{ commit.date }}
+		{{ commit.author }}
+		&lt;{{ commit.email }}&gt;
+		{{ commit.subject }}
+	</div>
+{%- endmacro %}
+
 {% block body %}
 <h2>Repository</h2>
 <p>
@@ -17,7 +27,7 @@
 	<li>
 		{{ branch.name }}
 		<ul>
-			<li>{{ branch.commit }}</li>
+			<li>{{ display_commit(branch.commit) }}</li>
 		</ul>
 	</li>
 	{% endfor %}
