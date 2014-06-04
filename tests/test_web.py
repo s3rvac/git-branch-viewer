@@ -13,15 +13,15 @@ import viewer
 
 class WebTests(unittest.TestCase):
     def setUp(self):
-        # Create and initialize a mock for git.Repo.
+        # Create and initialize a mocked repository.
         self.repo_mock = mock.MagicMock(spec=viewer.git.Repo)
         self.repo_name = 'my testing repo'
         type(self.repo_mock).name = mock.PropertyMock(return_value=self.repo_name)
 
-        # Patch repo creation.
-        patcher = mock.patch('viewer.web.views.get_repo', return_value=self.repo_mock)
+        # Patch repository creation.
+        patcher = mock.patch('viewer.git.Repo', return_value=self.repo_mock)
         self.addCleanup(patcher.stop)
-        patcher.start()
+        self.repo_cls_mock = patcher.start()
 
         self.app = viewer.web.app.test_client()
 
