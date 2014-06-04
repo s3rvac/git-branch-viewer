@@ -9,6 +9,7 @@ import unittest
 from unittest import mock
 
 import viewer
+import viewer.web
 
 
 class WebTests(unittest.TestCase):
