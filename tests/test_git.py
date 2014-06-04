@@ -221,6 +221,17 @@ class BranchCommitTests(unittest.TestCase):
         repo_mock.get_commit_for_branch.assert_called_once_with(branch)
 
 
+class BranchFullNameTests(unittest.TestCase):
+    """Tests for Branch.full_name."""
+
+    def test_full_name_returns_proper_name(self):
+        REMOTE = 'origin'
+        BRANCH_NAME = 'featureX'
+        repo_mock = get_git_repo_mock()
+        branch = Branch(repo_mock, REMOTE, BRANCH_NAME)
+        self.assertEqual(branch.full_name, '{}/{}'.format(REMOTE, BRANCH_NAME))
+
+
 class BranchComparisonTests(unittest.TestCase):
     """Tests for branch comparison."""
 

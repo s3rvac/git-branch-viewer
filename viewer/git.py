@@ -169,6 +169,11 @@ class Branch:
         return self._name
 
     @property
+    def full_name(self):
+        """Full name of the branch (`'remote/name'`)."""
+        return '{}/{}'.format(self.remote, self.name)
+
+    @property
     def commit(self):
         """Commit representing the branch."""
         return self._repo.get_commit_for_branch(self)
