@@ -13,6 +13,8 @@ import viewer.web
 
 
 class WebTests(unittest.TestCase):
+    """A base class for all web tests."""
+
     def setUp(self):
         # Create a mocked repository.
         self.repo_mock = mock.MagicMock(spec=viewer.git.Repo)
@@ -23,6 +25,10 @@ class WebTests(unittest.TestCase):
         self.repo_cls_mock = patcher.start()
 
         self.app = viewer.web.app.test_client()
+
+
+class GeneralIndexPageTests(WebTests):
+    """General tests for the index page."""
 
     def test_index_page_exists(self):
         rv = self.app.get('/')
@@ -40,25 +46,31 @@ class WebTests(unittest.TestCase):
         rv = self.app.get('/')
         self.assertIn(REPO_NAME, rv.data.decode())
 
-    def test_remote_from_config_is_used_when_getting_branches(self):
-        REMOTE = 'test_remote'
-        viewer.web.app.config['GIT_REMOTE'] = REMOTE
-        rv = self.app.get('/')
-        self.repo_mock.get_branches_on_remote.assert_called_with(REMOTE)
-
     def test_remote_is_shown_on_index_page(self):
         REMOTE = 'test_remote'
         viewer.web.app.config['GIT_REMOTE'] = REMOTE
         rv = self.app.get('/')
         self.assertIn(REMOTE, rv.data.decode())
 
-    def test_branches_are_shown_on_index_page(self):
-        REMOTE = 'test_remote'
-        BRANCHES = [
-            viewer.git.Branch(self.repo_mock, REMOTE, 'test_branch1'),
-            viewer.git.Branch(self.repo_mock, REMOTE, 'test_branch2')
+
+class BranchesOnIndexPageTests(WebTests):
+    """Tests for the branches shown on the index page."""
+
+    def setUp(self):
+        super().setUp()
+        self.REMOTE = 'test_remote'
+        self.BRANCHES = [
+            viewer.git.Branch(self.repo_mock, self.REMOTE, 'test_branch1'),
+            viewer.git.Branch(self.repo_mock, self.REMOTE, 'test_branch2')
         ]
-        self.repo_mock.get_branches_on_remote.return_value = BRANCHES
+
+    def test_remote_from_config_is_used_when_getting_branches(self):
+        viewer.web.app.config['GIT_REMOTE'] = self.REMOTE
         rv = self.app.get('/')
-        for branch in BRANCHES:
+        self.repo_mock.get_branches_on_remote.assert_called_with(self.REMOTE)
+
+    def test_branches_are_shown_on_index_page(self):
+        self.repo_mock.get_branches_on_remote.return_value = self.BRANCHES
+        rv = self.app.get('/')
+        for branch in self.BRANCHES:
             self.assertIn(branch.name, rv.data.decode())
