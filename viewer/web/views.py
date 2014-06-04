@@ -24,6 +24,7 @@ def before_request():
 def index():
     context = {
         'repo_name': g.repo.name,
+        'remote': app.config['GIT_REMOTE'],
         'branches': g.repo.get_branches_on_remote(app.config['GIT_REMOTE'])
     }
     return render_template('index.html', **context)
