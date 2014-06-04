@@ -40,6 +40,12 @@ class WebTests(unittest.TestCase):
         rv = self.app.get('/')
         self.assertIn(REPO_NAME, rv.data.decode())
 
+    def test_remote_from_config_is_used_when_getting_branches(self):
+        REMOTE = 'test_remote'
+        viewer.web.app.config['GIT_REMOTE'] = REMOTE
+        rv = self.app.get('/')
+        self.repo_mock.get_branches_on_remote.assert_called_with(REMOTE)
+
     def test_branches_are_shown_on_index_page(self):
         REMOTE = 'test_remote'
         BRANCHES = [
