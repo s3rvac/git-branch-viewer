@@ -15,13 +15,9 @@ from viewer import git
 from . import app
 
 
-def get_repo():
-    return git.Repo(app.config['GIT_REPO_PATH'])
-
-
 @app.before_request
 def before_request():
-    g.repo = get_repo()
+    g.repo = git.Repo(app.config['GIT_REPO_PATH'])
 
 
 @app.route('/')
