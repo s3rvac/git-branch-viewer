@@ -92,6 +92,18 @@ class Commit:
         """Subject (the first line of commit message)."""
         return self._subject
 
+    def short_subject(self, length=50):
+        """Shorter version of the subject.
+
+        When the subject is of a shorter or equal length as `length`, it is
+        returned unmodified. However, when it is longer than `length`, the
+        first `length` characters are returned with appended ellipsis
+        (`...`).
+        """
+        if len(self.subject) <= length:
+            return self.subject
+        return '{}...'.format(self.subject[:length])
+
     def short_hash(self, length=8):
         """Shorter version of the hash."""
         return self.hash[:length]

@@ -73,6 +73,20 @@ class CommitCreateAndAccessTests(unittest.TestCase):
         self.assertEqual(self.commit.short_hash(), self.hash[:8])
         self.assertEqual(self.commit.short_hash(10), self.hash[:10])
 
+    def test_short_subject_returns_subject_when_subject_is_shorter(self):
+        subject_len = len(self.subject)
+        self.assertEqual(self.commit.short_subject(subject_len + 1), self.subject)
+
+    def test_short_subject_returns_subject_when_subject_has_same_length(self):
+        subject_len = len(self.subject)
+        self.assertEqual(self.commit.short_subject(subject_len), self.subject)
+
+    def test_short_subject_returns_shorter_subject_when_subject_is_longer(self):
+        self.subject = 'Long commit subject'
+        self.commit = Commit(self.hash, self.author, self.email, self.date,
+            self.subject)
+        self.assertEqual(self.commit.short_subject(4), 'Long...')
+
     def test_age_returns_correct_result(self):
         with mock.patch('datetime.datetime') as datetime_mock:
             today = get_curr_date()
