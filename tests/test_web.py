@@ -40,7 +40,7 @@ class GeneralIndexPageTests(WebTests):
     def test_repo_is_initialized_with_path_from_config(self):
         REPO_PATH = '/path/to/repo'
         viewer.web.app.config['GIT_REPO_PATH'] = REPO_PATH
-        rv = self.app.get('/')
+        self.app.get('/')
         self.repo_cls_mock.assert_called_once_with(REPO_PATH)
 
     def test_repo_name_is_shown(self):
@@ -69,7 +69,7 @@ class BranchesOnIndexPageTests(WebTests):
 
     def test_remote_from_config_is_used_when_getting_branches(self):
         viewer.web.app.config['GIT_REMOTE'] = self.REMOTE
-        rv = self.app.get('/')
+        self.app.get('/')
         self.repo_mock.get_branches_on_remote.assert_called_with(self.REMOTE)
 
     def test_branches_are_shown(self):
