@@ -237,14 +237,6 @@ class BranchCreateAndAccessTests(unittest.TestCase):
         self.assertEqual(self.branch.remote, self.remote)
         self.assertEqual(self.branch.name, self.name)
 
-    def test_age_returns_age_of_commit(self):
-        with mock.patch('datetime.datetime') as datetime_mock:
-            today = get_curr_date()
-            datetime_mock.today.return_value = today
-            commit = get_new_commit()
-            self.repo_mock.get_commit_for_branch.return_value = commit
-            self.assertEqual(self.branch.age, commit.age)
-
     def test_data_cannot_be_changed_after_creation(self):
         with self.assertRaises(AttributeError):
             self.branch.repo = get_git_repo_mock()
@@ -270,11 +262,25 @@ class BranchFullNameTests(unittest.TestCase):
     """Tests for Branch.full_name."""
 
     def test_full_name_returns_proper_name(self):
-        REMOTE = 'origin'
-        BRANCH_NAME = 'featureX'
+        remote = 'origin'
+        branch_name = 'featureX'
         repo_mock = get_git_repo_mock()
-        branch = Branch(repo_mock, REMOTE, BRANCH_NAME)
-        self.assertEqual(branch.full_name, '{}/{}'.format(REMOTE, BRANCH_NAME))
+        branch = Branch(repo_mock, remote, branch_name)
+        self.assertEqual(branch.full_name, '{}/{}'.format(remote, branch_name))
+
+
+class BranchAgeTests(unittest.TestCase):
+    """Tests for Branch.age."""
+
+    @mock.patch('datetime.datetime')
+    def test_age_returns_age_of_commit(self, datetime_mock):
+        today = get_curr_date()
+        datetime_mock.today.return_value = today
+        commit = get_new_commit()
+        repo_mock = get_git_repo_mock()
+        repo_mock.get_commit_for_branch.return_value = commit
+        branch = Branch(repo_mock, 'origin', 'featureX')
+        self.assertEqual(branch.age, commit.age)
 
 
 class BranchComparisonTests(unittest.TestCase):
