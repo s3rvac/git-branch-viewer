@@ -480,7 +480,8 @@ class RepoGetBranchesOnRemoteTests(RepoTests):
         expected_branches = [
             Branch(self.repo, remote, name)
         ]
-        self.assertEqual(self.repo.get_branches_on_remote(remote), expected_branches)
+        self.assertEqual(self.repo.get_branches_on_remote(remote),
+            expected_branches)
 
     def test_returns_two_branches_when_there_are_two_branches(self):
         remote = 'origin'
@@ -496,7 +497,8 @@ class RepoGetBranchesOnRemoteTests(RepoTests):
             Branch(self.repo, remote, name1),
             Branch(self.repo, remote, name2)
         ]
-        self.assertEqual(self.repo.get_branches_on_remote(remote), expected_branches)
+        self.assertEqual(self.repo.get_branches_on_remote(remote),
+            expected_branches)
 
 
 class RepoGetCommitTests(RepoTests):
