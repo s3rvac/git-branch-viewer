@@ -77,10 +77,18 @@ class BranchesOnIndexPageTests(WebTests):
         for branch in self.BRANCHES:
             self.assertIn(branch.name, rv.data.decode())
 
-    def test_commit_for_each_branch_is_shown_on_index_page(self):
+
+class CommitsOnIndexPageTests(WebTests):
+    """Tests for the commits shown on the index page."""
+
+    def setUp(self):
+        super().setUp()
+        self.REMOTE = 'test_remote'
+        self.BRANCH = viewer.git.Branch(self.repo_mock, self.REMOTE, 'test_branch')
+        self.repo_mock.get_branches_on_remote.return_value = [self.BRANCH]
+
+    def test_commit_for_branch_is_shown_on_index_page(self):
         COMMIT = get_new_commit()
-        self.repo_mock.get_branches_on_remote.return_value = self.BRANCHES
-        # For simplicity, we return the same commit for every branch.
         self.repo_mock.get_commit_for_branch.return_value = COMMIT
         rv = self.app.get('/')
         # We check just some of the commit's data because what is actually
