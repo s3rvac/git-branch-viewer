@@ -13,8 +13,7 @@
 			{{ commit.short_hash() }}
 		{% endif %}
 		{{ commit.date }}
-		{{ commit.author }}
-		&lt;{{ commit.email }}&gt;
+		<a href="mailto:{{ commit.email }}">{{ commit.author }}</a>
 		{{ commit.subject }}
 	</div>
 {%- endmacro %}

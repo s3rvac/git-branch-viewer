@@ -116,3 +116,11 @@ class CommitsOnIndexPageTests(WebTests):
         rv = self.app.get('/')
         NOT_EXPECTED_RE = r'{}</a>'.format(COMMIT.short_hash())
         self.assertNotRegex(rv.data.decode(), NOT_EXPECTED_RE)
+
+    def test_author_is_link_to_his_or_her_email(self):
+        COMMIT = get_new_commit()
+        self.repo_mock.get_commit_for_branch.return_value = COMMIT
+        rv = self.app.get('/')
+        EXPECTED_RE = re.compile(r'<a[^>]+href="mailto:{}"[^>]*>{}</a>'.format(
+            COMMIT.email, COMMIT.author), re.MULTILINE)
+        self.assertRegex(rv.data.decode(), EXPECTED_RE)
