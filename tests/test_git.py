@@ -32,17 +32,18 @@ def get_rand_hash(characters=Commit.VALID_HASH_CHARACTERS):
         list(characters)) for _ in range(Commit.VALID_HASH_LENGTH))
 
 
-class CommitCreateAndAccessTests(unittest.TestCase):
-    """Tests for Commit.__init__() and accessors."""
+def get_new_commit(hash=None, author=None, email=None, date=None, subject=None):
+    """Returns a new commit, possibly based on the given data (if not None)."""
+    hash = hash if hash is not None else get_rand_hash()
+    author = author if author is not None else 'Petr Zemek'
+    email = email if email is not None else 's3rvac@gmail.com'
+    date = date if date is not None else get_curr_date()
+    subject = subject if subject is not None else 'Commit message'
+    return Commit(hash, author, email, date, subject)
 
-    def setUp(self):
-        self.hash = get_rand_hash()
-        self.author = 'Petr Zemek'
-        self.email = 's3rvac@gmail.com'
-        self.date = get_curr_date()
-        self.subject = 'Commit message'
-        self.commit = Commit(self.hash, self.author, self.email, self.date,
-            self.subject)
+
+class CommitClassTests(unittest.TestCase):
+    """Tests for the Commit class itself."""
 
     def test_valid_hash_length_has_proper_value(self):
         self.assertEqual(Commit.VALID_HASH_LENGTH, 40)
@@ -50,68 +51,93 @@ class CommitCreateAndAccessTests(unittest.TestCase):
     def test_valid_hash_characters_has_proper_value(self):
         self.assertEqual(Commit.VALID_HASH_CHARACTERS, set('abcdef0123456789'))
 
+
+class CommitCreateAndAccessTests(unittest.TestCase):
+    """Tests for Commit.__init__() and accessors."""
+
     def test_data_passed_into_constructor_are_accessible_after_creation(self):
-        self.assertEqual(self.commit.hash, self.hash)
-        self.assertEqual(self.commit.author, self.author)
-        self.assertEqual(self.commit.email, self.email)
-        self.assertEqual(self.commit.date, self.date)
-        self.assertEqual(self.commit.subject, self.subject)
+        hash = get_rand_hash()
+        author = 'Petr Zemek'
+        email = 's3rvac@gmail.com'
+        date = get_curr_date()
+        subject = 'Commit message'
+        commit = Commit(hash, author, email, date, subject)
+        self.assertEqual(commit.hash, hash)
+        self.assertEqual(commit.author, author)
+        self.assertEqual(commit.email, email)
+        self.assertEqual(commit.date, date)
+        self.assertEqual(commit.subject, subject)
 
     def test_data_cannot_be_changed_after_creation(self):
+        commit = get_new_commit()
         with self.assertRaises(AttributeError):
-            self.commit.hash = get_rand_hash()
+            commit.hash = get_rand_hash()
         with self.assertRaises(AttributeError):
-            self.commit.author = 'Other Author'
+            commit.author = 'Other Author'
         with self.assertRaises(AttributeError):
-            self.commit.email = 'Other email'
+            commit.email = 'Other email'
         with self.assertRaises(AttributeError):
-            self.commit.date = get_curr_date()
+            commit.date = get_curr_date()
         with self.assertRaises(AttributeError):
-            self.commit.subject = 'Other commit message'
-
-    def test_short_hash_returns_correct_result(self):
-        self.assertEqual(self.commit.short_hash(), self.hash[:8])
-        self.assertEqual(self.commit.short_hash(10), self.hash[:10])
-
-    def test_short_subject_returns_subject_when_subject_is_shorter(self):
-        subject_len = len(self.subject)
-        self.assertEqual(self.commit.short_subject(subject_len + 1), self.subject)
-
-    def test_short_subject_returns_subject_when_subject_has_same_length(self):
-        subject_len = len(self.subject)
-        self.assertEqual(self.commit.short_subject(subject_len), self.subject)
-
-    def test_short_subject_returns_shorter_subject_when_subject_is_longer(self):
-        self.subject = 'Long commit subject'
-        self.commit = Commit(self.hash, self.author, self.email, self.date,
-            self.subject)
-        self.assertEqual(self.commit.short_subject(4), 'Long...')
-
-    def test_age_returns_correct_result(self):
-        with mock.patch('datetime.datetime') as datetime_mock:
-            today = get_curr_date()
-            datetime_mock.today.return_value = today
-            expected_age = today - self.date
-            self.assertEqual(self.commit.age, expected_age)
+            commit.subject = 'Other commit message'
 
     def test_hash_is_properly_normalized(self):
-        hash = get_rand_hash('ABCDEF')
-        commit = Commit(hash, self.author, self.email, self.date, self.subject)
-        self.assertEqual(commit.hash, hash.lower())
+        commit = get_new_commit(
+            hash='207891DB5BDDBFB0C7210ACA8C76AC6A9C5F9859')
+        self.assertEqual(commit.hash,
+                 '207891db5bddbfb0c7210aca8c76ac6a9c5f9859')
 
-    def test_value_error_is_raised_when_hash_has_invalid_length(self):
+    def test_value_error_is_raised_when_hash_is_empty(self):
         with self.assertRaises(ValueError):
-            Commit('', self.author, self.email, self.date, self.subject)
+            get_new_commit(hash='')
+
+    def test_value_error_is_raised_when_hash_too_short(self):
         with self.assertRaises(ValueError):
-            Commit('abcdef', self.author, self.email, self.date, self.subject)
+            get_new_commit(hash='abcdef')
+
+    def test_value_error_is_raised_when_hash_too_long(self):
         with self.assertRaises(ValueError):
-            Commit('a' * (Commit.VALID_HASH_LENGTH + 1),
-                self.author, self.email, self.date, self.subject)
+            get_new_commit(hash='a' * (Commit.VALID_HASH_LENGTH + 1))
 
     def test_value_error_is_raised_when_hash_has_invalid_characters(self):
         with self.assertRaises(ValueError):
-            Commit((Commit.VALID_HASH_LENGTH - 1) * 'a' + 'g',
-                self.author, self.email, self.date, self.subject)
+            get_new_commit(hash=(Commit.VALID_HASH_LENGTH - 1) * 'a' + 'g')
+
+
+class CommitShortHashTests(unittest.TestCase):
+    """Tests for Commit.short_hash()."""
+
+    def test_short_hash_returns_correct_result(self):
+        commit = get_new_commit(hash='207891db5bddbfb0c7210aca8c76ac6a9c5f9859')
+        self.assertEqual(commit.short_hash(10), '207891db5b')
+
+
+class CommitShortSubjectTests(unittest.TestCase):
+    """Tests for Commit.short_subject()."""
+
+    def test_short_subject_returns_subject_when_subject_is_shorter(self):
+        commit = get_new_commit(subject='test')
+        self.assertEqual(commit.short_subject(5), commit.subject)
+
+    def test_short_subject_returns_subject_when_subject_has_same_length(self):
+        commit = get_new_commit(subject='test')
+        self.assertEqual(commit.short_subject(4), commit.subject)
+
+    def test_short_subject_returns_shorter_subject_when_subject_is_longer(self):
+        commit = get_new_commit(subject='test')
+        self.assertEqual(commit.short_subject(3), 'tes...')
+
+
+class CommitAgeTests(unittest.TestCase):
+    """Tests for Commit.age."""
+
+    @mock.patch('datetime.datetime')
+    def test_age_returns_correct_result(self, datetime_mock):
+        commit = get_new_commit()
+        today = get_curr_date()
+        datetime_mock.today.return_value = today
+        expected_age = today - commit.date
+        self.assertEqual(commit.age, expected_age)
 
 
 class CommitComparisonTests(unittest.TestCase):
@@ -179,16 +205,6 @@ class CommitComparisonTests(unittest.TestCase):
         commit2 = Commit(hash, author, 's3rvac@gmail.com', date,
             'Some other commit message')
         self.assertNotEqual(commit1, commit2)
-
-
-def get_new_commit(hash=None, author=None, email=None, date=None, subject=None):
-    """Returns a new commit, possibly based on the given data (if not None)."""
-    hash = hash or get_rand_hash()
-    author = author or 'Petr Zemek'
-    email = email or 's3rvac@gmail.com'
-    date = get_curr_date()
-    subject = subject or 'Commit message'
-    return Commit(hash, author, email, date, subject)
 
 
 class CommitReprTests(unittest.TestCase):
