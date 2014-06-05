@@ -205,6 +205,12 @@ class BranchCreateAndAccessTests(unittest.TestCase):
         self.assertEqual(self.branch.remote, self.remote)
         self.assertEqual(self.branch.name, self.name)
 
+    def test_age_returns_age_of_commit(self):
+        today = get_curr_date()
+        commit = get_new_commit()
+        self.repo_mock.get_commit_for_branch.return_value = commit
+        self.assertEqual(self.branch.age(today), commit.age(today))
+
     def test_data_cannot_be_changed_after_creation(self):
         with self.assertRaises(AttributeError):
             self.branch.repo = get_git_repo_mock()
