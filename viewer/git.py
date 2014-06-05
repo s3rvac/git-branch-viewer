@@ -96,6 +96,10 @@ class Commit:
         """Shorter version of the hash."""
         return self.hash[:length]
 
+    def age(self, today=datetime.datetime.today()):
+        """Age of the commit, relative to `today`."""
+        return today - self.date
+
     def __eq__(self, other):
         return (self.hash == other.hash and
                 self.author == other.author and

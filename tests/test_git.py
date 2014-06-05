@@ -73,6 +73,11 @@ class CommitCreateAndAccessTests(unittest.TestCase):
         self.assertEqual(self.commit.short_hash(), self.hash[:8])
         self.assertEqual(self.commit.short_hash(10), self.hash[:10])
 
+    def test_age_returns_correct_result(self):
+        today = get_curr_date()
+        expected_age = today - self.date
+        self.assertEqual(self.commit.age(today), expected_age)
+
     def test_hash_is_properly_normalized(self):
         hash = get_rand_hash('ABCDEF')
         commit = Commit(hash, self.author, self.email, self.date, self.subject)
