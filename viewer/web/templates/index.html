@@ -7,7 +7,11 @@
 
 {% macro display_commit(commit) -%}
 	<div>
-		{{ commit.short_hash() }}
+		{% if commit_details_url_fmt %}
+			<a href="{{ commit_details_url_fmt.format(commit.hash) }}">{{ commit.short_hash() }}</a>
+		{% else %}
+			{{ commit.short_hash() }}
+		{% endif %}
 		{{ commit.date }}
 		{{ commit.author }}
 		&lt;{{ commit.email }}&gt;

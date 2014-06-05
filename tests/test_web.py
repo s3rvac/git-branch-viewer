@@ -5,6 +5,7 @@
 # License: BSD, see LICENSE for more details
 #
 
+import re
 import unittest
 from unittest import mock
 
@@ -96,3 +97,22 @@ class CommitsOnIndexPageTests(WebTests):
         self.assertIn(COMMIT.short_hash(), rv.data.decode())
         self.assertIn(COMMIT.author, rv.data.decode())
         self.assertIn(COMMIT.email, rv.data.decode())
+
+    def test_commit_hash_is_link_to_commit_details_taken_from_config(self):
+        COMMIT = get_new_commit()
+        self.repo_mock.get_commit_for_branch.return_value = COMMIT
+        COMMIT_DETAILS_URL_FMT = 'http://show-commit.net/{}'
+        viewer.web.app.config['COMMIT_DETAILS_URL_FMT'] = COMMIT_DETAILS_URL_FMT
+        rv = self.app.get('/')
+        COMMIT_DETAILS_URL = COMMIT_DETAILS_URL_FMT.format(COMMIT.hash)
+        EXPECTED_RE = re.compile(r'<a[^>]+href="{}"[^>]*>{}</a>'.format(
+            COMMIT_DETAILS_URL, COMMIT.short_hash()), re.MULTILINE)
+        self.assertRegex(rv.data.decode(), EXPECTED_RE)
+
+    def test_when_commit_details_url_fmt_is_not_set_no_commit_url_us_shown(self):
+        COMMIT = get_new_commit()
+        self.repo_mock.get_commit_for_branch.return_value = COMMIT
+        viewer.web.app.config['COMMIT_DETAILS_URL_FMT'] = None
+        rv = self.app.get('/')
+        NOT_EXPECTED_RE = r'{}</a>'.format(COMMIT.short_hash())
+        self.assertNotRegex(rv.data.decode(), NOT_EXPECTED_RE)
