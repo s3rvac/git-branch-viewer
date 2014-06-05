@@ -43,13 +43,13 @@ class GeneralIndexPageTests(WebTests):
         rv = self.app.get('/')
         self.repo_cls_mock.assert_called_once_with(REPO_PATH)
 
-    def test_repo_name_is_shown_on_index_page(self):
+    def test_repo_name_is_shown(self):
         REPO_NAME = 'my testing repo'
         type(self.repo_mock).name = mock.PropertyMock(return_value=REPO_NAME)
         rv = self.app.get('/')
         self.assertIn(REPO_NAME, rv.data.decode())
 
-    def test_remote_is_shown_on_index_page(self):
+    def test_remote_is_shown(self):
         REMOTE = 'test_remote'
         viewer.web.app.config['GIT_REMOTE'] = REMOTE
         rv = self.app.get('/')
@@ -72,7 +72,7 @@ class BranchesOnIndexPageTests(WebTests):
         rv = self.app.get('/')
         self.repo_mock.get_branches_on_remote.assert_called_with(self.REMOTE)
 
-    def test_branches_are_shown_on_index_page(self):
+    def test_branches_are_shown(self):
         self.repo_mock.get_branches_on_remote.return_value = self.BRANCHES
         rv = self.app.get('/')
         for branch in self.BRANCHES:
@@ -88,7 +88,7 @@ class CommitsOnIndexPageTests(WebTests):
         self.BRANCH = viewer.git.Branch(self.repo_mock, self.REMOTE, 'test_branch')
         self.repo_mock.get_branches_on_remote.return_value = [self.BRANCH]
 
-    def test_commit_for_branch_is_shown_on_index_page(self):
+    def test_commit_for_branch_is_shown(self):
         COMMIT = get_new_commit()
         self.repo_mock.get_commit_for_branch.return_value = COMMIT
         rv = self.app.get('/')
