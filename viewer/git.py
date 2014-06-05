@@ -96,9 +96,10 @@ class Commit:
         """Shorter version of the hash."""
         return self.hash[:length]
 
-    def age(self, today=datetime.datetime.today()):
-        """Age of the commit, relative to `today`."""
-        return today - self.date
+    @property
+    def age(self):
+        """Age of the commit."""
+        return datetime.datetime.today() - self.date
 
     def __eq__(self, other):
         return (self.hash == other.hash and
@@ -182,9 +183,13 @@ class Branch:
         """Commit representing the branch."""
         return self._repo.get_commit_for_branch(self)
 
-    def age(self, today=datetime.datetime.today()):
-        """Age of the commit representing the branch, relative to `today`."""
-        return self.commit.age(today)
+    @property
+    def age(self):
+        """Age of the branch.
+
+        It is the age of the commit representing the branch.
+        """
+        return self.commit.age
 
     def __eq__(self, other):
         return (self.repo == other.repo and

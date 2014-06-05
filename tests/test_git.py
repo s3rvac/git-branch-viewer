@@ -74,9 +74,11 @@ class CommitCreateAndAccessTests(unittest.TestCase):
         self.assertEqual(self.commit.short_hash(10), self.hash[:10])
 
     def test_age_returns_correct_result(self):
-        today = get_curr_date()
-        expected_age = today - self.date
-        self.assertEqual(self.commit.age(today), expected_age)
+        with mock.patch('datetime.datetime') as datetime_mock:
+            today = get_curr_date()
+            datetime_mock.today.return_value = today
+            expected_age = today - self.date
+            self.assertEqual(self.commit.age, expected_age)
 
     def test_hash_is_properly_normalized(self):
         hash = get_rand_hash('ABCDEF')
@@ -206,10 +208,12 @@ class BranchCreateAndAccessTests(unittest.TestCase):
         self.assertEqual(self.branch.name, self.name)
 
     def test_age_returns_age_of_commit(self):
-        today = get_curr_date()
-        commit = get_new_commit()
-        self.repo_mock.get_commit_for_branch.return_value = commit
-        self.assertEqual(self.branch.age(today), commit.age(today))
+        with mock.patch('datetime.datetime') as datetime_mock:
+            today = get_curr_date()
+            datetime_mock.today.return_value = today
+            commit = get_new_commit()
+            self.repo_mock.get_commit_for_branch.return_value = commit
+            self.assertEqual(self.branch.age, commit.age)
 
     def test_data_cannot_be_changed_after_creation(self):
         with self.assertRaises(AttributeError):
