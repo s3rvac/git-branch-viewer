@@ -19,12 +19,8 @@
 {%- endmacro %}
 
 {% block body %}
-<h2>Repository</h2>
-<p>
-	{{ repo_name }}
-</p>
+<h1>Branches In '{{ repo_name }}' On '{{ remote }}'</h1>
 
-<h2>Branches on Remote '{{ remote }}'</h2>
 <ul>
 	{% for branch in shown_branches %}
 	<li>
@@ -35,7 +31,8 @@
 	</li>
 	{% endfor %}
 </ul>
-<h3>Ignored Branches</h3>
+
+<h2>Ignored</h2>
 <ul>
 	{% for branch in ignored_branches %}
 	<li>

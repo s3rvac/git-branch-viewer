@@ -5,13 +5,11 @@
 
 <!doctype html>
 <head>
-	<title>Git Branch Viewer</title>
+	<title>Branches In '{{ repo_name }}' On '{{ remote }}'</title>
 	<meta name="author" content="Petr Zemek, s3rvac@gmail.com">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-	<h1>Git Branch Viewer</h1>
-
 	{% block body %}{% endblock %}
 
 	<div id="footer">
