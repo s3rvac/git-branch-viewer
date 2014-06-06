@@ -29,6 +29,7 @@ def index():
         if branch not in ignored_branches]
     context = {
         'repo_name': g.repo.name,
+        'repo_last_update_date': g.repo.get_date_of_last_update(),
         'remote': app.config['GIT_REMOTE'],
         'shown_branches': shown_branches,
         'ignored_branches': ignored_branches,
