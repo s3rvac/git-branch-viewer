@@ -5,11 +5,11 @@
 # License: BSD, see LICENSE for more details
 #
 
+# Cannot use `from datetime import datetime` because of eval() in `repr` tests.
+import datetime
 import random
 import subprocess
 import unittest
-# Cannot use `from datetime import datetime` because of eval() in `repr` tests.
-import datetime
 from unittest import mock
 
 from viewer.git import Branch
