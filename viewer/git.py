@@ -292,6 +292,15 @@ class Repo:
         return self._get_commit_from_git_show_with_object(
             '{}/{}'.format(branch.remote, branch.name))
 
+    def get_date_of_last_update(self):
+        """Returns the date when the repository was last updated."""
+        # We obtain this information by checking the last modification time of
+        # the .git/FETCH_HEAD file. This is not bulletproof (see the comments
+        # in http://stackoverflow.com/a/9229377), but I don't know of any
+        # better way.
+        return datetime.datetime.fromtimestamp(
+            os.path.getmtime(os.path.join(self.path, '.git', 'FETCH_HEAD')))
+
     def __eq__(self, other):
         return self.path == other.path
 

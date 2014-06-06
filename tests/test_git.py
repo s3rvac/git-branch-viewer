@@ -7,6 +7,7 @@
 
 # Cannot use `from datetime import datetime` because of eval() in `repr` tests.
 import datetime
+import os
 import random
 import subprocess
 import unittest
@@ -554,3 +555,18 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
     def test_returns_correct_commit(self):
         self.assertEqual(self.repo.get_commit_for_branch(self.branch),
             Commit(self.hash, self.author, self.email, self.date, self.subject))
+
+
+@mock.patch('os.path.getmtime')
+class RepoGetDateOfLastUpdateTests(RepoGetCommitTests):
+    """Tests for Repo.get_date_of_last_update()."""
+
+    def test_calls_getmtime_with_proper_argument(self, getmtime_mock):
+        self.repo.get_date_of_last_update()
+        getmtime_mock.assert_called_with(
+            os.path.join(self.repo.path, '.git', 'FETCH_HEAD'))
+
+    def test_returns_correct_date(self, getmtime_mock):
+        expected_date = get_curr_date()
+        getmtime_mock.return_value = expected_date.timestamp()
+        self.assertEqual(self.repo.get_date_of_last_update(), expected_date)
