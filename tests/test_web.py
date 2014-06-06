@@ -55,6 +55,14 @@ class GeneralIndexPageTests(WebTests):
         rv = self.app.get('/')
         self.assertIn(REMOTE, rv.data.decode())
 
+    def test_link_to_project_on_github_is_shown_in_footer(self):
+        rv = self.app.get('/')
+        EXPECTED_RE = re.compile(r"""
+            id="footer".*
+            <a[^>]+href="https://github.com/s3rvac/git-branch-viewer"[^>]*>Git\ Branch\ Viewer</a>
+            """, re.VERBOSE | re.MULTILINE | re.DOTALL)
+        self.assertRegex(rv.data.decode(), EXPECTED_RE)
+
 
 class BranchesOnIndexPageTests(WebTests):
     """Tests for the branches shown on the index page."""
