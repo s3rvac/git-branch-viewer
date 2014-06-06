@@ -26,12 +26,20 @@
 
 <h2>Branches on Remote '{{ remote }}'</h2>
 <ul>
-	{% for branch in branches %}
+	{% for branch in shown_branches %}
 	<li>
 		{{ branch.name }} ({{ branch.age }})
 		<ul>
 			<li>{{ display_commit(branch.commit) }}</li>
 		</ul>
+	</li>
+	{% endfor %}
+</ul>
+<h3>Ignored Branches</h3>
+<ul>
+	{% for branch in ignored_branches %}
+	<li>
+		{{ branch.name }}
 	</li>
 	{% endfor %}
 </ul>

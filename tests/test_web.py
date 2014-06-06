@@ -78,6 +78,15 @@ class BranchesOnIndexPageTests(WebTests):
         for branch in self.BRANCHES:
             self.assertIn(branch.name, rv.data.decode())
 
+    def test_branches_to_be_ignored_are_ignored(self):
+        self.repo_mock.get_branches_on_remote.return_value = self.BRANCHES
+        IGNORED_BRANCH_NAME = self.BRANCHES[1].name
+        viewer.web.app.config['GIT_BRANCHES_TO_IGNORE'] = [IGNORED_BRANCH_NAME]
+        rv = self.app.get('/')
+        EXPECTED_RE = re.compile(r'.*Ignored.*{}'.format(IGNORED_BRANCH_NAME),
+            re.MULTILINE | re.DOTALL)
+        self.assertRegex(rv.data.decode(), EXPECTED_RE)
+
 
 class CommitsOnIndexPageTests(WebTests):
     """Tests for the commits shown on the index page."""

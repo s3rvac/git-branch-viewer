@@ -22,10 +22,16 @@ def before_request():
 
 @app.route('/')
 def index():
+    all_branches = g.repo.get_branches_on_remote(app.config['GIT_REMOTE'])
+    ignored_branches = [branch for branch in all_branches
+        if branch.name in app.config['GIT_BRANCHES_TO_IGNORE']]
+    shown_branches = [branch for branch in all_branches
+        if branch not in ignored_branches]
     context = {
         'repo_name': g.repo.name,
         'remote': app.config['GIT_REMOTE'],
-        'branches': g.repo.get_branches_on_remote(app.config['GIT_REMOTE']),
+        'shown_branches': shown_branches,
+        'ignored_branches': ignored_branches,
         'commit_details_url_fmt': app.config['COMMIT_DETAILS_URL_FMT']
     }
     return render_template('index.html', **context)
