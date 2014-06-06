@@ -28,7 +28,7 @@
 <ul>
 	{% for branch in branches %}
 	<li>
-		{{ branch.name }}
+		{{ branch.name }} ({{ branch.age }})
 		<ul>
 			<li>{{ display_commit(branch.commit) }}</li>
 		</ul>
