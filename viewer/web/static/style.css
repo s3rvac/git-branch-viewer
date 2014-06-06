@@ -1,1 +1,11 @@
 /*! Copyright (c) 2014 by Petr Zemek <s3rvac@gmail.com> and contributors */
+
+#footer {
+	display: table;
+	margin: 0 auto;
+	color: #888;
+}
+
+#footer a {
+	color: #888;
+}
