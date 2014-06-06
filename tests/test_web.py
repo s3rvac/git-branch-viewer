@@ -43,26 +43,6 @@ class GeneralIndexPageTests(WebTests):
         self.app.get('/')
         self.repo_cls_mock.assert_called_once_with(REPO_PATH)
 
-    def test_repo_name_is_shown(self):
-        REPO_NAME = 'my testing repo'
-        type(self.repo_mock).name = mock.PropertyMock(return_value=REPO_NAME)
-        rv = self.app.get('/')
-        self.assertIn(REPO_NAME, rv.data.decode())
-
-    def test_remote_is_shown(self):
-        REMOTE = 'test_remote'
-        viewer.web.app.config['GIT_REMOTE'] = REMOTE
-        rv = self.app.get('/')
-        self.assertIn(REMOTE, rv.data.decode())
-
-    def test_link_to_project_on_github_is_shown_in_footer(self):
-        rv = self.app.get('/')
-        EXPECTED_RE = re.compile(r"""
-            id="footer".*
-            <a[^>]+href="https://github.com/s3rvac/git-branch-viewer"[^>]*>Git\ Branch\ Viewer</a>
-            """, re.VERBOSE | re.MULTILINE | re.DOTALL)
-        self.assertRegex(rv.data.decode(), EXPECTED_RE)
-
 
 class BranchesOnIndexPageTests(WebTests):
     """Tests for the branches shown on the index page."""
@@ -133,11 +113,3 @@ class CommitsOnIndexPageTests(WebTests):
         rv = self.app.get('/')
         NOT_EXPECTED_RE = r'{}</a>'.format(COMMIT.short_hash())
         self.assertNotRegex(rv.data.decode(), NOT_EXPECTED_RE)
-
-    def test_author_is_link_to_his_or_her_email(self):
-        COMMIT = get_new_commit()
-        self.repo_mock.get_commit_for_branch.return_value = COMMIT
-        rv = self.app.get('/')
-        EXPECTED_RE = re.compile(r'<a[^>]+href="mailto:{}"[^>]*>{}</a>'.format(
-            COMMIT.email, COMMIT.author), re.MULTILINE)
-        self.assertRegex(rv.data.decode(), EXPECTED_RE)
