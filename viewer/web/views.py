@@ -24,7 +24,7 @@ def setup_jinja_filters():
 
 
 @app.before_request
-def before_request():
+def setup_git_repo():
     g.repo = git.Repo(app.config['GIT_REPO_PATH'])
 
 
