@@ -12,7 +12,7 @@ from unittest import mock
 import viewer
 import viewer.web
 
-from .test_git import get_new_commit
+from .git_tests import get_new_commit
 
 
 class WebTests(unittest.TestCase):
