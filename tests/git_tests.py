@@ -441,12 +441,16 @@ class RepoReprTests(RepoTests):
         self.assertEqual(eval(repo_repr), repo)
 
 
-class RepoRunGitCmdTests(RepoTests):
-    """Tests for Repo.run_git_cmd()."""
+class RepoWithRepoTests(RepoTests):
+    """Base class for tests of a created repository."""
 
     def setUp(self):
         super().setUp()
         self.repo = Repo('/path/to/existing/repository')
+
+
+class RepoRunGitCmdTests(RepoWithRepoTests):
+    """Tests for Repo.run_git_cmd()."""
 
     def test_git_status_returns_output(self):
         GIT_STATUS_OUTPUT = 'The output from git status.'
@@ -454,12 +458,8 @@ class RepoRunGitCmdTests(RepoTests):
         self.assertEqual(self.repo.run_git_cmd(['status']), GIT_STATUS_OUTPUT)
 
 
-class RepoGetBranchesOnRemoteTests(RepoTests):
+class RepoGetBranchesOnRemoteTests(RepoWithRepoTests):
     """Tests for Repo.get_branches_on_remote()."""
-
-    def setUp(self):
-        super().setUp()
-        self.repo = Repo('/path/to/existing/repository')
 
     def test_calls_proper_command_to_get_branches_on_given_remote(self):
         remote = 'origin'
@@ -502,7 +502,7 @@ class RepoGetBranchesOnRemoteTests(RepoTests):
             expected_branches)
 
 
-class RepoGetCommitTests(RepoTests):
+class RepoGetCommitTests(RepoWithRepoTests):
     """A base class for all Repo.get_commit_*() tests."""
 
     def mock_check_output_side_effect(self, *args, **kwargs):
@@ -520,7 +520,6 @@ class RepoGetCommitTests(RepoTests):
         self.date = get_curr_date()
         self.subject = 'Commit message'
         self.mock_check_output.side_effect = self.mock_check_output_side_effect
-        self.repo = Repo('/path/to/existing/repository')
 
 
 class RepoGetCommitFromHashTests(RepoGetCommitTests):
@@ -558,7 +557,7 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
 
 
 @mock.patch('os.path.getmtime')
-class RepoGetDateOfLastUpdateTests(RepoGetCommitTests):
+class RepoGetDateOfLastUpdateTests(RepoWithRepoTests):
     """Tests for Repo.get_date_of_last_update()."""
 
     def test_calls_getmtime_with_proper_argument(self, getmtime_mock):
