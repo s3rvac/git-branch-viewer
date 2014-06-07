@@ -311,6 +311,18 @@ class Repo:
             master_branch.full_name, other_branch.full_name)])
         return self._get_commit_from_every_hash_in_output(output)
 
+    def has_unmerged_commits(self, master_branch, other_branch):
+        """Checks if there are commits in `other_branch` that are not in
+        `master_branch`.
+
+        :return `True` if there are such commits, `False` otherwise.
+        """
+        # The following command either generates a single line (= there is at
+        # least one unmerged commit), or nothing (no unmerged commits).
+        output = self.run_git_cmd(['log', '-1', '--format=format:%h', '{}..{}'.format(
+            master_branch.full_name, other_branch.full_name)])
+        return bool(output.strip())
+
     def get_date_of_last_update(self):
         """Returns the date when the repository was last updated."""
         # We obtain this information by checking the last modification time of

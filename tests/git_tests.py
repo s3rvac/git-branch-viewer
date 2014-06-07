@@ -609,6 +609,27 @@ class RepoGetUnmergedCommitsTests(RepoUnmergedCommitsTests):
         self.assertEqual(unmerged_commits, commits)
 
 
+class RepoHasUnmergedCommitsTests(RepoUnmergedCommitsTests):
+    """Tests for Repo.has_unmerged_commits()."""
+
+    def test_calls_proper_subprocess_command(self):
+        self.repo.has_unmerged_commits(self.master_branch, self.other_branch)
+        self.mock_check_output.assert_called_with(
+            ['git', 'log', '-1', '--format=format:%h', '{}..{}'.format(
+                self.master_branch.full_name, self.other_branch.full_name)],
+            universal_newlines=True)
+
+    def test_there_are_no_unmerged_commits(self):
+        self.mock_check_output.return_value = '\n'
+        self.assertFalse(
+            self.repo.has_unmerged_commits(self.master_branch, self.other_branch))
+
+    def test_there_are_unmerged_commits(self):
+        self.mock_check_output.return_value = '327c90a\n548a89e\n'
+        self.assertTrue(
+            self.repo.has_unmerged_commits(self.master_branch, self.other_branch))
+
+
 @mock.patch('os.path.getmtime')
 class RepoGetDateOfLastUpdateTests(RepoWithRepoTests):
     """Tests for Repo.get_date_of_last_update()."""
