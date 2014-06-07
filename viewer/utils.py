@@ -23,3 +23,10 @@ def chdir(dir):
         yield
     finally:
         os.chdir(cwd)
+
+
+def nonempty_lines(text):
+    """Generates non-empty lines in the given text."""
+    for line in text.split('\n'):
+        if line:
+            yield line

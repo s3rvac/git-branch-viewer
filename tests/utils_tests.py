@@ -10,6 +10,7 @@ import unittest
 from unittest import mock
 
 from viewer.utils import chdir
+from viewer.utils import nonempty_lines
 
 
 @mock.patch('os.chdir')
@@ -37,3 +38,23 @@ class ChdirTests(unittest.TestCase):
                 raise RuntimeError
         except RuntimeError:
             mock_chdir.assert_called_once_with(self.orig_cwd)
+
+
+class NonemptyLinesTests(unittest.TestCase):
+    """Tests for nonempty_lines()."""
+
+    def check(self, text, expected_lines):
+        self.assertEqual(list(nonempty_lines(text)),
+            expected_lines)
+
+    def test_empty_list_is_returned_for_empty_text(self):
+        self.check('', [])
+
+    def test_line_is_returned_for_text_with_single_line(self):
+        line = 'test'
+        self.check(line, [line])
+
+    def test_nonempty_lines_are_returned_for_text_with_some_empty_lines(self):
+        text = '\ntest1\n\n\ntest2\n\n'
+        expected_lines = ['test1', 'test2']
+        self.check(text, expected_lines)
