@@ -284,6 +284,19 @@ class BranchAgeTests(unittest.TestCase):
         self.assertEqual(branch.age, commit.age)
 
 
+class BranchUnmergedCommitsTests(unittest.TestCase):
+    """Tests for Branch.unmerged_commits()."""
+
+    def test_unmerged_commits_calls_repo_get_unmerged_commits_and_returns_its_result(self):
+        repo_mock = get_git_repo_mock()
+        branch = Branch(repo_mock, 'origin', 'featureX')
+        master_branch = Branch(repo_mock, 'origin', 'master')
+        commits = [get_new_commit()]
+        repo_mock.get_unmerged_commits.return_value = commits
+        self.assertEqual(branch.unmerged_commits(master_branch), commits)
+        repo_mock.get_unmerged_commits.assert_called_with(master_branch, branch)
+
+
 class BranchComparisonTests(unittest.TestCase):
     """Tests for branch comparison."""
 

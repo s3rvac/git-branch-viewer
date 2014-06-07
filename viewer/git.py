@@ -204,6 +204,10 @@ class Branch:
         """
         return self.commit.age
 
+    def unmerged_commits(self, master_branch):
+        """Returns a list of commits that are not in `master_branch`."""
+        return self.repo.get_unmerged_commits(master_branch, self)
+
     def __eq__(self, other):
         return (self.repo == other.repo and
             self.remote == other.remote and
