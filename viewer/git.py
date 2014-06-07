@@ -365,9 +365,10 @@ class Repo:
         #   date (timestamp)
         #   subject
         #
-        #   diff
-        #
-        output = self.run_git_cmd(['show',
+        # The '--quiet' parameter prevents a diff from being displayed (we do
+        # not need it).
+        print(obj)
+        output = self.run_git_cmd(['show', '--quiet',
             '--format=format:%H%n%an%n%ae%n%at%n%s%n', obj])
         m = re.match(r"""
                 (?P<hash>[a-fA-F0-9]+)\n

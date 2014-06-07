@@ -542,7 +542,7 @@ class RepoGetCommitFromHashTests(RepoGetCommitTests):
         hash = '8a9abf8ad351dc9c7e2a5ba9f3b4d41c038ea605'
         self.repo.get_commit_from_hash(hash)
         self.mock_check_output.assert_called_with(
-            ['git', 'show', '--format=format:%H%n%an%n%ae%n%at%n%s%n', hash],
+            ['git', 'show', '--quiet', '--format=format:%H%n%an%n%ae%n%at%n%s%n', hash],
             universal_newlines=True)
 
     def test_returns_correct_commit(self):
@@ -560,7 +560,7 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
     def test_calls_proper_subprocess_command(self):
         self.repo.get_commit_for_branch(self.branch)
         self.mock_check_output.assert_called_with(
-            ['git', 'show', '--format=format:%H%n%an%n%ae%n%at%n%s%n',
+            ['git', 'show', '--quiet', '--format=format:%H%n%an%n%ae%n%at%n%s%n',
              self.branch.full_name], universal_newlines=True)
 
     def test_returns_correct_commit(self):
