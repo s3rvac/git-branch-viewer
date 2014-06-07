@@ -293,8 +293,9 @@ class BranchUnmergedCommitsTests(unittest.TestCase):
         master_branch = Branch(repo_mock, 'origin', 'master')
         commits = [get_new_commit()]
         repo_mock.get_unmerged_commits.return_value = commits
-        self.assertEqual(branch.unmerged_commits(master_branch), commits)
-        repo_mock.get_unmerged_commits.assert_called_with(master_branch, branch)
+        self.assertEqual(branch.unmerged_commits(master_branch, limit=5), commits)
+        repo_mock.get_unmerged_commits.assert_called_with(
+            master_branch, branch, 5)
 
 
 class BranchHasUnmergedCommitsTests(unittest.TestCase):
@@ -591,10 +592,18 @@ class RepoUnmergedCommitsTests(RepoWithRepoTests):
 class RepoGetUnmergedCommitsTests(RepoUnmergedCommitsTests):
     """Tests for Repo.get_unmerged_commits()."""
 
-    def test_calls_proper_subprocess_command(self):
+    def test_calls_proper_subprocess_command_when_no_limit_is_given(self):
         self.repo.get_unmerged_commits(self.master_branch, self.other_branch)
         self.mock_check_output.assert_called_with(
             ['git', 'log', '--format=format:%H', '{}..{}'.format(
+                self.master_branch.full_name, self.other_branch.full_name)],
+            universal_newlines=True)
+
+    def test_calls_proper_subprocess_command_when_limit_is_given(self):
+        self.repo.get_unmerged_commits(self.master_branch, self.other_branch,
+            limit=5)
+        self.mock_check_output.assert_called_with(
+            ['git', 'log', '-5', '--format=format:%H', '{}..{}'.format(
                 self.master_branch.full_name, self.other_branch.full_name)],
             universal_newlines=True)
 

@@ -204,9 +204,12 @@ class Branch:
         """
         return self.commit.age
 
-    def unmerged_commits(self, master_branch):
-        """Returns a list of commits that are not in `master_branch`."""
-        return self.repo.get_unmerged_commits(master_branch, self)
+    def unmerged_commits(self, master_branch, limit=None):
+        """Returns a list of commits that are not in `master_branch`.
+
+        :param int limit: If not `None`, returns at most `limit` commits.
+        """
+        return self.repo.get_unmerged_commits(master_branch, self, limit)
 
     def has_unmerged_commits(self, master_branch):
         """Checks if there are commits in the branch that are not in
@@ -305,9 +308,11 @@ class Repo:
         return self._get_commit_from_git_show_with_object(
             '{}/{}'.format(branch.remote, branch.name))
 
-    def get_unmerged_commits(self, master_branch, other_branch):
+    def get_unmerged_commits(self, master_branch, other_branch, limit=None):
         """Returns a list of commits that are in `other_branch` but not in
         `master_branch`.
+
+        :param int limit: If not `None`, returns at most `limit` commits.
         """
         # The following command generates output of the form
         #
@@ -315,8 +320,13 @@ class Repo:
         #   548a89e53ffe8fb532655156b700ea1ed1e410fb
         #   ...
         #
-        output = self.run_git_cmd(['log', '--format=format:%H', '{}..{}'.format(
+        # where the number of lines is limited by the given limit (if any).
+        cmd = ['log']
+        if limit is not None:
+            cmd.append('-{}'.format(limit))
+        cmd.extend(['--format=format:%H', '{}..{}'.format(
             master_branch.full_name, other_branch.full_name)])
+        output = self.run_git_cmd(cmd)
         return self._get_commit_from_every_hash_in_output(output)
 
     def has_unmerged_commits(self, master_branch, other_branch):
