@@ -14,6 +14,8 @@ from viewer.utils import chdir
 
 @mock.patch('os.chdir')
 class ChdirTests(unittest.TestCase):
+    """Tests for the chdir() context manager."""
+
     def setUp(self):
         self.orig_cwd = os.getcwd()
         self.dst_dir = 'test'
