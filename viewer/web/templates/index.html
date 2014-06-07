@@ -12,7 +12,7 @@
 		{% else %}
 			{{ commit.short_hash() }}
 		{% endif %}
-		{{ commit.date }}
+		{{ commit.date|date }}
 		<a href="mailto:{{ commit.email }}">{{ commit.author }}</a>
 		{{ commit.subject }}
 	</div>
@@ -20,7 +20,7 @@
 
 {% macro display_branch(branch) -%}
 	<li>
-		{{ branch.name }} ({{ branch.age }})
+		{{ branch.name }} ({{ branch.age|age }})
 		<ul>
 			<li>{{ display_commit(branch.commit) }}</li>
 		</ul>

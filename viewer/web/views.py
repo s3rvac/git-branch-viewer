@@ -12,7 +12,15 @@ from flask import render_template
 from flask import g
 
 from viewer import git
+from viewer.format import format_date
+from viewer.format import format_age
 from . import app
+
+
+@app.before_request
+def setup_jinja_filters():
+    app.jinja_env.filters['date'] = format_date
+    app.jinja_env.filters['age'] = format_age
 
 
 @app.before_request
