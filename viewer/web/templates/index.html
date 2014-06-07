@@ -25,12 +25,16 @@
 			<li>
 				{{ display_commit(branch.commit) }}
 				<br />
-				Unmerged commits:
-				<ul>
-				{% for commit in branch.unmerged_commits(master_branch) %}
-					<li>{{ display_commit(commit) }}</li>
-				{% endfor %}
-				</ul>
+				{% if branch.has_unmerged_commits(master_branch) %}
+					Unmerged commits:
+					<ul>
+					{% for commit in branch.unmerged_commits(master_branch) %}
+						<li>{{ display_commit(commit) }}</li>
+					{% endfor %}
+					</ul>
+				{% else %}
+					No unmerged commits.
+				{% endif %}
 			</li>
 		</ul>
 	</li>
