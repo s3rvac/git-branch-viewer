@@ -18,7 +18,7 @@ from . import app
 
 
 @app.before_request
-def setup_jinja_filters():
+def setup_filters():
     app.jinja_env.filters['date'] = format_date
     app.jinja_env.filters['age'] = format_age
 
