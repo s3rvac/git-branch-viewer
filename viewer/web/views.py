@@ -39,6 +39,8 @@ def index():
         'repo_name': g.repo.name,
         'repo_last_update_date': g.repo.get_date_of_last_update(),
         'remote': app.config['GIT_REMOTE'],
+        'master_branch': git.Branch(g.repo, app.config['GIT_REMOTE'],
+            app.config['GIT_MASTER_BRANCH']),
         'shown_branches': shown_branches,
         'ignored_branches': ignored_branches,
         'commit_details_url_fmt': app.config['COMMIT_DETAILS_URL_FMT']

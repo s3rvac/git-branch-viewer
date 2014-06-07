@@ -22,7 +22,16 @@
 	<li>
 		{{ branch.name }} ({{ branch.age|age }})
 		<ul>
-			<li>{{ display_commit(branch.commit) }}</li>
+			<li>
+				{{ display_commit(branch.commit) }}
+				<br />
+				Unmerged commits:
+				<ul>
+				{% for commit in branch.unmerged_commits(master_branch) %}
+					<li>{{ display_commit(commit) }}</li>
+				{% endfor %}
+				</ul>
+			</li>
 		</ul>
 	</li>
 {%- endmacro %}
