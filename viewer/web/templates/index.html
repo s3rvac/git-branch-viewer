@@ -26,9 +26,10 @@
 				{{ display_commit(branch.commit) }}
 				<br />
 				{% if branch.has_unmerged_commits(master_branch) %}
-					Unmerged commits:
+					Unmerged commits{% if unmerged_commits_limit %}
+						(the last {{ unmerged_commits_limit }}){% endif %}:
 					<ul>
-					{% for commit in branch.unmerged_commits(master_branch) %}
+					{% for commit in branch.unmerged_commits(master_branch, unmerged_commits_limit) %}
 						<li>{{ display_commit(commit) }}</li>
 					{% endfor %}
 					</ul>

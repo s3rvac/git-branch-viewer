@@ -43,6 +43,7 @@ def index():
             app.config['GIT_MASTER_BRANCH']),
         'shown_branches': shown_branches,
         'ignored_branches': ignored_branches,
-        'commit_details_url_fmt': app.config['COMMIT_DETAILS_URL_FMT']
+        'commit_details_url_fmt': app.config['COMMIT_DETAILS_URL_FMT'],
+        'unmerged_commits_limit': app.config['UNMERGED_COMMITS_LIMIT']
     }
     return render_template('index.html', **context)
