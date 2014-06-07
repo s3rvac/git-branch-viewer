@@ -14,6 +14,7 @@ import re
 import subprocess
 
 from .utils import chdir
+from .utils import nonempty_lines
 
 
 class BaseGitError(Exception):
@@ -292,6 +293,20 @@ class Repo:
         return self._get_commit_from_git_show_with_object(
             '{}/{}'.format(branch.remote, branch.name))
 
+    def get_unmerged_commits(self, master_branch, other_branch):
+        """Returns a list of commits that are in `other_branch` but not in
+        `master_branch`.
+        """
+        # The following command generates output of the form
+        #
+        #   327c90a7c0bb4a739c2a245aeffa5f569cbd67da
+        #   548a89e53ffe8fb532655156b700ea1ed1e410fb
+        #   ...
+        #
+        output = self.run_git_cmd(['log', '--format=format:%H', '{}..{}'.format(
+            master_branch.full_name, other_branch.full_name)])
+        return self._get_commit_from_every_hash_in_output(output)
+
     def get_date_of_last_update(self):
         """Returns the date when the repository was last updated."""
         # We obtain this information by checking the last modification time of
@@ -311,6 +326,9 @@ class Repo:
         return '{}({!r})'.format(
             self.__class__.__name__,
             self.path)
+
+    def _get_commit_from_every_hash_in_output(self, output):
+        return list(map(self.get_commit_from_hash, nonempty_lines(output)))
 
     def _get_branches_from_ls_remote_output(self, output, remote):
         # The ls-remote output should be of the form

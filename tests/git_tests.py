@@ -556,6 +556,44 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
             Commit(self.hash, self.author, self.email, self.date, self.subject))
 
 
+class RepoGetUnmergedCommitsTests(RepoWithRepoTests):
+    """Tests for Repo.get_unmerged_commits()."""
+
+    def setUp(self):
+        super().setUp()
+        self.master_branch = Branch(self.repo, 'origin', 'master')
+        self.other_branch = Branch(self.repo, 'origin', 'other')
+
+    def test_calls_proper_subprocess_command(self):
+        self.repo.get_unmerged_commits(self.master_branch, self.other_branch)
+        self.mock_check_output.assert_called_with(
+            ['git', 'log', '--format=format:%H', '{}..{}'.format(
+                self.master_branch.full_name, self.other_branch.full_name)],
+            universal_newlines=True)
+
+    def test_no_unmerged_commits(self):
+        self.mock_check_output.return_value = '\n'
+        unmerged_commits = self.repo.get_unmerged_commits(
+            self.master_branch, self.other_branch)
+        expected_unmerged_commits = []
+        self.assertEqual(unmerged_commits, expected_unmerged_commits)
+
+    def test_calls_get_commit_from_hash_for_every_hash_in_output(self):
+        commits = [get_new_commit(), get_new_commit()]
+        self.mock_check_output.return_value = '\n'.join(
+            commit.hash for commit in commits)
+        def mock_get_commit_from_hash_side_effect(hash):
+            for commit in commits:
+                if commit.hash == hash:
+                    return commit
+        self.repo.get_commit_from_hash = mock.MagicMock(
+            spec=Repo.get_commit_from_hash,
+            side_effect=mock_get_commit_from_hash_side_effect)
+        unmerged_commits = self.repo.get_unmerged_commits(
+            self.master_branch, self.other_branch)
+        self.assertEqual(unmerged_commits, commits)
+
+
 @mock.patch('os.path.getmtime')
 class RepoGetDateOfLastUpdateTests(RepoWithRepoTests):
     """Tests for Repo.get_date_of_last_update()."""
