@@ -567,14 +567,17 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
         self.assertEqual(self.repo.get_commit_for_branch(self.branch),
             Commit(self.hash, self.author, self.email, self.date, self.subject))
 
-
-class RepoGetUnmergedCommitsTests(RepoWithRepoTests):
-    """Tests for Repo.get_unmerged_commits()."""
+class RepoUnmergedCommitsTests(RepoWithRepoTests):
+    """A base class for all tests of getting unmerged commits."""
 
     def setUp(self):
         super().setUp()
         self.master_branch = Branch(self.repo, 'origin', 'master')
         self.other_branch = Branch(self.repo, 'origin', 'other')
+
+
+class RepoGetUnmergedCommitsTests(RepoUnmergedCommitsTests):
+    """Tests for Repo.get_unmerged_commits()."""
 
     def test_calls_proper_subprocess_command(self):
         self.repo.get_unmerged_commits(self.master_branch, self.other_branch)
