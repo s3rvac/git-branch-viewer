@@ -9,6 +9,7 @@
 """
 
 import datetime
+import operator
 import os
 import re
 import subprocess
@@ -233,6 +234,13 @@ class Branch:
             self.repo,
             self.remote,
             self.name)
+
+
+def sort_branches(branches, attr):
+    """Sorts the given list of branches in place by the given attribute
+    (`str`).
+    """
+    return branches.sort(key=operator.attrgetter(attr))
 
 
 class Repo:

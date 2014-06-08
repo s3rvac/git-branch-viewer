@@ -18,6 +18,7 @@ from viewer.git import Commit
 from viewer.git import GitBinaryNotFoundError
 from viewer.git import GitCmdError
 from viewer.git import Repo
+from viewer.git import sort_branches
 
 
 def get_curr_date():
@@ -352,6 +353,21 @@ class BranchReprTests(unittest.TestCase):
         branch_repr = repr(branch)
         self.assertEqual(branch_repr, 'Branch({!r}, {!r}, {!r})'.format(
             repo_mock, branch.remote, branch.name))
+
+
+class SortBranchesTests(unittest.TestCase):
+    """Tests for sort_branches()."""
+
+    def setUp(self):
+        self.repo_mock = get_git_repo_mock()
+
+    def test_sort_branches_by_name_work_correctly(self):
+        branchA = Branch(self.repo_mock, 'origin', 'A')
+        branchB = Branch(self.repo_mock, 'origin', 'B')
+        branchC = Branch(self.repo_mock, 'origin', 'C')
+        branches = [branchC, branchA, branchB]
+        sort_branches(branches, 'name')
+        self.assertEqual(branches, [branchA, branchB, branchC])
 
 
 class RepoTests(unittest.TestCase):
