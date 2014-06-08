@@ -35,6 +35,7 @@ def index():
         if branch.name in app.config['GIT_BRANCHES_TO_IGNORE']]
     shown_branches = [branch for branch in all_branches
         if branch not in ignored_branches]
+    git.sort_branches(shown_branches, app.config['SORT_BRANCHES_BY'])
     context = {
         'repo_name': g.repo.name,
         'repo_last_update_date': g.repo.get_date_of_last_update(),
