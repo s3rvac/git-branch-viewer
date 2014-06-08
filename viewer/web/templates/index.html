@@ -44,7 +44,7 @@
 			<div class="branch-unmerged-commits">
 				<div class="branch-unmerged-commits-title">
 					Unmerged commits{% if unmerged_commits_limit %}
-						(at most the last {{ unmerged_commits_limit }}){% endif %}:
+						(limit: {{ unmerged_commits_limit }}){% endif %}:
 				</div>
 				<div class="branch-unmerged-commits-list">
 					{% for commit in branch.unmerged_commits(master_branch, unmerged_commits_limit) %}
