@@ -6,49 +6,66 @@
 {% extends "base.html" %}
 
 {% macro display_commit(commit) -%}
-	<div>
-		{% if commit_details_url_fmt %}
-			<a href="{{ commit_details_url_fmt.format(commit.hash) }}">{{ commit.short_hash() }}</a>
-		{% else %}
-			{{ commit.short_hash() }}
-		{% endif %}
-		{{ commit.date|date }}
-		<a href="mailto:{{ commit.email }}">{{ commit.author }}</a>
-		{{ commit.subject }}
+	<div class="commit">
+		<div class="commit-hash">
+			{% if commit_details_url_fmt %}
+				<a href="{{ commit_details_url_fmt.format(commit.hash) }}">[{{ commit.short_hash() }}]</a>
+			{% else %}
+				{{ commit.short_hash() }}
+			{% endif %}
+		</div>
+		<div class="commit-date">
+			{{ commit.date|date }}
+		</div>
+		<div class="commit-author-email">
+			<a href="mailto:{{ commit.email }}">{{ commit.author }}</a>
+		</div>
+		<div class="commit-subject" title="{{ commit.subject }}">
+			{{ commit.short_subject() }}
+		</div>
 	</div>
 {%- endmacro %}
 
 {% macro display_branch(branch) -%}
-	<li>
-		{{ branch.name }} ({{ branch.age|age }})
-		<ul>
-			<li>
+	<div class="branch">
+		<div class="branch-title">
+			<span class="branch-name">{{ branch.name }}</span>
+			<span class="branch-age">({{ branch.age|age }} old)</span>
+		</div>
+		<div class="branch-commit">
+			<div class="branch-commit-title">
+			Current commit:
+			</div>
+			<div class="branch-commit-body">
 				{{ display_commit(branch.commit) }}
-				<br />
-				{% if branch.has_unmerged_commits(master_branch) %}
+			</div>
+		</div>
+		{% if branch.has_unmerged_commits(master_branch) %}
+			<div class="branch-unmerged-commits">
+				<div class="branch-unmerged-commits-title">
 					Unmerged commits{% if unmerged_commits_limit %}
-						(the last {{ unmerged_commits_limit }}){% endif %}:
-					<ul>
+						(at most the last {{ unmerged_commits_limit }}){% endif %}:
+				</div>
+				<div class="branch-unmerged-commits-list">
 					{% for commit in branch.unmerged_commits(master_branch, unmerged_commits_limit) %}
-						<li>{{ display_commit(commit) }}</li>
+						{{ display_commit(commit) }}
 					{% endfor %}
-					</ul>
-				{% else %}
-					No unmerged commits.
-				{% endif %}
-			</li>
-		</ul>
-	</li>
+				</div>
+			</div>
+		{% else %}
+			<div class="branch-no-unmerged-commits">
+				No unmerged commits.
+			</div>
+		{% endif %}
+	</div>
 {%- endmacro %}
 
 {% block body %}
 <h1>Branches In '{{ repo_name }}' On '{{ remote }}'</h1>
 
-<ul>
-	{% for branch in shown_branches %}
-		{{ display_branch(branch) }}
-	{% endfor %}
-</ul>
+{% for branch in shown_branches %}
+	{{ display_branch(branch) }}
+{% endfor %}
 
 <h2>Ignored</h2>
 <ul>

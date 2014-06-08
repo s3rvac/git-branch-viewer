@@ -1,11 +1,107 @@
 /*! Copyright (c) 2014 by Petr Zemek <s3rvac@gmail.com> and contributors */
 
+body {
+	font-family: normal 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+}
+
+h1, h2 {
+	font-family: Arial,Verdana,'Bitstream Vera Sans',Helvetica,sans-serif;
+	font-weight: bold;
+}
+
+/* Link styles */
+
+:link, :visited {
+	text-decoration: none;
+	color: #336699;
+	border-bottom: 1px dotted #bbb;
+}
+
+:link:hover, :visited:hover {
+	background-color: #eee;
+	color: #555;
+}
+
+/* Branches */
+
+.branch {
+	margin: 10px;
+	padding: 5px;
+	border: 1px solid grey;
+}
+
+.branch-title {
+	margin-bottom: 5px;
+}
+
+.branch-name {
+	font-weight: bold;
+}
+
+.branch-age {
+}
+
+.branch-commit {
+	margin-bottom: 5px;
+}
+
+.branch-commit-title {
+	margin-bottom: 2px;
+}
+
+.branch-commit-body {
+	margin-left: 10px;
+}
+
+.branch-unmerged-commits {
+}
+
+.branch-unmerged-commits-title {
+	margin-bottom: 2px;
+}
+
+.branch-unmerged-commits-list {
+	margin-left: 10px;
+}
+
+.branch-no-unmerged-commits {
+}
+
+/* Commits */
+
+.commit {
+}
+
+.commit-hash {
+	display: inline-block;
+	font-family: monospace;
+	width: 100px;
+}
+
+.commit-date {
+	display: inline-block;
+	font-family: monospace;
+	width: 180px;
+}
+
+.commit-author-email {
+	display: inline-block;
+	margin-right: 8px;
+}
+
+.commit-subject {
+	display: inline-block;
+}
+
+/* Footer */
+
 #footer {
 	display: table;
 	margin: 0 auto;
-	color: #888;
+	margin-bottom: 50px;
+	color: grey;
 }
 
 #footer a {
-	color: #888;
+	color: grey;
 }
