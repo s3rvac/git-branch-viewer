@@ -47,8 +47,13 @@
 		{% if branch.has_unmerged_commits(master_branch) %}
 			<div class="branch-unmerged-commits">
 				<div class="branch-unmerged-commits-title">
-					Unmerged commits{% if unmerged_commits_limit %}
-						(limit: {{ unmerged_commits_limit }}){% endif %}:
+					{% if unmerged_commits_limit and branch.has_more_unmerged_commits_than(
+							master_branch, unmerged_commits_limit) %}
+						Unmerged commits (showing the last {{ unmerged_commits_limit }}
+							out of {{ branch.num_of_unmerged_commits(master_branch) }}):
+					{% else %}
+						Unmerged commits ({{ branch.num_of_unmerged_commits(master_branch) }}):
+					{% endif %}
 				</div>
 				<div class="branch-unmerged-commits-list">
 					{% for commit in branch.unmerged_commits(master_branch, unmerged_commits_limit) %}

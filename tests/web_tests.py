@@ -55,6 +55,7 @@ class BranchesOnIndexPageTests(WebTests):
             viewer.git.Branch(self.repo_mock, self.REMOTE, 'test_branch2')
         ]
         self.repo_mock.get_commit_for_branch.return_value = get_new_commit()
+        viewer.web.app.config['UNMERGED_COMMITS_LIMIT'] = None
 
     def test_remote_from_config_is_used_when_getting_branches(self):
         viewer.web.app.config['GIT_REMOTE'] = self.REMOTE
