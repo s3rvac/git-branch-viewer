@@ -45,6 +45,7 @@ def index():
         'shown_branches': shown_branches,
         'ignored_branches': ignored_branches,
         'commit_details_url_fmt': app.config['COMMIT_DETAILS_URL_FMT'],
-        'unmerged_commits_limit': app.config['UNMERGED_COMMITS_LIMIT']
+        'unmerged_commits_limit': app.config['UNMERGED_COMMITS_LIMIT'],
+        'commit_subject_limit': app.config['COMMIT_SUBJECT_LIMIT']
     }
     return render_template('index.html', **context)

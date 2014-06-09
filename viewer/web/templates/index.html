@@ -21,7 +21,11 @@
 			<a href="mailto:{{ commit.email }}">{{ commit.author }}</a>
 		</div>
 		<div class="commit-subject" title="{{ commit.subject }}">
-			{{ commit.short_subject() }}
+			{% if commit_subject_limit %}
+				{{ commit.short_subject(commit_subject_limit) }}
+			{% else %}
+				{{ commit.subject }}
+			{% endif %}
 		</div>
 	</div>
 {%- endmacro %}
