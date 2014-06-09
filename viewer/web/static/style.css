@@ -27,11 +27,14 @@ h1, h2 {
 .branch {
 	margin: 10px;
 	padding: 5px;
-	border: 1px solid grey;
 }
 
 .branch-title {
 	margin-bottom: 5px;
+	padding: 2px;
+	background-color: #cccccc;
+	border: 1px solid grey;
+	width: 1024px;
 }
 
 .branch-name {
@@ -65,6 +68,10 @@ h1, h2 {
 }
 
 .branch-no-unmerged-commits {
+}
+
+.ignored-branches-list li {
+	list-style-type: square;
 }
 
 /* Commits */
