@@ -1,11 +1,10 @@
 /*! Copyright (c) 2014 by Petr Zemek <s3rvac@gmail.com> and contributors */
 
 body {
-	font-family: normal 13px Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+	font-family: normal 13px Verdana, Geneva, sans-serif;
 }
 
 h1, h2 {
-	font-family: Arial,Verdana,'Bitstream Vera Sans',Helvetica,sans-serif;
 	font-weight: bold;
 }
 
@@ -42,14 +41,15 @@ h1, h2 {
 }
 
 .branch-age {
+	margin-left: 5px;
 }
 
 .branch-commit {
-	margin-bottom: 5px;
+	margin: 10px 0;
 }
 
 .branch-commit-title {
-	margin-bottom: 2px;
+	margin-bottom: 5px;
 }
 
 .branch-commit-body {
@@ -60,7 +60,7 @@ h1, h2 {
 }
 
 .branch-unmerged-commits-title {
-	margin-bottom: 2px;
+	margin-bottom: 10px;
 }
 
 .branch-unmerged-commits-list {
@@ -77,18 +77,19 @@ h1, h2 {
 /* Commits */
 
 .commit {
+	margin: 2px 0;
 }
 
 .commit-hash {
 	display: inline-block;
-	font-family: monospace;
-	width: 100px;
+	font-family: "Lucida Console", Monaco, monospace;
+	width: 110px;
 }
 
 .commit-date {
 	display: inline-block;
-	font-family: monospace;
-	width: 180px;
+	font-family: "Lucida Console", Monaco, monospace;
+	width: 200px;
 }
 
 .commit-author-email {
