@@ -26,7 +26,5 @@ def chdir(dir):
 
 
 def nonempty_lines(text):
-    """Generates non-empty lines in the given text."""
-    for line in text.split('\n'):
-        if line:
-            yield line
+    """Returns non-empty lines in the given text."""
+    return [line for line in text.split('\n') if line]

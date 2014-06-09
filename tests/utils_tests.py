@@ -44,8 +44,7 @@ class NonemptyLinesTests(unittest.TestCase):
     """Tests for nonempty_lines()."""
 
     def check(self, text, expected_lines):
-        self.assertEqual(list(nonempty_lines(text)),
-            expected_lines)
+        self.assertEqual(nonempty_lines(text), expected_lines)
 
     def test_empty_list_is_returned_for_empty_text(self):
         self.check('', [])

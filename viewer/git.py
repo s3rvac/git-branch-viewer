@@ -391,7 +391,7 @@ class Repo:
         cmd.extend(['--format=format:%H', '{}..{}'.format(
             master_branch.full_name, other_branch.full_name)])
         output = self.run_git_cmd(cmd)
-        return list(nonempty_lines(output))
+        return nonempty_lines(output)
 
     def _get_branches_from_ls_remote_output(self, output, remote):
         # The ls-remote output should be of the form
