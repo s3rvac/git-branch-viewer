@@ -299,6 +299,19 @@ class BranchUnmergedCommitsTests(unittest.TestCase):
             master_branch, branch, 5)
 
 
+class BranchNumOfUnmergedCommitsTests(unittest.TestCase):
+    """Tests for Branch.num_of_unmerged_commits()."""
+
+    def test_num_of_unmerged_commits_calls_repo_get_num_of_unmerged_commits_and_returns_its_result(self):
+        repo_mock = get_git_repo_mock()
+        branch = Branch(repo_mock, 'origin', 'featureX')
+        master_branch = Branch(repo_mock, 'origin', 'master')
+        repo_mock.get_num_of_unmerged_commits.return_value = 1
+        self.assertEqual(branch.num_of_unmerged_commits(master_branch), 1)
+        repo_mock.get_num_of_unmerged_commits.assert_called_with(
+            master_branch, branch)
+
+
 class BranchHasUnmergedCommitsTests(unittest.TestCase):
     """Tests for Branch.has_unmerged_commits()."""
 

@@ -212,6 +212,10 @@ class Branch:
         """
         return self.repo.get_unmerged_commits(master_branch, self, limit)
 
+    def num_of_unmerged_commits(self, master_branch):
+        """Returns the number of commits that are not in `master_branch`."""
+        return self.repo.get_num_of_unmerged_commits(master_branch, self)
+
     def has_unmerged_commits(self, master_branch):
         """Checks if there are commits in the branch that are not in
         `master_branch`.
