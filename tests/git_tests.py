@@ -646,6 +646,29 @@ class RepoGetUnmergedCommitsTests(RepoUnmergedCommitsTests):
         self.assertEqual(unmerged_commits, commits)
 
 
+class RepoGetNumOfUnmergedCommitsTests(RepoUnmergedCommitsTests):
+    """Tests for Repo.get_num_of_unmerged_commits()."""
+
+    def test_calls_proper_subprocess_command(self):
+        self.repo.has_unmerged_commits(self.master_branch, self.other_branch)
+        self.mock_check_output.assert_called_with(
+            ['git', 'log', '-1', '--format=format:%h', '{}..{}'.format(
+                self.master_branch.full_name, self.other_branch.full_name)],
+            universal_newlines=True)
+
+    def test_there_are_no_unmerged_commits(self):
+        self.mock_check_output.return_value = '\n'
+        num_of_unmerged_commits = self.repo.get_num_of_unmerged_commits(
+            self.master_branch, self.other_branch)
+        self.assertEqual(num_of_unmerged_commits, 0)
+
+    def test_there_are_unmerged_commits(self):
+        self.mock_check_output.return_value = '327c90a\n548a89e\n'
+        num_of_unmerged_commits = self.repo.get_num_of_unmerged_commits(
+            self.master_branch, self.other_branch)
+        self.assertEqual(num_of_unmerged_commits, 2)
+
+
 class RepoHasUnmergedCommitsTests(RepoUnmergedCommitsTests):
     """Tests for Repo.has_unmerged_commits()."""
 

@@ -322,20 +322,17 @@ class Repo:
 
         :param int limit: If not `None`, returns at most `limit` commits.
         """
-        # The following command generates output of the form
-        #
-        #   327c90a7c0bb4a739c2a245aeffa5f569cbd67da
-        #   548a89e53ffe8fb532655156b700ea1ed1e410fb
-        #   ...
-        #
-        # where the number of lines is limited by the given limit (if any).
-        cmd = ['log']
-        if limit is not None:
-            cmd.append('-{}'.format(limit))
-        cmd.extend(['--format=format:%H', '{}..{}'.format(
-            master_branch.full_name, other_branch.full_name)])
-        output = self.run_git_cmd(cmd)
-        return self._get_commit_from_every_hash_in_output(output)
+        hashes = self._get_hashes_of_unmerged_commits(
+            master_branch, other_branch, limit)
+        return list(map(self.get_commit_from_hash, hashes))
+
+    def get_num_of_unmerged_commits(self, master_branch, other_branch):
+        """Returns the number of commits that are in `other_branch` but not in
+        `master_branch`.
+        """
+        hashes = self._get_hashes_of_unmerged_commits(master_branch,
+            other_branch)
+        return len(hashes)
 
     def has_unmerged_commits(self, master_branch, other_branch):
         """Checks if there are commits in `other_branch` that are not in
@@ -369,8 +366,22 @@ class Repo:
             self.__class__.__name__,
             self.path)
 
-    def _get_commit_from_every_hash_in_output(self, output):
-        return list(map(self.get_commit_from_hash, nonempty_lines(output)))
+    def _get_hashes_of_unmerged_commits(self, master_branch, other_branch,
+            limit=None):
+        # The following command generates output of the form
+        #
+        #   327c90a7c0bb4a739c2a245aeffa5f569cbd67da
+        #   548a89e53ffe8fb532655156b700ea1ed1e410fb
+        #   ...
+        #
+        # where the number of lines is limited by the given limit (if any).
+        cmd = ['log']
+        if limit is not None:
+            cmd.append('-{}'.format(limit))
+        cmd.extend(['--format=format:%H', '{}..{}'.format(
+            master_branch.full_name, other_branch.full_name)])
+        output = self.run_git_cmd(cmd)
+        return list(nonempty_lines(output))
 
     def _get_branches_from_ls_remote_output(self, output, remote):
         # The ls-remote output should be of the form
