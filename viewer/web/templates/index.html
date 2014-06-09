@@ -76,12 +76,16 @@
 	{{ display_branch(branch) }}
 {% endfor %}
 
-<h2>Ignored</h2>
-<ul>
-	{% for branch in ignored_branches %}
-	<li>
-		{{ branch.name }}
-	</li>
-	{% endfor %}
-</ul>
+{% if ignored_branches %}
+	<h2>Ignored Branches</h2>
+
+	The follwing branches are set to be ignored:
+	<ul>
+		{% for branch in ignored_branches %}
+		<li>
+			{{ branch.name }}
+		</li>
+		{% endfor %}
+	</ul>
+{% endif %}
 {% endblock %}
