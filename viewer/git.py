@@ -224,6 +224,12 @@ class Branch:
         """
         return self.repo.has_unmerged_commits(master_branch, self)
 
+    def has_more_unmerged_commits_than(self, master_branch, limit):
+        """Checks if there are more than `limit` commits in the branch that are
+        not in `master_branch`.
+        """
+        return self.num_of_unmerged_commits(master_branch) > limit
+
     def __eq__(self, other):
         return (self.repo == other.repo and
             self.remote == other.remote and

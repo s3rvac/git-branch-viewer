@@ -286,7 +286,7 @@ class BranchAgeTests(unittest.TestCase):
 
 
 class BranchUnmergedCommitsTests(unittest.TestCase):
-    """Tests for Branch.unmerged_commits()."""
+    """Tests for methods related to unmerged commits."""
 
     def test_unmerged_commits_calls_repo_get_unmerged_commits_and_returns_its_result(self):
         repo_mock = get_git_repo_mock()
@@ -298,10 +298,6 @@ class BranchUnmergedCommitsTests(unittest.TestCase):
         repo_mock.get_unmerged_commits.assert_called_with(
             master_branch, branch, 5)
 
-
-class BranchNumOfUnmergedCommitsTests(unittest.TestCase):
-    """Tests for Branch.num_of_unmerged_commits()."""
-
     def test_num_of_unmerged_commits_calls_repo_get_num_of_unmerged_commits_and_returns_its_result(self):
         repo_mock = get_git_repo_mock()
         branch = Branch(repo_mock, 'origin', 'featureX')
@@ -311,10 +307,6 @@ class BranchNumOfUnmergedCommitsTests(unittest.TestCase):
         repo_mock.get_num_of_unmerged_commits.assert_called_with(
             master_branch, branch)
 
-
-class BranchHasUnmergedCommitsTests(unittest.TestCase):
-    """Tests for Branch.has_unmerged_commits()."""
-
     def test_has_unmerged_commits_calls_repo_has_unmerged_commits_and_returns_its_result(self):
         repo_mock = get_git_repo_mock()
         branch = Branch(repo_mock, 'origin', 'featureX')
@@ -322,6 +314,22 @@ class BranchHasUnmergedCommitsTests(unittest.TestCase):
         repo_mock.has_unmerged_commits.return_value = True
         self.assertTrue(branch.has_unmerged_commits(master_branch))
         repo_mock.has_unmerged_commits.assert_called_with(master_branch, branch)
+
+    def test_has_more_unmerged_commits_returns_true_when_there_are_more_such_commits(self):
+        repo_mock = get_git_repo_mock()
+        branch = Branch(repo_mock, 'origin', 'featureX')
+        master_branch = Branch(repo_mock, 'origin', 'master')
+        branch.num_of_unmerged_commits = mock.Mock(spec=Branch.num_of_unmerged_commits)
+        branch.num_of_unmerged_commits.return_value = 6
+        self.assertTrue(branch.has_more_unmerged_commits_than(master_branch, 4))
+
+    def test_has_more_unmerged_commits_returns_false_when_there_are_not_more_such_commits(self):
+        repo_mock = get_git_repo_mock()
+        branch = Branch(repo_mock, 'origin', 'featureX')
+        master_branch = Branch(repo_mock, 'origin', 'master')
+        branch.num_of_unmerged_commits = mock.Mock(spec=Branch.num_of_unmerged_commits)
+        branch.num_of_unmerged_commits.return_value = 4
+        self.assertFalse(branch.has_more_unmerged_commits_than(master_branch, 4))
 
 
 class BranchComparisonTests(unittest.TestCase):
