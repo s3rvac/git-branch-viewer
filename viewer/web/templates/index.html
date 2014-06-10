@@ -30,10 +30,18 @@
 	</div>
 {%- endmacro %}
 
+{% macro branch_status(branch) -%}
+	{% if not branch.has_unmerged_commits(master_branch) %}
+		<span class="branch-status branch-status-no-unmerged-commits"></span>
+	{% else %}
+		<span class="branch-status"></span>
+	{% endif %}
+{%- endmacro %}
+
 {% macro display_branch(branch) -%}
 	<div class="branch">
 		<div class="branch-title">
-			<span class="branch-status"></span>
+			{{ branch_status(branch) }}
 			<span class="branch-name">{{ branch.name }}</span>
 			<span class="branch-age">(last updated {{ branch.age|age }} ago)</span>
 		</div>

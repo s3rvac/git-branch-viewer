@@ -41,6 +41,10 @@ h2 {
 	height: 12px;
 }
 
+.branch-status-no-unmerged-commits {
+	background-color: red;
+}
+
 .branch-title {
 	margin-bottom: 5px;
 	padding: 2px;
