@@ -32,6 +32,15 @@ h2 {
 	padding: 5px;
 }
 
+.branch-status {
+	display: inline-block;
+	background-color: #ffffff;
+	border: 1px solid grey;
+	margin: 0 2px -1px 5px;
+	width: 12px;
+	height: 12px;
+}
+
 .branch-title {
 	margin-bottom: 5px;
 	padding: 2px;

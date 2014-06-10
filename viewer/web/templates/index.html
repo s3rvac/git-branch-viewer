@@ -33,6 +33,7 @@
 {% macro display_branch(branch) -%}
 	<div class="branch">
 		<div class="branch-title">
+			<span class="branch-status"></span>
 			<span class="branch-name">{{ branch.name }}</span>
 			<span class="branch-age">(last updated {{ branch.age|age }} ago)</span>
 		</div>
