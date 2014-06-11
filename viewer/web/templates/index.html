@@ -31,7 +31,8 @@
 
 {% macro branch_status(branch) -%}
 	{% if not branch.has_unmerged_commits(master_branch) %}
-		<span class="branch-status branch-status-no-unmerged-commits"></span>
+		<span class="branch-status branch-status-no-unmerged-commits"
+			title="No unmerged commits"></span>
 	{% else %}
 		<span class="branch-status"></span>
 	{% endif %}
