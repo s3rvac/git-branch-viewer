@@ -14,5 +14,8 @@ app = Flask(__name__)
 app.config.from_pyfile('settings/default.cfg')
 # Local settings.
 app.config.from_pyfile('settings/local.cfg', silent=True)
+# Template settings.
+app.jinja_env.lstrip_blocks = True
+app.jinja_env.trim_blocks = True
 
 from . import views
