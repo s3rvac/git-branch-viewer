@@ -1,9 +1,12 @@
-#
-# Unit tests for the viewer.utils module.
-#
-# Copyright: (c) 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
-# License: BSD, see LICENSE for more details
-#
+"""
+    tests.utils
+    ~~~~~~~~~~~
+
+    Unit tests for the viewer.utils module.
+
+    :copyright: © 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
+    :license: BSD, see LICENSE for more details
+"""
 
 import os
 import unittest

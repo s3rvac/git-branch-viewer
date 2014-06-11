@@ -1,9 +1,12 @@
-#
-# Unit tests for the viewer.web package.
-#
-# Copyright: (c) 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
-# License: BSD, see LICENSE for more details
-#
+"""
+    tests.web
+    ~~~~~~~~~
+
+    Unit tests for the viewer.web package.
+
+    :copyright: © 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
+    :license: BSD, see LICENSE for more details
+"""
 
 import re
 import unittest

@@ -1,9 +1,12 @@
-#
-# Unit tests for the viewer.git module.
-#
-# Copyright: (c) 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
-# License: BSD, see LICENSE for more details
-#
+"""
+    tests.git
+    ~~~~~~~~~
+
+    Unit tests for the viewer.git module.
+
+    :copyright: © 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
+    :license: BSD, see LICENSE for more details
+"""
 
 # Cannot use `from datetime import datetime` because of eval() in `repr` tests.
 import datetime

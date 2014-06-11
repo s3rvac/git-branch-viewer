@@ -1,9 +1,12 @@
-#
-# Unit tests for the viewer.format module.
-#
-# Copyright: (c) 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
-# License: BSD, see LICENSE for more details
-#
+"""
+    tests.format
+    ~~~~~~~~~~~~
+
+    Unit tests for the viewer.format module.
+
+    :copyright: © 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
+    :license: BSD, see LICENSE for more details
+"""
 
 import unittest
 import datetime
