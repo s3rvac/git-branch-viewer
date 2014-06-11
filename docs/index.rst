@@ -6,7 +6,13 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-Indices and tables
+   viewer.git
+   viewer.format
+   viewer.utils
+   viewer.web
+   viewer.web.views
+
+Indices and search
 ==================
 
 * :ref:`genindex`
