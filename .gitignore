@@ -8,6 +8,3 @@ coverage
 
 # Sphinx
 docs/_build/*
-
-# Local settings
-local-settings.cfg
