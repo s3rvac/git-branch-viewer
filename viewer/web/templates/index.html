@@ -81,9 +81,13 @@
 {% block body %}
 	<h1>Branches In '{{ repo_name }}' On '{{ remote }}'</h1>
 
-	{% for branch in shown_branches %}
-		{{ display_branch(branch) }}
-	{% endfor %}
+	{% if shown_branches %}
+        {% for branch in shown_branches %}
+            {{ display_branch(branch) }}
+        {% endfor %}
+    {% else %}
+        <p>No branches.</p>
+    {% endif %}
 
 	{% if ignored_branches %}
 		<h2>Ignored Branches</h2>
