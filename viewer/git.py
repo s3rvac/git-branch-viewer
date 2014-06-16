@@ -313,7 +313,7 @@ class Repo:
                 raise GitCmdError(ex.output)
 
     def get_branches_on_remote(self, remote):
-        """Returns all the branches on the given remote in a list."""
+        """Returns a list of all the branches on the given remote."""
         output = self.run_git_cmd(['ls-remote', '--heads', remote])
         return self._get_branches_from_ls_remote_output(output, remote)
 
