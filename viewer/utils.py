@@ -14,8 +14,19 @@ import os
 
 @contextlib.contextmanager
 def chdir(dir):
-    """A context manager that enables performing actions in the given
-    directory.
+    """A context manager that performs actions in the given directory.
+
+    Example:
+
+    >>> import os
+    >>> print(os.getcwd())
+    /
+    >>> with chdir('/tmp'):
+    ...     print(os.getcwd())
+    ...
+    /tmp
+    >>> print(os.getcwd())
+    /
     """
     cwd = os.getcwd()
     os.chdir(dir)
