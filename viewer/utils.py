@@ -28,12 +28,12 @@ def chdir(dir):
     >>> print(os.getcwd())
     /
     """
-    cwd = os.getcwd()
+    orig_cwd = os.getcwd()
     os.chdir(dir)
     try:
         yield
     finally:
-        os.chdir(cwd)
+        os.chdir(orig_cwd)
 
 
 def nonempty_lines(text):
