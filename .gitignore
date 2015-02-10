@@ -3,8 +3,8 @@ __pycache__
 *.py[co]
 
 # Unit tests and coverage reports
-.coverage
-coverage
+/.coverage
+/coverage
 
 # Sphinx
-docs/_build/*
+/docs/_build/*
