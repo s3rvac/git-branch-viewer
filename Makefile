@@ -16,7 +16,7 @@ help:
 	@echo "docs          - generate Sphinx HTML documentation, including API docs"
 
 clean: clean-pyc
-	@rm -rf coverage
+	@rm -rf .coverage coverage
 
 clean-pyc:
 	@find . -name '__pycache__' -exec rm -rf {} +
