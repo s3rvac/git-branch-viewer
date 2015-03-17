@@ -36,6 +36,6 @@ test-coverage:
 		--cover-html-dir coverage
 
 docs:
-	@sphinx-apidoc -o docs/ viewer
+	@sphinx-apidoc --force -o docs/ viewer
 	@$(MAKE) -C docs clean
 	@$(MAKE) -C docs html
