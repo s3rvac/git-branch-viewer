@@ -1,16 +1,12 @@
 Welcome to git-branch-viewer's documentation!
 =============================================
 
-Contents:
+Packages:
 
 .. toctree::
    :maxdepth: 2
 
-   viewer.git
-   viewer.format
-   viewer.utils
-   viewer.web
-   viewer.web.views
+   modules
 
 Indices and search
 ==================
