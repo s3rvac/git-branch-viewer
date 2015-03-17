@@ -90,7 +90,7 @@ class CommitCreateAndAccessTests(unittest.TestCase):
         commit = get_new_commit(
             hash='207891DB5BDDBFB0C7210ACA8C76AC6A9C5F9859')
         self.assertEqual(commit.hash,
-                 '207891db5bddbfb0c7210aca8c76ac6a9c5f9859')
+            '207891db5bddbfb0c7210aca8c76ac6a9c5f9859')
 
     def test_value_error_is_raised_when_hash_is_empty(self):
         with self.assertRaises(ValueError):
