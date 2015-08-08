@@ -5,7 +5,7 @@
 # License: BSD, see LICENSE for more details
 #
 
-.PHONY: help clean clean-pyc lint tests tests-coverage docs
+.PHONY: help clean clean-pyc lint tests tests-coverage tests-timings docs
 
 help:
 	@echo "clean          - remove build artifacts"
@@ -13,6 +13,7 @@ help:
 	@echo "lint           - check style with flake8"
 	@echo "tests          - run unit tests"
 	@echo "tests-coverage - check test code coverage"
+	@echo "tests-timings  - obtain test timings"
 	@echo "docs           - generate Sphinx HTML documentation, including API docs"
 
 clean: clean-pyc
@@ -34,6 +35,12 @@ tests-coverage:
 		--cover-erase \
 		--cover-html \
 		--cover-html-dir coverage
+
+tests-timings:
+	@nosetests tests \
+		--with-timer \
+		--timer-ok=10ms \
+		--timer-warning=50ms
 
 docs:
 	@sphinx-apidoc --force -o docs/ viewer
