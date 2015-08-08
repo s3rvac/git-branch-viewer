@@ -19,6 +19,7 @@ help:
 
 clean: clean-pyc
 	@rm -rf .coverage coverage
+	@$(MAKE) -C docs clean
 
 clean-pyc:
 	@find . -name '__pycache__' -exec rm -rf {} +
