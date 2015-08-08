@@ -145,7 +145,9 @@ class Commit:
         if len(hash) != self.VALID_HASH_LENGTH:
             raise ValueError(
                 "hash '{}' has invalid length {} (expected {})".format(
-                    hash, len(hash), self.VALID_HASH_LENGTH))
+                    hash, len(hash), self.VALID_HASH_LENGTH
+                )
+            )
 
     def _validate_hash_characters(self, hash):
         hash_characters = set(hash)
@@ -153,7 +155,9 @@ class Commit:
         if invalid_characters:
             raise ValueError(
                 "hash '{}' contains invalid character(s): '{}'".format(
-                    hash, ''.join(invalid_characters)))
+                    hash, ''.join(invalid_characters)
+                )
+            )
 
 
 class Branch:
@@ -290,7 +294,8 @@ class Repo:
         # `git rev-parse --show-toplevel` prints the path to the top-level
         # directory of the repository.
         return os.path.basename(
-            self.run_git_cmd(['rev-parse', '--show-toplevel']).strip())
+            self.run_git_cmd(['rev-parse', '--show-toplevel']).strip()
+        )
 
     def run_git_cmd(self, args):
         """Runs the Git command with the given arguments in the repository and
@@ -311,7 +316,8 @@ class Repo:
             # subprocess.check_output() raises OSError.
             except OSError:
                 raise GitBinaryNotFoundError(
-                    "'git' is not installed or cannot be executed")
+                    "'git' is not installed or cannot be executed"
+                )
             except subprocess.CalledProcessError as ex:
                 raise GitCmdError(ex.output)
 
@@ -327,7 +333,8 @@ class Repo:
     def get_commit_for_branch(self, branch):
         """Returns the commit for the given branch."""
         return self._get_commit_from_git_show_with_object(
-            '{}/{}'.format(branch.remote, branch.name))
+            '{}/{}'.format(branch.remote, branch.name)
+        )
 
     def get_unmerged_commits(self, master_branch, other_branch, limit=None):
         """Returns a list of commits that are in `other_branch` but not in
@@ -336,7 +343,10 @@ class Repo:
         :param int limit: If not `None`, returns at most `limit` commits.
         """
         hashes = self._get_hashes_of_unmerged_commits(
-            master_branch, other_branch, limit)
+            master_branch,
+            other_branch,
+            limit
+        )
         return list(map(self.get_commit_from_hash, hashes))
 
     def get_num_of_unmerged_commits(self, master_branch, other_branch):
@@ -357,8 +367,12 @@ class Repo:
         """
         # The following command either generates a single line (= there is at
         # least one unmerged commit), or nothing (no unmerged commits).
-        output = self.run_git_cmd(['log', '-1', '--format=format:%h', '{}..{}'.format(
-            master_branch.full_name, other_branch.full_name)])
+        output = self.run_git_cmd([
+            'log',
+            '-1',
+            '--format=format:%h',
+            '{}..{}'.format(master_branch.full_name, other_branch.full_name)
+        ])
         return bool(output.strip())
 
     def get_date_of_last_update(self):
@@ -368,7 +382,8 @@ class Repo:
         # in http://stackoverflow.com/a/9229377), but I don't know of any
         # better way.
         return datetime.datetime.fromtimestamp(
-            os.path.getmtime(os.path.join(self.path, '.git', 'FETCH_HEAD')))
+            os.path.getmtime(os.path.join(self.path, '.git', 'FETCH_HEAD'))
+        )
 
     def __eq__(self, other):
         return self.path == other.path
@@ -393,8 +408,12 @@ class Repo:
         cmd = ['log']
         if limit is not None:
             cmd.append('-{}'.format(limit))
-        cmd.extend(['--format=format:%H', '{}..{}'.format(
-            master_branch.full_name, other_branch.full_name)])
+        cmd.extend([
+            '--format=format:%H', '{}..{}'.format(
+                master_branch.full_name,
+                other_branch.full_name
+            )
+        ])
         output = self.run_git_cmd(cmd)
         return nonempty_lines(output)
 
@@ -434,17 +453,13 @@ class Repo:
         output = self.run_git_cmd(
             ['show', '--quiet', '--format=format:%H%n%an%n%ae%n%at%n%s%n', obj]
         )
-        m = re.match(
-            r"""
+        m = re.match(r"""
                 (?P<hash>[a-fA-F0-9]+)\n
                 (?P<author>.+)\n
                 (?P<email>.+)\n
                 (?P<date_ts>[0-9]+)\n
                 (?P<subject>.+)\n
-            """,
-            output,
-            re.VERBOSE | re.MULTILINE
-        )
+            """, output, re.VERBOSE | re.MULTILINE)
         hash = m.group('hash')
         author = m.group('author')
         email = m.group('email')

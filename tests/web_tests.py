@@ -119,8 +119,12 @@ class CommitsOnIndexPageTests(WebTests):
         viewer.web.app.config['COMMIT_DETAILS_URL_FMT'] = COMMIT_DETAILS_URL_FMT
         rv = self.app.get('/')
         COMMIT_DETAILS_URL = COMMIT_DETAILS_URL_FMT.format(COMMIT.hash)
-        EXPECTED_RE = re.compile(r'<a[^>]+href="{}"[^>]*>.*{}.*</a>'.format(
-            COMMIT_DETAILS_URL, COMMIT.short_hash()), re.MULTILINE)
+        EXPECTED_RE = re.compile(
+            r'<a[^>]+href="{}"[^>]*>.*{}.*</a>'.format(
+                COMMIT_DETAILS_URL, COMMIT.short_hash()
+            ),
+            re.MULTILINE
+        )
         self.assertRegex(rv.data.decode(), EXPECTED_RE)
 
     def test_when_commit_details_url_fmt_is_not_set_no_commit_url_us_shown(self):

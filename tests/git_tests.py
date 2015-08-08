@@ -33,8 +33,9 @@ def get_curr_date():
 
 def get_rand_hash(characters=Commit.VALID_HASH_CHARACTERS):
     """Returns a new, random hash from the given characters"""
-    return ''.join(random.choice(
-        list(characters)) for _ in range(Commit.VALID_HASH_LENGTH))
+    return ''.join(
+        random.choice(list(characters)) for _ in range(Commit.VALID_HASH_LENGTH)
+    )
 
 
 def get_new_commit(hash=None, author=None, email=None, date=None, subject=None):
@@ -445,7 +446,8 @@ class RepoCreateTests(RepoTests):
     def test_create_repo_from_location_with_no_repository_raises_exception(self):
         self.mock_check_output.side_effect = subprocess.CalledProcessError(
             128, "['git', 'status']",
-            b'fatal: Not a git repository (or any parent up to mount point)')
+            b'fatal: Not a git repository (or any parent up to mount point)'
+        )
         REPO_PATH = '/path/to/existing/location/with/no/repository'
         self.assertRaises(GitCmdError, Repo, REPO_PATH)
         self.mock_check_output.assert_called_once_with(
@@ -456,7 +458,8 @@ class RepoCreateTests(RepoTests):
     def test_exception_is_raised_when_git_binary_is_not_found(self):
         # FileNotFoundError is raised when the command does not exist.
         self.mock_check_output.side_effect = FileNotFoundError(
-            "[Errno 2] No such file or directory: 'git'")
+            "[Errno 2] No such file or directory: 'git'"
+        )
         REPO_PATH = '/path/to/existing/location/with/norepository'
         self.assertRaises(GitBinaryNotFoundError, Repo, REPO_PATH)
         self.mock_check_output.assert_called_once_with(
@@ -548,7 +551,8 @@ class RepoGetBranchesOnRemoteTests(RepoWithRepoTests):
         hash = '1956e0f534d57e409508e821e03b5f6c317690fd'
         name = 'master'
         self.mock_check_output.return_value = '{} refs/heads/{}\n'.format(
-            hash, name)
+            hash, name
+        )
         expected_branches = [
             Branch(self.repo, remote, name)
         ]
@@ -584,7 +588,8 @@ class RepoGetCommitTests(RepoWithRepoTests):
         if 'show' in args[0]:
             return '{}\n{}\n{}\n{}\n{}\n\ndiff'.format(
                 self.hash, self.author, self.email,
-                int(self.date.timestamp()), self.subject)
+                int(self.date.timestamp()), self.subject
+            )
         return ''
 
     def setUp(self):
