@@ -43,6 +43,6 @@ tests-timings:
 		--timer-warning=50ms
 
 docs:
-	@sphinx-apidoc --force -o docs/ viewer
+	@sphinx-apidoc --force -o docs viewer
 	@$(MAKE) -C docs clean
 	@$(MAKE) -C docs html
