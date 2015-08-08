@@ -11,7 +11,8 @@ Requirements
 * [Python](https://www.python.org/) (tested on Python 3.4)
 * [Flask](http://flask.pocoo.org/) (tested on Flask 0.10)
 * a [WSGI](http://en.wikipedia.org/wiki/Wsgi)-compilant web server (tested on
-  [Apache](http://httpd.apache.org/) 2.4 with [mod_wsgi](https://code.google.com/p/modwsgi/))
+  [Apache](http://httpd.apache.org/) 2.4 with
+  [mod_wsgi](https://code.google.com/p/modwsgi/))
 
 Installation
 ------------
@@ -26,7 +27,8 @@ Installation
 
 3. Set up your web server and point it to the
    `git-branch-viewer/git-branch-viewer.wsgi` file. A sample configuration for
-   [Apache](http://httpd.apache.org/) 2.4 with [mod_wsgi](https://code.google.com/p/modwsgi/):
+   [Apache](http://httpd.apache.org/) 2.4 with
+   [mod_wsgi](https://code.google.com/p/modwsgi/):
 
         LoadModule wsgi_module modules/mod_wsgi.so
 
