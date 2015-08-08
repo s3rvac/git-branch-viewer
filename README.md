@@ -8,8 +8,8 @@ including their status (age, unmerged commits).
 Requirements
 ------------
 
-* [Python](https://www.python.org/) (tested on Python 3.4)
-* [Flask](http://flask.pocoo.org/) (tested on Flask 0.10)
+* [Python](https://www.python.org/) (tested with Python 3.4)
+* [Flask](http://flask.pocoo.org/) (tested with Flask 0.10)
 * a [WSGI](http://en.wikipedia.org/wiki/Wsgi)-compilant web server (tested on
   [Apache](http://httpd.apache.org/) 2.4 with
   [mod_wsgi](https://code.google.com/p/modwsgi/))
