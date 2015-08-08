@@ -5,17 +5,17 @@
 # License: BSD, see LICENSE for more details
 #
 
-.PHONY: help clean clean-pyc lint tests tests-coverage tests-timings docs
+.PHONY: help clean clean-pyc docs lint tests tests-coverage tests-timings
 
 help:
 	@echo "Use \`make <target>', where <target> is one of the following:"
 	@echo "  clean          - remove all generated files"
 	@echo "  clean-pyc      - remove just Python file artifacts"
+	@echo "  docs           - generate documentation"
 	@echo "  lint           - check code style with flake8"
 	@echo "  tests          - run tests"
 	@echo "  tests-coverage - check test coverage"
 	@echo "  tests-timings  - obtain test timings"
-	@echo "  docs           - generate documentation"
 
 clean: clean-pyc
 	@rm -rf .coverage coverage
@@ -23,6 +23,11 @@ clean: clean-pyc
 clean-pyc:
 	@find . -name '__pycache__' -exec rm -rf {} +
 	@find . -name '*.py[co]' -exec rm -f {} +
+
+docs:
+	@sphinx-apidoc --force -o docs viewer
+	@$(MAKE) -C docs clean
+	@$(MAKE) -C docs html
 
 lint:
 	@flake8 viewer tests
@@ -43,8 +48,3 @@ tests-timings:
 		--with-timer \
 		--timer-ok=10ms \
 		--timer-warning=50ms
-
-docs:
-	@sphinx-apidoc --force -o docs viewer
-	@$(MAKE) -C docs clean
-	@$(MAKE) -C docs html
