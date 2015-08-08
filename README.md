@@ -1,6 +1,8 @@
 git-branch-viewer
 =================
 
+[![Build Status](https://travis-ci.org/s3rvac/git-branch-viewer.svg?branch=master)](https://travis-ci.org/s3rvac/git-branch-viewer)
+
 A Python WSGI viewer of branches in [Git](http://git-scm.com/) repositories.
 Through a web browser, it allows you to view the branches in a repository,
 including their status (age, unmerged commits).
