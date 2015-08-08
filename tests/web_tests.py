@@ -71,13 +71,23 @@ class BranchesOnIndexPageTests(WebTests):
         for branch in self.BRANCHES:
             self.assertIn(branch.name, rv.data.decode())
 
-    def test_branches_to_be_ignored_are_ignored(self):
+    def test_ignores_branch_by_name(self):
         self.repo_mock.get_branches_on_remote.return_value = self.BRANCHES
         IGNORED_BRANCH_NAME = self.BRANCHES[1].name
         viewer.web.app.config['GIT_BRANCHES_TO_IGNORE'] = [IGNORED_BRANCH_NAME]
         rv = self.app.get('/')
         EXPECTED_RE = re.compile(
             r'.*Ignored.*{}'.format(IGNORED_BRANCH_NAME),
+            re.MULTILINE | re.DOTALL
+        )
+        self.assertRegex(rv.data.decode(), EXPECTED_RE)
+
+    def test_ignores_branch_by_regular_expression(self):
+        self.repo_mock.get_branches_on_remote.return_value = self.BRANCHES
+        viewer.web.app.config['GIT_BRANCHES_TO_IGNORE'] = ['.*1']
+        rv = self.app.get('/')
+        EXPECTED_RE = re.compile(
+            r'.*Ignored.*test_branch1',
             re.MULTILINE | re.DOTALL
         )
         self.assertRegex(rv.data.decode(), EXPECTED_RE)
