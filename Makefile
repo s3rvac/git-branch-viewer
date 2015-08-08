@@ -27,7 +27,6 @@ clean-pyc:
 
 docs:
 	@sphinx-apidoc --force -o docs viewer
-	@$(MAKE) -C docs clean
 	@$(MAKE) -C docs html
 
 lint:
