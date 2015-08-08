@@ -8,13 +8,14 @@
 .PHONY: help clean clean-pyc lint tests tests-coverage tests-timings docs
 
 help:
-	@echo "clean          - remove build artifacts"
-	@echo "clean-pyc      - remove Python file artifacts"
-	@echo "lint           - check style with flake8"
-	@echo "tests          - run unit tests"
-	@echo "tests-coverage - check test code coverage"
-	@echo "tests-timings  - obtain test timings"
-	@echo "docs           - generate Sphinx HTML documentation, including API docs"
+	@echo "Use \`make <target>', where <target> is one of the following:"
+	@echo "  clean          - remove all generated files"
+	@echo "  clean-pyc      - remove just Python file artifacts"
+	@echo "  lint           - check code style with flake8"
+	@echo "  tests          - run tests"
+	@echo "  tests-coverage - check test coverage"
+	@echo "  tests-timings  - obtain test timings"
+	@echo "  docs           - generate documentation"
 
 clean: clean-pyc
 	@rm -rf .coverage coverage
