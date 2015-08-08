@@ -88,9 +88,12 @@ class CommitCreateAndAccessTests(unittest.TestCase):
 
     def test_hash_is_properly_normalized(self):
         commit = get_new_commit(
-            hash='207891DB5BDDBFB0C7210ACA8C76AC6A9C5F9859')
-        self.assertEqual(commit.hash,
-            '207891db5bddbfb0c7210aca8c76ac6a9c5f9859')
+            hash='207891DB5BDDBFB0C7210ACA8C76AC6A9C5F9859'
+        )
+        self.assertEqual(
+            commit.hash,
+            '207891db5bddbfb0c7210aca8c76ac6a9c5f9859'
+        )
 
     def test_value_error_is_raised_when_hash_is_empty(self):
         with self.assertRaises(ValueError):
@@ -150,7 +153,7 @@ class CommitComparisonTests(unittest.TestCase):
 
     def test_two_identical_commits_are_equal(self):
         commit = Commit(get_rand_hash(), 'PZ', 'pz@pz.net', get_curr_date(),
-            'Commit message')
+                        'Commit message')
         self.assertEqual(commit, commit)
 
     def test_two_commits_with_equal_data_are_equal(self):
@@ -196,9 +199,9 @@ class CommitComparisonTests(unittest.TestCase):
         email = 'pz@pz.net'
         subject = 'Commit message'
         commit1 = Commit(hash, author, email,
-            datetime.datetime(2007, 12, 11, 5, 43, 14), subject)
+                         datetime.datetime(2007, 12, 11, 5, 43, 14), subject)
         commit2 = Commit(hash, author, email,
-            datetime.datetime(2014, 5, 18, 10, 27, 53), subject)
+                         datetime.datetime(2014, 5, 18, 10, 27, 53), subject)
         self.assertNotEqual(commit1, commit2)
 
     def test_two_commits_with_different_msg_are_not_equal(self):
@@ -206,9 +209,9 @@ class CommitComparisonTests(unittest.TestCase):
         author = 'PZ'
         date = get_curr_date()
         commit1 = Commit(hash, author, 'pz@pz.net', date,
-            'Commit message')
+                         'Commit message')
         commit2 = Commit(hash, author, 's3rvac@gmail.com', date,
-            'Some other commit message')
+                         'Some other commit message')
         self.assertNotEqual(commit1, commit2)
 
 
@@ -301,18 +304,22 @@ class BranchUnmergedCommitsTests(unittest.TestCase):
         self.repo_mock.get_unmerged_commits.return_value = commits
         self.assertEqual(self.branch.unmerged_commits(self.master_branch, limit=5), commits)
         self.repo_mock.get_unmerged_commits.assert_called_with(
-            self.master_branch, self.branch, 5)
+            self.master_branch, self.branch, 5
+        )
 
-    def test_num_of_unmerged_commits_calls_repo_get_num_of_unmerged_commits_and_returns_its_result(self):
+    def test_num_of_unmerged_commits_calls_repo_and_returns_its_result(self):
         self.repo_mock.get_num_of_unmerged_commits.return_value = 1
         self.assertEqual(self.branch.num_of_unmerged_commits(self.master_branch), 1)
         self.repo_mock.get_num_of_unmerged_commits.assert_called_with(
-            self.master_branch, self.branch)
+            self.master_branch, self.branch
+        )
 
     def test_has_unmerged_commits_calls_repo_has_unmerged_commits_and_returns_its_result(self):
         self.repo_mock.has_unmerged_commits.return_value = True
         self.assertTrue(self.branch.has_unmerged_commits(self.master_branch))
-        self.repo_mock.has_unmerged_commits.assert_called_with(self.master_branch, self.branch)
+        self.repo_mock.has_unmerged_commits.assert_called_with(
+            self.master_branch, self.branch
+        )
 
     def test_has_more_unmerged_commits_returns_true_when_there_are_more_such_commits(self):
         self.branch.num_of_unmerged_commits = mock.Mock(spec=Branch.num_of_unmerged_commits)
@@ -406,8 +413,10 @@ class RepoCreateTests(RepoTests):
         REPO_PATH = '/path/to/existing/repository'
         Repo(REPO_PATH)
         self.mock_chdir.assert_any_call(REPO_PATH)
-        self.mock_check_output.assert_called_once_with(['git', 'status'],
-            universal_newlines=True)
+        self.mock_check_output.assert_called_once_with(
+            ['git', 'status'],
+            universal_newlines=True
+        )
 
     def test_path_is_accessible_after_creating_repo_from_existing_repository(self):
         REPO_PATH = '/path/to/existing/repository'
@@ -415,8 +424,8 @@ class RepoCreateTests(RepoTests):
         self.assertEqual(repo.path, REPO_PATH)
 
     @mock.patch('os.path.abspath')
-    def test_rel_path_is_converted_into_abs_path_after_creating_repo(self,
-            mock_abspath):
+    def test_rel_path_is_converted_into_abs_path_after_creating_repo(
+            self, mock_abspath):
         ABS_REPO_PATH = '/path/to/existing/repository'
         REL_REPO_PATH = '../repository'
         mock_abspath.return_value = ABS_REPO_PATH
@@ -439,8 +448,10 @@ class RepoCreateTests(RepoTests):
             b'fatal: Not a git repository (or any parent up to mount point)')
         REPO_PATH = '/path/to/existing/location/with/no/repository'
         self.assertRaises(GitCmdError, Repo, REPO_PATH)
-        self.mock_check_output.assert_called_once_with(['git', 'status'],
-            universal_newlines=True)
+        self.mock_check_output.assert_called_once_with(
+            ['git', 'status'],
+            universal_newlines=True
+        )
 
     def test_exception_is_raised_when_git_binary_is_not_found(self):
         # FileNotFoundError is raised when the command does not exist.
@@ -448,8 +459,10 @@ class RepoCreateTests(RepoTests):
             "[Errno 2] No such file or directory: 'git'")
         REPO_PATH = '/path/to/existing/location/with/norepository'
         self.assertRaises(GitBinaryNotFoundError, Repo, REPO_PATH)
-        self.mock_check_output.assert_called_once_with(['git', 'status'],
-            universal_newlines=True)
+        self.mock_check_output.assert_called_once_with(
+            ['git', 'status'],
+            universal_newlines=True
+        )
 
 
 class RepoNameTests(RepoTests):
@@ -461,7 +474,8 @@ class RepoNameTests(RepoTests):
         repo.name
         self.mock_check_output.assert_called_with(
             ['git', 'rev-parse', '--show-toplevel'],
-            universal_newlines=True)
+            universal_newlines=True
+        )
 
     def test_name_returns_correct_name(self):
         REPO_NAME = 'repository'
@@ -522,7 +536,8 @@ class RepoGetBranchesOnRemoteTests(RepoWithRepoTests):
         self.repo.get_branches_on_remote(remote)
         self.mock_check_output.assert_called_with(
             ['git', 'ls-remote', '--heads', remote],
-            universal_newlines=True)
+            universal_newlines=True
+        )
 
     def test_returns_empty_list_when_there_are_no_branches(self):
         self.mock_check_output.return_value = ''
@@ -537,8 +552,10 @@ class RepoGetBranchesOnRemoteTests(RepoWithRepoTests):
         expected_branches = [
             Branch(self.repo, remote, name)
         ]
-        self.assertEqual(self.repo.get_branches_on_remote(remote),
-            expected_branches)
+        self.assertEqual(
+            self.repo.get_branches_on_remote(remote),
+            expected_branches
+        )
 
     def test_returns_two_branches_when_there_are_two_branches(self):
         remote = 'origin'
@@ -554,8 +571,10 @@ class RepoGetBranchesOnRemoteTests(RepoWithRepoTests):
             Branch(self.repo, remote, name1),
             Branch(self.repo, remote, name2)
         ]
-        self.assertEqual(self.repo.get_branches_on_remote(remote),
-            expected_branches)
+        self.assertEqual(
+            self.repo.get_branches_on_remote(remote),
+            expected_branches
+        )
 
 
 class RepoGetCommitTests(RepoWithRepoTests):
@@ -586,11 +605,14 @@ class RepoGetCommitFromHashTests(RepoGetCommitTests):
         self.repo.get_commit_from_hash(hash)
         self.mock_check_output.assert_called_with(
             ['git', 'show', '--quiet', '--format=format:%H%n%an%n%ae%n%at%n%s%n', hash],
-            universal_newlines=True)
+            universal_newlines=True
+        )
 
     def test_returns_correct_commit(self):
-        self.assertEqual(self.repo.get_commit_from_hash(hash),
-            Commit(self.hash, self.author, self.email, self.date, self.subject))
+        self.assertEqual(
+            self.repo.get_commit_from_hash(hash),
+            Commit(self.hash, self.author, self.email, self.date, self.subject)
+        )
 
 
 class RepoGetCommitForBranchTests(RepoGetCommitTests):
@@ -604,11 +626,16 @@ class RepoGetCommitForBranchTests(RepoGetCommitTests):
         self.repo.get_commit_for_branch(self.branch)
         self.mock_check_output.assert_called_with(
             ['git', 'show', '--quiet', '--format=format:%H%n%an%n%ae%n%at%n%s%n',
-             self.branch.full_name], universal_newlines=True)
+                self.branch.full_name],
+            universal_newlines=True
+        )
 
     def test_returns_correct_commit(self):
-        self.assertEqual(self.repo.get_commit_for_branch(self.branch),
-            Commit(self.hash, self.author, self.email, self.date, self.subject))
+        self.assertEqual(
+            self.repo.get_commit_for_branch(self.branch),
+            Commit(self.hash, self.author, self.email, self.date, self.subject)
+        )
+
 
 class RepoUnmergedCommitsTests(RepoWithRepoTests):
     """A base class for all tests of getting unmerged commits."""
@@ -627,15 +654,17 @@ class RepoGetUnmergedCommitsTests(RepoUnmergedCommitsTests):
         self.mock_check_output.assert_called_with(
             ['git', 'log', '--format=format:%H', '{}..{}'.format(
                 self.master_branch.full_name, self.other_branch.full_name)],
-            universal_newlines=True)
+            universal_newlines=True
+        )
 
     def test_calls_proper_subprocess_command_when_limit_is_given(self):
         self.repo.get_unmerged_commits(self.master_branch, self.other_branch,
-            limit=5)
+                                       limit=5)
         self.mock_check_output.assert_called_with(
             ['git', 'log', '-5', '--format=format:%H', '{}..{}'.format(
                 self.master_branch.full_name, self.other_branch.full_name)],
-            universal_newlines=True)
+            universal_newlines=True
+        )
 
     def test_no_unmerged_commits(self):
         self.mock_check_output.return_value = '\n'
@@ -648,6 +677,7 @@ class RepoGetUnmergedCommitsTests(RepoUnmergedCommitsTests):
         commits = [get_new_commit(), get_new_commit()]
         self.mock_check_output.return_value = '\n'.join(
             commit.hash for commit in commits)
+
         def mock_get_commit_from_hash_side_effect(hash):
             for commit in commits:
                 if commit.hash == hash:
@@ -668,7 +698,8 @@ class RepoGetNumOfUnmergedCommitsTests(RepoUnmergedCommitsTests):
         self.mock_check_output.assert_called_with(
             ['git', 'log', '-1', '--format=format:%h', '{}..{}'.format(
                 self.master_branch.full_name, self.other_branch.full_name)],
-            universal_newlines=True)
+            universal_newlines=True
+        )
 
     def test_there_are_no_unmerged_commits(self):
         self.mock_check_output.return_value = '\n'
@@ -691,17 +722,20 @@ class RepoHasUnmergedCommitsTests(RepoUnmergedCommitsTests):
         self.mock_check_output.assert_called_with(
             ['git', 'log', '-1', '--format=format:%h', '{}..{}'.format(
                 self.master_branch.full_name, self.other_branch.full_name)],
-            universal_newlines=True)
+            universal_newlines=True
+        )
 
     def test_there_are_no_unmerged_commits(self):
         self.mock_check_output.return_value = '\n'
         self.assertFalse(
-            self.repo.has_unmerged_commits(self.master_branch, self.other_branch))
+            self.repo.has_unmerged_commits(self.master_branch, self.other_branch)
+        )
 
     def test_there_are_unmerged_commits(self):
         self.mock_check_output.return_value = '327c90a\n548a89e\n'
         self.assertTrue(
-            self.repo.has_unmerged_commits(self.master_branch, self.other_branch))
+            self.repo.has_unmerged_commits(self.master_branch, self.other_branch)
+        )
 
 
 @mock.patch('os.path.getmtime')

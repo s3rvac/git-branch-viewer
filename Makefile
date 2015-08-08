@@ -30,7 +30,10 @@ docs:
 	@$(MAKE) -C docs html
 
 lint:
-	@flake8 viewer tests
+	@flake8 \
+		--max-line-length=100 \
+		--ignore=E402,F403 \
+		viewer tests
 
 tests:
 	@nosetests tests

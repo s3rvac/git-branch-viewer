@@ -232,8 +232,8 @@ class Branch:
 
     def __eq__(self, other):
         return (self.repo == other.repo and
-            self.remote == other.remote and
-            self.name == other.name)
+                self.remote == other.remote and
+                self.name == other.name)
 
     def __ne__(self, other):
         return not self == other
@@ -243,7 +243,8 @@ class Branch:
             self.__class__.__name__,
             self.repo,
             self.remote,
-            self.name)
+            self.name
+        )
 
 
 def sort_branches(branches, attr):
@@ -302,8 +303,10 @@ class Repo:
         """
         with chdir(self.path):
             try:
-                return subprocess.check_output(['git'] + list(args),
-                    universal_newlines=True)
+                return subprocess.check_output(
+                    ['git'] + list(args),
+                    universal_newlines=True
+                )
             # When a command is not found or cannot be executed,
             # subprocess.check_output() raises OSError.
             except OSError:
@@ -340,8 +343,10 @@ class Repo:
         """Returns the number of commits that are in `other_branch` but not in
         `master_branch`.
         """
-        hashes = self._get_hashes_of_unmerged_commits(master_branch,
-            other_branch)
+        hashes = self._get_hashes_of_unmerged_commits(
+            master_branch,
+            other_branch
+        )
         return len(hashes)
 
     def has_unmerged_commits(self, master_branch, other_branch):
@@ -377,7 +382,7 @@ class Repo:
             self.path)
 
     def _get_hashes_of_unmerged_commits(self, master_branch, other_branch,
-            limit=None):
+                                        limit=None):
         # The following command generates output of the form
         #
         #   327c90a7c0bb4a739c2a245aeffa5f569cbd67da
@@ -426,15 +431,20 @@ class Repo:
         #
         # The '--quiet' parameter prevents a diff from being displayed (we do
         # not need it).
-        output = self.run_git_cmd(['show', '--quiet',
-            '--format=format:%H%n%an%n%ae%n%at%n%s%n', obj])
-        m = re.match(r"""
+        output = self.run_git_cmd(
+            ['show', '--quiet', '--format=format:%H%n%an%n%ae%n%at%n%s%n', obj]
+        )
+        m = re.match(
+            r"""
                 (?P<hash>[a-fA-F0-9]+)\n
                 (?P<author>.+)\n
                 (?P<email>.+)\n
                 (?P<date_ts>[0-9]+)\n
                 (?P<subject>.+)\n
-            """, output, re.VERBOSE | re.MULTILINE)
+            """,
+            output,
+            re.VERBOSE | re.MULTILINE
+        )
         hash = m.group('hash')
         author = m.group('author')
         email = m.group('email')
