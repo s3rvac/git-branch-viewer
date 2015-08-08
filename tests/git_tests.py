@@ -26,7 +26,7 @@ from viewer.git import sort_branches
 
 def get_curr_date():
     """Returns the current date."""
-    # Do not include milliseconds into the date because git uses just seconds.
+    # Do not include milliseconds into the date because Git uses just seconds.
     curr_date_ts = int(datetime.datetime.now().timestamp())
     return datetime.datetime.fromtimestamp(curr_date_ts)
 
@@ -223,7 +223,7 @@ class CommitReprTests(unittest.TestCase):
 
 
 def get_git_repo_mock(path='/path/to/existing/repository'):
-    """Returns a Mock object for a git repository."""
+    """Returns a Mock object for a Git repository."""
     repo = mock.MagicMock(spec=Repo, path=path)
     return repo
 

@@ -2,7 +2,7 @@
     viewer.git
     ~~~~~~~~~~
 
-    Interface to git.
+    Interface to Git.
 
     :copyright: © 2014 by Petr Zemek <s3rvac@gmail.com> and contributors
     :license: BSD, see LICENSE for more details
@@ -24,17 +24,17 @@ class BaseGitError(Exception):
 
 
 class GitCmdError(BaseGitError):
-    """An exception that is raised when a git command fails."""
+    """An exception that is raised when a Git command fails."""
     pass
 
 
 class GitBinaryNotFoundError(GitCmdError):
-    """An exception that is raised when the git binary is not found."""
+    """An exception that is raised when the Git binary is not found."""
     pass
 
 
 class Commit:
-    """A representation of a git commit."""
+    """A representation of a Git commit."""
 
     #: The length of a valid hash. Hashes of a different length are not
     #: permitted.
@@ -157,7 +157,7 @@ class Commit:
 
 
 class Branch:
-    """A representation of a git branch."""
+    """A representation of a Git branch."""
 
     def __init__(self, repo, remote, name):
         """Constructs a branch with the given data.
@@ -254,19 +254,19 @@ def sort_branches(branches, attr):
 
 
 class Repo:
-    """An interface to a git repository.
+    """An interface to a Git repository.
 
     The methods in this class may raise the following exceptions:
 
     :raises FileNotFoundError: If the repository path path does not exist or
                                cannot be entered.
-    :raises GitBinaryNotFoundError: If the git binary (i.e. ``git``) is not
+    :raises GitBinaryNotFoundError: If the Git binary (i.e. ``git``) is not
                                     found.
-    :raises GitCmdError: If there is an error when running a git command.
+    :raises GitCmdError: If there is an error when running a Git command.
     """
 
     def __init__(self, path):
-        """Creates an interface to a git repository in the given `path`.
+        """Creates an interface to a Git repository in the given `path`.
 
         :param str path: A path to the repository.
 
@@ -292,7 +292,7 @@ class Repo:
             self.run_git_cmd(['rev-parse', '--show-toplevel']).strip())
 
     def run_git_cmd(self, args):
-        """Runs the git command with the given arguments in the repository and
+        """Runs the Git command with the given arguments in the repository and
         returns the output.
 
         :param seq args: A sequence of parameters passed to git.

@@ -1,7 +1,7 @@
 git-branch-viewer
 =================
 
-A Python WSGI viewer of branches in [git](http://git-scm.com/) repositories.
+A Python WSGI viewer of branches in [Git](http://git-scm.com/) repositories.
 Through a web browser, it allows you to view the branches in a repository,
 including their status (age, unmerged commits).
 
@@ -64,7 +64,7 @@ directory and add the modified settings in there. When the viewer is run, it
 first loads the default configuration. Then, it loads the local configuration
 (if any) and overrides the already loaded settings.
 
-You should at least override `GIT_REPO_PATH`, which tells the viewer which git
+You should at least override `GIT_REPO_PATH`, which tells the viewer which Git
 repository it should use. Currently, it has to be an absolute path to a cloned
 repository.
 
