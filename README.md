@@ -20,7 +20,10 @@ Installation
 1. Install all the requirements above. [Flask](http://flask.pocoo.org/) can be
    installed by using
    [easy_install](http://pythonhosted.org/setuptools/easy_install.html) or
-   [pip](https://pypi.python.org/pypi/pip).
+   [pip](https://pypi.python.org/pypi/pip) (recommended):
+   ```
+   pip install flask
+   ```
 2. Clone this repository to your web server:
 
         git clone https://github.com/s3rvac/git-branch-viewer
