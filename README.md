@@ -2,6 +2,7 @@ git-branch-viewer
 =================
 
 [![Build Status](https://travis-ci.org/s3rvac/git-branch-viewer.svg?branch=master)](https://travis-ci.org/s3rvac/git-branch-viewer)
+[![Coverage Status](https://coveralls.io/repos/s3rvac/git-branch-viewer/badge.svg?branch=master&service=github)](https://coveralls.io/github/s3rvac/git-branch-viewer?branch=master)
 
 A Python WSGI viewer of branches in [Git](http://git-scm.com/) repositories.
 Through a web browser, it allows you to view the branches in a repository,
