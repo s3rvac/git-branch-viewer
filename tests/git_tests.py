@@ -538,7 +538,7 @@ class RepoGetBranchesOnRemoteTests(RepoWithRepoTests):
         remote = 'origin'
         self.repo.get_branches_on_remote(remote)
         self.mock_check_output.assert_called_with(
-            ['git', 'ls-remote', '--heads', remote],
+            ['git', 'branch', '--remote', '--no-color'],
             universal_newlines=True
         )
 
@@ -548,10 +548,9 @@ class RepoGetBranchesOnRemoteTests(RepoWithRepoTests):
 
     def test_returns_single_branch_when_there_is_single_branch(self):
         remote = 'origin'
-        hash = '1956e0f534d57e409508e821e03b5f6c317690fd'
         name = 'master'
-        self.mock_check_output.return_value = '{} refs/heads/{}\n'.format(
-            hash, name
+        self.mock_check_output.return_value = '  {}/{}\n'.format(
+            remote, name
         )
         expected_branches = [
             Branch(self.repo, remote, name)
@@ -563,14 +562,12 @@ class RepoGetBranchesOnRemoteTests(RepoWithRepoTests):
 
     def test_returns_two_branches_when_there_are_two_branches(self):
         remote = 'origin'
-        hash1 = '1956e0f534d57e409508e821e03b5f6c317690fd'
         name1 = 'master'
-        hash2 = '6b2a042d4d1b80ebda22e7c63cc8e830a0d77045'
         name2 = 'featureX'
         self.mock_check_output.return_value = """
-            {} refs/heads/{}
-            {} refs/heads/{}
-            """.format(hash1, name1, hash2, name2)
+            {0}/{1}
+            {0}/{2}
+            """.format(remote, name1, name2)
         expected_branches = [
             Branch(self.repo, remote, name1),
             Branch(self.repo, remote, name2)
@@ -579,6 +576,10 @@ class RepoGetBranchesOnRemoteTests(RepoWithRepoTests):
             self.repo.get_branches_on_remote(remote),
             expected_branches
         )
+
+    def test_ignores_remote_head(self):
+        self.mock_check_output.return_value = 'origin/HEAD -> origin/master\n'
+        self.assertEqual(self.repo.get_branches_on_remote('origin'), [])
 
 
 class RepoGetCommitTests(RepoWithRepoTests):

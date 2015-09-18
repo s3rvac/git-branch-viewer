@@ -322,9 +322,9 @@ class Repo:
                 raise GitCmdError(ex.output)
 
     def get_branches_on_remote(self, remote):
-        """Returns a list of all the branches on the given remote."""
-        output = self.run_git_cmd(['ls-remote', '--heads', remote])
-        return self._get_branches_from_ls_remote_output(output, remote)
+        """Returns a list of all branches on the given remote."""
+        output = self.run_git_cmd(['branch', '--remote', '--no-color'])
+        return self._get_branches_from_branch_remote_output(output, remote)
 
     def get_commit_from_hash(self, hash):
         """Returns the commit corresponding to the given hash."""
@@ -417,22 +417,20 @@ class Repo:
         output = self.run_git_cmd(cmd)
         return nonempty_lines(output)
 
-    def _get_branches_from_ls_remote_output(self, output, remote):
-        # The ls-remote output should be of the form
+    def _get_branches_from_branch_remote_output(self, output, remote):
+        # The `git branch --remote` output should be of the form
         #
-        #   hash1        refs/heads/branch1_name
-        #   hash1        refs/heads/branch2_name
+        #   remote/branch1_name
+        #   remote/branch2_name
         #   ...
         #
         branches = []
         for line in output.split('\n'):
             m = re.match(r"""
-                    \s*                     # Optional spaces at the beginning
-                    [a-fA-F0-9]+            # Hash
-                    \s+                     # Spaces
-                    refs/heads/(?P<name>.+) # Branch name
+                    \s*                # Optional spaces at the beginning
+                    {}/(?P<name>[^ ]+) # remote/branch_name
                     $
-                """, line, re.VERBOSE)
+                """.format(remote), line, re.VERBOSE)
             if m:
                 branches.append(Branch(self, remote, m.group('name')))
         return branches
