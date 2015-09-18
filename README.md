@@ -90,7 +90,11 @@ Notes
 
 * The viewer does not perform any repository updates by itself. To keep your
   repository up to date, you should set up a
-  [cronjob](http://en.wikipedia.org/wiki/Cron).
+  [cronjob](http://en.wikipedia.org/wiki/Cron):
+```
+# Update the cloned repository for git-branch-viewer every 1 minute.
+*/1 * * * * git -C /path/to/some/cloned/repository pull --prune
+```
 
 Contribution
 ------------
