@@ -33,6 +33,7 @@ lint:
 	@flake8 \
 		--max-line-length=100 \
 		--ignore=E402,F403 \
+		--jobs=auto \
 		viewer tests
 
 tests:
