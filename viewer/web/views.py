@@ -14,9 +14,9 @@ from flask import render_template
 from flask import g
 
 from viewer import git
-from viewer.format import format_date
 from viewer.format import format_age
-from . import app
+from viewer.format import format_date
+from viewer.web import app
 
 
 @app.before_request

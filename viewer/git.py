@@ -14,8 +14,8 @@ import os
 import re
 import subprocess
 
-from .utils import chdir
-from .utils import nonempty_lines
+from viewer.utils import chdir
+from viewer.utils import nonempty_lines
 
 
 class BaseGitError(Exception):
