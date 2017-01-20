@@ -58,7 +58,7 @@ the given remote in the given repository. For each branch, you can see its
 name, age, current commit, and commits that have not yet been merged into the
 master branch. If a branch does not have any unmerged commits, it is marked
 with a red square (usually, such branches can be removed as they contain
-nothing the is not already in the master branch).
+nothing that is not already in the master branch).
 
 Configuration
 -------------
