@@ -22,4 +22,4 @@ app.config.from_pyfile('settings/local.cfg', silent=True)
 app.jinja_env.lstrip_blocks = True
 app.jinja_env.trim_blocks = True
 
-from viewer.web.views import *
+from viewer.web.views import * # noqa
