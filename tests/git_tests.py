@@ -474,6 +474,7 @@ class RepoNameTests(RepoTests):
     def test_name_calls_proper_command(self):
         REPO_PATH = '/path/to/existing/repository'
         repo = Repo(REPO_PATH)
+        self.mock_check_output.return_value = REPO_PATH
         repo.name
         self.mock_check_output.assert_called_with(
             ['git', 'rev-parse', '--show-toplevel'],
