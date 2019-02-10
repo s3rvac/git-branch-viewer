@@ -32,7 +32,7 @@ docs:
 lint:
 	@flake8 \
 		--max-line-length=100 \
-		--ignore=E402,F403 \
+		--ignore=E402,F403,W504 \
 		--jobs=auto \
 		viewer tests
 
